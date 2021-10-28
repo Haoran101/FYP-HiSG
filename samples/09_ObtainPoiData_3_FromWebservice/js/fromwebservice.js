@@ -3,11 +3,11 @@
     Places near given location.
  */
 
-    https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyAJRn-a8TdDAA22Vgh1HVfdm62enaq7OfY&location=1.2372390405371851%2C103.60725402832033&type=point_of_interest&radius=1600&language=en-US
+    https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=&location=1.2372390405371851%2C103.60725402832033&type=point_of_interest&radius=1600&language=en-US
 var ServerInformation = {
     POIDATA_SERVER: "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
     POIDATA_SERVER_KEY : "key",
-    PLACES_API_KEY : "AIzaSyAJRn-a8TdDAA22Vgh1HVfdm62enaq7OfY",
+    PLACES_API_KEY : "",
     POIDATA_SERVER_LOCATION : "location",
     POIDATA_SERVER_RADIUS: "radius", 
     POIDATA_SERVER_LAN: "language", 
