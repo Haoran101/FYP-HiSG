@@ -34,6 +34,7 @@ plugin/
 
 # Web related
 lib/generated_plugin_registrant.dart
+samples/00_My_Test_Program/js/api_key.js
 
 # Symbolication related
 app.*.symbols
