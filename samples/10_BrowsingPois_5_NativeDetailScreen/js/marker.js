@@ -40,27 +40,27 @@ function Marker(poiData) {
         onClick: null
     });
 
-    /* Create an AR.Label for the marker's title . */
-    this.titleLabel = new AR.Label(poiData.title.trunc(10), 1, {
-        zOrder: 1,
-        translate: {
-            y: 0.55
-        },
-        style: {
-            textColor: '#FFFFFF',
-            fontStyle: AR.CONST.FONT_STYLE.BOLD
-        }
-    });
+    // /* Create an AR.Label for the marker's title . */
+    // this.titleLabel = new AR.Label(poiData.title.trunc(10), 1, {
+    //     zOrder: 1,
+    //     translate: {
+    //         y: 0.55
+    //     },
+    //     style: {
+    //         textColor: '#FFFFFF',
+    //         fontStyle: AR.CONST.FONT_STYLE.BOLD
+    //     }
+    // });
 
-    this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
-        zOrder: 1,
-        translate: {
-            y: -0.55
-        },
-        style: {
-            textColor: '#FFFFFF'
-        }
-    });
+    // this.descriptionLabel = new AR.Label(poiData.description.trunc(15), 0.8, {
+    //     zOrder: 1,
+    //     translate: {
+    //         y: -0.55
+    //     },
+    //     style: {
+    //         textColor: '#FFFFFF'
+    //     }
+    // });
 
     /*
         Create an AR.ImageDrawable using the AR.ImageResource for the direction indicator which was created in the

@@ -2,11 +2,15 @@
     Information about server communication. This sample webservice is provided by Wikitude and returns random dummy
     Places near given location.
  */
+
+    https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyAJRn-a8TdDAA22Vgh1HVfdm62enaq7OfY&location=1.2372390405371851%2C103.60725402832033&type=point_of_interest&radius=1600&language=en-US
 var ServerInformation = {
-    POIDATA_SERVER: "https://example.wikitude.com/GetSamplePois/",
-    POIDATA_SERVER_ARG_LAT: "lat",
-    POIDATA_SERVER_ARG_LON: "lon",
-    POIDATA_SERVER_ARG_NR_POIS: "nrPois"
+    POIDATA_SERVER: "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+    POIDATA_SERVER_KEY : "key",
+    PLACES_API_KEY : "AIzaSyAJRn-a8TdDAA22Vgh1HVfdm62enaq7OfY",
+    POIDATA_SERVER_LOCATION : "location",
+    POIDATA_SERVER_RADIUS: "radius", 
+    POIDATA_SERVER_LAN: "language", 
 };
 
 /* Implementation of AR-Experience (aka "World"). */
@@ -36,10 +40,10 @@ var World = {
         World.markerList = [];
 
         /* Start loading marker assets. */
-        World.markerDrawableIdle = new AR.ImageResource("assets/marker_idle.png", {
+        World.markerDrawableIdle = new AR.ImageResource("assets/poi_blue.png", {
             onError: World.onError
         });
-        World.markerDrawableSelected = new AR.ImageResource("assets/marker_selected.png", {
+        World.markerDrawableSelected = new AR.ImageResource("assets/poi.png", {
             onError: World.onError
         });
         World.markerDrawableDirectionIndicator = new AR.ImageResource("assets/indi.png", {
@@ -49,13 +53,14 @@ var World = {
         /* Loop through POI-information and create an AR.GeoObject (=Marker) per POI. */
         for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
             var singlePoi = {
-                "id": poiData[currentPlaceNr].id,
-                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
-                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
-                "altitude": parseFloat(poiData[currentPlaceNr].altitude),
+                "id": poiData[currentPlaceNr].place_id,
+                "latitude": parseFloat(poiData[currentPlaceNr].geometry.location.lat),
+                "longitude": parseFloat(poiData[currentPlaceNr].geometry.location.lng),
+                "altitude": 100.0 + (Math.random() * 10),
                 "title": poiData[currentPlaceNr].name,
-                "description": poiData[currentPlaceNr].description
+                "description": poiData[currentPlaceNr].vicinity
             };
+            console.log(singlePoi);
 
             World.markerList.push(new Marker(singlePoi));
         }
@@ -129,9 +134,9 @@ var World = {
 
         /* Server-url to JSON content provider. */
         var serverUrl = ServerInformation.POIDATA_SERVER + "?" +
-            ServerInformation.POIDATA_SERVER_ARG_LAT + "=" +
-            lat + "&" + ServerInformation.POIDATA_SERVER_ARG_LON + "=" +
-            lon + "&" + ServerInformation.POIDATA_SERVER_ARG_NR_POIS + "=20";
+            "key=" + ServerInformation.PLACES_API_KEY + "&location=" +
+            lat + "," + lon + "&radius=3000&" +
+            "type=restaurants&language=en-US";
 
         /* Use GET request to fetch the JSON data from the server */
         var xhr = new XMLHttpRequest();
@@ -140,7 +145,7 @@ var World = {
         xhr.onload = function() {
             var status = xhr.status;
             if (status === 200) {
-                World.loadPoisFromJsonData(xhr.response);
+                World.loadPoisFromJsonData(xhr.response["results"]);
                 World.isRequestingData = false;
             } else {
                 World.updateStatusMessage("Invalid web-service response.", true);

@@ -2,282 +2,105 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wikitude_flutter_app/customUrl.dart';
+import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
 
-import 'arview.dart';
-import 'category.dart';
-import 'custom_expansion_tile.dart';
-import 'sample.dart';
+import 'Wikitude/arview.dart';
+import 'Wikitude/category.dart';
+import 'Wikitude/custom_expansion_tile.dart';
+import 'Wikitude/sample.dart';
 
 import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_sdk_build_information.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
+import 'Wikitude/armain.dart';
+import 'UI/discover.dart';
+import 'UI/search.dart';
+import 'UI/signin.dart';
 
 void main() => runApp(MyApp());
 
-Future<String> _loadSamplesJson() async{
-  return await rootBundle.loadString('samples/samples.json');
-}
-
-Future<List<Category>> _loadSamples() async{
-  String samplesJson =  await _loadSamplesJson();
-  List<dynamic> categoriesFromJson = json.decode(samplesJson);
-  List<Category> categories = [];
-
-  for(int i = 0; i < categoriesFromJson.length; i++) {
-    categories.add(new Category.fromJson(categoriesFromJson[i]));
-  }
-  return categories;
-}
-
 class MyApp extends StatelessWidget {
+  const MyApp({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: Color(0xffffb300)
-    ));
-
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Color(0xffffb300),
-        primaryColorDark: Color(0xfffb8c00),
-        accentColor: Color(0xffffb300)
-      ),
-      home: MainMenu()
+    return const MaterialApp(
+      home: Home(),
     );
   }
 }
 
-class MainMenu extends StatefulWidget {
+/// This is the stateful widget that the main application instantiates.
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
-  MyAppState createState() => new MyAppState();
+  State<Home> createState() => _HomeState();
 }
 
-class MyAppState extends State<MainMenu> {
+/// This is the private State class that goes with Home.
+class _HomeState extends State<Home> {
+  
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static List<Widget> _widgetOptions = <Widget>[
+    discoverContent(),
+    searchPage(),
+    MainMenu(),
+    Text(
+      'Index 3: Plan',
+      style: optionStyle,
+    ),
+    SignInScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Examples'),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: popupMenuSelectedItem,
-            itemBuilder: (BuildContext context) {
-              return PopupMenuItems.items.map((String item) {
-                return PopupMenuItem<String> (
-                  value: item,
-                  child: Text(item)
-                );
-              }).toList();
-            },
-          )
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('HiSG !', style: TextStyle(fontFamily: 'Jomhuria', fontSize: 80, color: pinkRedColor)),
+      //   backgroundColor: Colors.white,
+      // ),
       body: Container(
-        decoration: BoxDecoration(color: Color(0xffdddddd)),
-        child: Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          child: FutureBuilder(
-            future: _loadSamples(),
-            builder: (context, AsyncSnapshot<List<Category>>snapshot) {
-              if(snapshot.hasData) {
-                return Container(
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: CategoryExpansionTile(
-                    categories: snapshot.data!,
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.travel_explore_rounded),
+            label: 'Discover',
           ),
-        )
-      )
-    );
-  }
-
-  void popupMenuSelectedItem(String item) {
-    switch(item) {
-      case PopupMenuItems.customUrlLauncher:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CustomUrl()),
-        );
-        break;
-      case PopupMenuItems.sdkBuildInformation:
-        _getSDKInfo();
-        break;
-    }
-  }
-
-  Future<void> _getSDKInfo() async {
-    String sdkVersion = await WikitudePlugin.getSDKVersion();
-    WikitudeSDKBuildInformation sdkBuildInformation = await WikitudePlugin.getSDKBuildInformation();
-    String flutterVersion = "2.2.0";
-
-    String message = "Build configuration: ${sdkBuildInformation.buildConfiguration}\nBuild date: ${sdkBuildInformation.buildDate}\nBuild number: ${sdkBuildInformation.buildNumber}\nBuild version: $sdkVersion\nFlutter version: $flutterVersion";
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("SDK information"),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      }
-    );
-  }
-}
-
-class CategoryExpansionTile extends StatefulWidget {
-  final List<Category> categories;
-  CategoryExpansionTile({
-    Key? key,
-    required this.categories,
-  }) : super(key: key);
-
-  @override
-  CategoryExpansionTileState createState() => new CategoryExpansionTileState();
-}
-
-class CategoryExpansionTileState extends State<CategoryExpansionTile> {
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.categories.length,
-      itemBuilder: (context, index){
-        return CustomExpansionTile(
-          key: PageStorageKey("$index"),
-          title: Text(
-            "${widget.categories[index].categoryName}",
-            style: TextStyle(color: Colors.black),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.saved_search_rounded),
+            label: 'Search',
           ),
-          headerBackgroundColor: Colors.white,
-          headerBackgroundColorAccent: Color(0xffffb300),
-          headerContentPadding: EdgeInsets.fromLTRB(15, 2, 15, 2),
-          borderColor: Theme.of(context).dividerColor,
-          iconColor: Colors.grey,
-          children: createSamplesTileList(widget.categories[index].samples),
-        );
-      }
+          BottomNavigationBarItem(
+            icon: Icon(Icons.view_in_ar_rounded),
+            label: 'AR',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.today),
+            label: 'Plan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_rounded),
+            label: 'Account',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor:  pinkRedColor,
+        unselectedItemColor: Colors.grey[800],
+        backgroundColor: Colors.white,
+        onTap: _onItemTapped,
+      ),
     );
   }
-
-  List<Widget> createSamplesTileList(List<Sample> samples) {
-    List<Widget> tileList = [];
-
-    for(int i = 0; i < samples.length; i++) {
-      Sample sample = samples[i];
-      List<String> features = [];
-      for(int j = 0; j < sample.requiredFeatures.length; j++) {
-        features.add(sample.requiredFeatures[j]);
-      }
-      
-      tileList.add(FutureBuilder(
-        future: _isDeviceSupporting(features),
-        builder: (context, AsyncSnapshot<WikitudeResponse>snapshot) {
-          if(snapshot.hasData) {
-            return Container(
-              decoration: BoxDecoration(color: snapshot.data!.success ? Colors.white : Colors.grey),
-              child: ListTile(
-                title: Text(sample.name),
-                onTap: () => snapshot.data!.success ? _pushArView(sample) : _showDialog("Device missing features", snapshot.data!.message),
-              )
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      ));
-    }
-
-    return tileList;
-  }
-
-  Future<WikitudeResponse> _isDeviceSupporting(List<String> features) async {
-    return await WikitudePlugin.isDeviceSupporting(features);
-  }
-
-  Future<WikitudeResponse> _requestARPermissions(List<String> features) async {
-    return await WikitudePlugin.requestARPermissions(features);
-  }
-
-  Future<void> _pushArView(Sample sample) async {
-    WikitudeResponse permissionsResponse = await _requestARPermissions(sample.requiredFeatures);
-    if(permissionsResponse.success) {
-       Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ArViewWidget(sample: sample)),
-      );
-    } else {
-      _showPermissionError(permissionsResponse.message);
-    }
-  }
-
-  void _showDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      }
-    );
-  }
-
-  void _showPermissionError(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Permissions required"),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Open settings'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                WikitudePlugin.openAppSettings();
-              },
-            )
-          ],
-        );
-      }
-    );
-  }
-}
-
-class PopupMenuItems {
-  static const String customUrlLauncher = "Custom URL Launcher";
-  static const String sdkBuildInformation = "SDK Build Information";
-
-  static const List<String> items = <String> [
-    customUrlLauncher, sdkBuildInformation
-  ];
 }

@@ -37,12 +37,12 @@ var World = {
         /* Loop through POI-information and create an AR.GeoObject (=Marker) per POI. */
         for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
             var singlePoi = {
-                "id": poiData[currentPlaceNr].id,
-                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
-                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
-                "altitude": parseFloat(poiData[currentPlaceNr].altitude),
+                "id": poiData[currentPlaceNr].place_id,
+                "latitude": parseFloat(poiData[currentPlaceNr].geometry.location.lat),
+                "longitude": parseFloat(poiData[currentPlaceNr].geometry.location.lng),
+                "altitude": 100.0 + (Math.random() * 10),
                 "title": poiData[currentPlaceNr].name,
-                "description": poiData[currentPlaceNr].description
+                "description": poiData[currentPlaceNr].vicinity
             };
 
             World.markerList.push(new Marker(singlePoi));
@@ -100,14 +100,14 @@ var World = {
     /* Request POI data. */
     requestDataFromLocal: function requestDataFromLocalFn(lat, lon) {
 
-        var poisNearby = Helper.bringPlacesToUser(myJsonData, lat, lon);
-        World.loadPoisFromJsonData(poisNearby);
+        // var poisNearby = Helper.bringPlacesToUser(myJsonData, lat, lon);
+        // World.loadPoisFromJsonData(poisNearby);
 
         /*
             For demo purpose they are relocated randomly around the user using a 'Helper'-function.
             Comment out previous 2 lines and use the following line > instead < to use static values 1:1.
         */
-        /* world.loadPoisFromJsonData(myJsonData);. */
+        World.loadPoisFromJsonData(myJsonData);
     },
 
     onError: function onErrorFn(error) {

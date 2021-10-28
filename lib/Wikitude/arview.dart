@@ -14,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:augmented_reality_plugin_wikitude/architect_widget.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
-import 'package:wikitude_flutter_app/poiDetails.dart';
+import 'package:wikitude_flutter_app/Wikitude/poiDetails.dart';
 
 class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   late ArchitectWidget architectWidget;

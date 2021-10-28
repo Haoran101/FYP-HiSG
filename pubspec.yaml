@@ -2,6 +2,7 @@ name: wikitude_flutter_app
 description: A new Flutter project.
 
 version: 9.9.0+1
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -9,11 +10,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  mongo_dart: ^0.7.2
 
   cupertino_icons: ^1.0.3
   location: ^4.1.1
   path_provider: ^2.0.1
   wakelock: ^0.5.1
+  firebase_core: ^0.3.0
+  cloud_firestore:
+  material_floating_search_bar: ^0.2.6
+
 
   augmented_reality_plugin_wikitude:
     path: ./plugin/augmented_reality_plugin_wikitude/
@@ -28,9 +34,20 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+  fonts:
+    - family: Jomhuria
+      fonts:
+        - asset: assets/fonts/Jomhuria-Regular.ttf
 
   assets:
+    - assets/icons/AR.svg
+    - assets/img/placeholder.png
+    - assets/icons/google.png
     - samples/
+    - samples/00_My_Test_Program/
+    - samples/00_My_Test_Program/js/
+    - samples/00_My_Test_Program/css/
+    - samples/00_My_Test_Program/assets/
     - samples/x_Demo_3_SolarSystem(2dTracking)/
     - samples/x_Demo_3_SolarSystem(2dTracking)/js/
     - samples/x_Demo_3_SolarSystem(2dTracking)/css/

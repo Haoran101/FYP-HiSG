@@ -2,13 +2,6 @@
     Information about server communication. This sample webservice is provided by Wikitude and returns random dummy
     places near given location.
  */
-var ServerInformation = {
-    POIDATA_SERVER: "https://example.wikitude.com/GetSamplePois/",
-    POIDATA_SERVER_ARG_LAT: "lat",
-    POIDATA_SERVER_ARG_LON: "lon",
-    POIDATA_SERVER_ARG_NR_POIS: "nrPois"
-};
-
 /* Implementation of AR-Experience (aka "World"). */
 var World = {
 
@@ -61,12 +54,12 @@ var World = {
         /* Loop through POI-information and create an AR.GeoObject (=Marker) per POI. */
         for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
             var singlePoi = {
-                "id": poiData[currentPlaceNr].id,
-                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
-                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
-                "altitude": parseFloat(poiData[currentPlaceNr].altitude),
+                "id": poiData[currentPlaceNr].place_id,
+                "latitude": parseFloat(poiData[currentPlaceNr].geometry.location.lat),
+                "longitude": parseFloat(poiData[currentPlaceNr].geometry.location.lng),
+                "altitude": 100.0 + (Math.random() * 10),
                 "title": poiData[currentPlaceNr].name,
-                "description": poiData[currentPlaceNr].description
+                "description": poiData[currentPlaceNr].vicinity
             };
 
             World.markerList.push(new Marker(singlePoi));
@@ -78,7 +71,7 @@ var World = {
         World.updateStatusMessage(currentPlaceNr + ' places loaded');
 
         /* Set distance slider to 100%. */
-        document.getElementById("panelRangeSliderValue").innerHTML = 100;
+        document.getElementById("panelRangeSliderValue").innerHTML = 30;
     },
 
     /*
@@ -111,7 +104,7 @@ var World = {
 
         /* Request data if not already present. */
         if (!World.initiallyLoadedData) {
-            World.requestDataFromServer(lat, lon);
+            World.requestDataFromlocal(lat, lon);
             World.initiallyLoadedData = true;
         } else if (World.locationUpdateCounter === 0) {
             /*
@@ -275,32 +268,16 @@ var World = {
     },
 
     /* Request POI data. */
-    requestDataFromServer: function requestDataFromServerFn(lat, lon) {
+    requestDataFromLocal: function requestDataFromLocalFn(lat, lon){
 
-        /* Set helper var to avoid requesting places while loading. */
-        World.isRequestingData = true;
-        World.updateStatusMessage('Requesting places from web-service');
+        // var poisNearby = Helper.bringPlacesToUser(myJsonData, lat, lon);
+        // World.loadPoisFromJsonData(poisNearby);
 
-        /* Server-url to JSON content provider. */
-        var serverUrl = ServerInformation.POIDATA_SERVER + "?" + ServerInformation.POIDATA_SERVER_ARG_LAT + "=" +
-            lat + "&" + ServerInformation.POIDATA_SERVER_ARG_LON + "=" +
-            lon + "&" + ServerInformation.POIDATA_SERVER_ARG_NR_POIS + "=20";
-
-        /* Use GET request to fetch the JSON data from the server */
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', serverUrl, true);
-        xhr.responseType = 'json';
-        xhr.onload = function() {
-            var status = xhr.status;
-            if (status === 200) {
-                World.loadPoisFromJsonData(xhr.response);
-                World.isRequestingData = false;
-            } else {
-                World.updateStatusMessage("Invalid web-service response.", true);
-                World.isRequestingData = false;
-            }
-        }
-        xhr.send();
+        /*
+            For demo purpose they are relocated randomly around the user using a 'Helper'-function.
+            Comment out previous 2 lines and use the following line > instead < to use static values 1:1.
+        */
+        World.loadPoisFromJsonData(myJsonData);
     },
 
     /* Helper to sort places by distance. */
