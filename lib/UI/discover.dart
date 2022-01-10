@@ -6,7 +6,10 @@ class discoverContent extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Scaffold (
+      appBar: AppBar(
+        title: const Text('Discover SG')),
+      body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: 
         Container(
@@ -16,33 +19,40 @@ class discoverContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const titleText(title: "Popular",),
-          const feedCard(width: 400.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",),
+          const TitleText(title: "Popular",),
           Row(children: [
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 380.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",)]
+          ),
+          Row(children: [
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            SizedBox(width: 20),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            SizedBox(width: 20),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            SizedBox(width: 20),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
-            const feedCard(width: 150.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            SizedBox(width: 20),
+            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
         ]
       ),),
-    );
+    )
+    ); 
   }
 }
 
-class titleText extends StatelessWidget {
+class TitleText extends StatelessWidget {
   final title;
-  const titleText({Key? key, @required this.title}) : super(key: key);
+  const TitleText({Key? key, @required this.title}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -51,18 +61,42 @@ class titleText extends StatelessWidget {
   }
 }
 
-class feedCard extends StatelessWidget {
+class FeedCardRow extends StatelessWidget {
+  final children;
+  const FeedCardRow({Key? key, @required this.children});
+  
+  @override
+  Widget build(BuildContext context) {
+    if (this.children.length == 1) {
+      return Row(
+      children: [
+        FeedCard(width: 420.0, title: this.children[0].title, img: this.children[0].img, description: this.children[0].description,)
+      ]
+      );
+    } else {
+      return Row(
+        children: [
+          FeedCard(width: 200.0, title: this.children[0].title, img: this.children[0].img, description: this.children[0].description,),
+          SizedBox(width: 20),
+          FeedCard(width: 200.0, title: this.children[1].title, img: this.children[1].img, description: this.children[1].description,),
+        ],
+      );
+    }
+  }
+}
+
+class FeedCard extends StatelessWidget {
   final title;
   final img;
   final description;
   final width;
-  const feedCard({Key? key, @required this.title, @required this.img, @required this.description, this.width}) : super(key: key);
+  const FeedCard({Key? key, @required this.title, @required this.img, @required this.description, this.width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var _picheight = (width>300) ? width/3 : width/1.8;
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: width,
       child: Card(
         elevation: 3,

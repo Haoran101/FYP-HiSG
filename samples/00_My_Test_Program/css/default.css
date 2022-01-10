@@ -46,11 +46,11 @@ html, body {
 #panelPoiDetail {
     background-color: #eee;
     height: 100%;
-    right: 0;
+    bottom: 20px;
     position: absolute;
     font-family: sans-serif;
     visibility: hidden;
-    margin-top: env(safe-area-inset-top);
+    margin-bottom: env(safe-area-inset-top);
 }
 
 #poiDetailDistance {
@@ -230,5 +230,9 @@ html, body {
         margin-left: 5vh;
         margin-right: 5vh;
     }
+}
+
+#filter {
+
 }
 

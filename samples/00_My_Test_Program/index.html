@@ -10,8 +10,16 @@
 
     <title>My ARchitect World</title>
     <script type="text/javascript" src="js/api_key.js"></script>
+    <script>
+        var scriptElement = document.createElement("script");
+        scriptElement.src = "https://maps.googleapis.com/maps/api/js?key=" + api_key;
+        document.head.appendChild(scriptElement);
+    </script>
+    
     <script src="https://www.wikitude.com/libs/architect.js"></script>
     <script src="../ade.js"></script>
+    
+    <script src="js/mapsapi.js"></script>
 
     <!-- marker representation-->
     <script src="js/marker.js"></script>

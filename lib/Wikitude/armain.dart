@@ -39,7 +39,7 @@ class MyAppState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Examples'),
+        title: const Text('Explore AR in SG'),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: popupMenuSelectedItem,

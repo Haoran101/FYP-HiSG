@@ -7,7 +7,7 @@ class EmptySearchScreen extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "422246644740",
+    "project_id": "hisg-327915",
+    "storage_bucket": "hisg-327915.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422246644740:android:aa551a6237e94886bb0951",
+        "android_client_info": {
+          "package_name": "com.wikitude.fluttersamples"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422246644740-rejnqqlp8tdar9tle9q867bhsdnmks5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_kvP4P5vxeJG_sKaW8d7AvE6ho80EUuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422246644740-rejnqqlp8tdar9tle9q867bhsdnmks5o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

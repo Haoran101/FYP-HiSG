@@ -78,7 +78,8 @@ void deleteSearchTerm(String term) {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+     return Container(
+      padding: (EdgeInsets.only(top: 10)),
       child: FloatingSearchBar(
       transition: CircularFloatingSearchBarTransition(),
       physics: BouncingScrollPhysics(),
@@ -90,7 +91,7 @@ void deleteSearchTerm(String term) {
           filteredSearchHistory = filterSearchTerms(filter: query);
         });
       },
-      isScrollControlled: true,
+      isScrollControlled: false,
       onSubmitted: (query) {
           setState(() {
             addSearchTerm(query);

@@ -16,6 +16,9 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        flatDir {
+            dirs project(':augmented_reality_plugin_wikitude').file('wikitudesdk')
+        }
     }
 }
 
@@ -30,11 +33,12 @@ android {
     }
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 }
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.ar:core:1.19.0'
-    implementation files('wikitudesdk/wikitudesdk.aar')
+    implementation files("wikitudesdk/wikitudesdk.aar")
 }

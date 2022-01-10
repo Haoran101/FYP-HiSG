@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 const pinkRedColor = Color.fromRGBO(255, 0, 117, 1);
 
 class SignInScreen extends StatelessWidget {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
 
+import 'DataSource/editorial.dart';
 import 'Wikitude/arview.dart';
 import 'Wikitude/category.dart';
 import 'Wikitude/custom_expansion_tile.dart';
@@ -16,6 +17,7 @@ import 'Wikitude/armain.dart';
 import 'UI/discover.dart';
 import 'UI/search.dart';
 import 'UI/signin.dart';
+import 'UI/webview.dart';
 
 void main() => runApp(MyApp());
 
@@ -48,10 +50,10 @@ class _HomeState extends State<Home> {
     discoverContent(),
     searchPage(),
     MainMenu(),
-    Text(
-      'Index 3: Plan',
-      style: optionStyle,
-    ),
+    //Text("AR place holder"),
+    MyWebView(
+      title: "DigitalOcean",
+      selectedUrl: "https://www.digitalocean.com"),
     SignInScreen(),
   ];
 
