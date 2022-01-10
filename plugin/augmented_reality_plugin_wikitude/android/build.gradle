@@ -5,10 +5,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://cdn.wikitude.com/sdk/maven'
+        }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
     }
 }
 
@@ -16,8 +19,8 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
-        flatDir {
-            dirs project(':augmented_reality_plugin_wikitude').file('wikitudesdk')
+        maven {
+            url 'https://cdn.wikitude.com/sdk/maven'
         }
     }
 }
@@ -33,12 +36,11 @@ android {
     }
     lintOptions {
         disable 'InvalidPackage'
-        checkReleaseBuilds false
     }
 }
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.ar:core:1.19.0'
-    compile project(':libs:wikitudesdk')
+    implementation 'com.wikitude:js:9.10.0'
 }
