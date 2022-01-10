@@ -23,6 +23,21 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin augmented_reality_plugin_wikitude, com.wikitude.wikitude_plugin.WikitudePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin firebase_auth, io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin firebase_core, io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new io.flutter.plugins.firebase.dynamiclinks.FlutterFirebaseDynamicLinksPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin firebase_dynamic_links, io.flutter.plugins.firebase.dynamiclinks.FlutterFirebaseDynamicLinksPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new com.lyokone.location.LocationPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin location, com.lyokone.location.LocationPlugin", e);

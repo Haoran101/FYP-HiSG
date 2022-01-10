@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "wikitude-flutter-plugin-examples",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "wikitude-flutter-plugin-examples (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "augmented_reality_plugin_wikitude",
+            "cwd": "plugin\\augmented_reality_plugin_wikitude",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "augmented_reality_plugin_wikitude (profile mode)",
+            "cwd": "plugin\\augmented_reality_plugin_wikitude",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ]
+}

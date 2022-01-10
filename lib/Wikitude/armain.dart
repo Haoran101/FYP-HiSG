@@ -40,6 +40,7 @@ class MyAppState extends State<MainMenu> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Explore AR in SG'),
+        backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: popupMenuSelectedItem,

@@ -8,7 +8,8 @@ class discoverContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold (
       appBar: AppBar(
-        title: const Text('Discover SG')),
+        title: const Text('Discover SG'),
+        backgroundColor: Theme.of(context).primaryColor,),
       body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: 
@@ -21,27 +22,27 @@ class discoverContent extends StatelessWidget {
         children: <Widget>[
           const TitleText(title: "Popular",),
           Row(children: [
-            const FeedCard(width: 380.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",)]
+            const FeedCard(width: 340.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",)]
           ),
           Row(children: [
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
             SizedBox(width: 20),
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
             SizedBox(width: 20),
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
             SizedBox(width: 20),
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
           Row(children: [
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
             SizedBox(width: 20),
-            const FeedCard(width: 180.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
+            const FeedCard(width: 160.0, title: "Title", img: "Image", description: "Lorem ipsum dolor sit amet, consectetuer.",),
           ],),
         ]
       ),),

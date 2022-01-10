@@ -25,6 +25,7 @@ class _MyWebViewState extends State<MyWebView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: 
       Stack(

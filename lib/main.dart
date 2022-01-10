@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
@@ -16,17 +17,32 @@ import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 import 'Wikitude/armain.dart';
 import 'UI/discover.dart';
 import 'UI/search.dart';
-import 'UI/signin.dart';
+import 'Authentication/accountScreen.dart';
 import 'UI/webview.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+    theme: ThemeData(
+    brightness: Brightness.light,
+    primaryColor: Color.fromRGBO(255, 0, 117, 1),
+    textTheme: const TextTheme(
+      button: TextStyle(fontSize: 15.0, color: Colors.white),
+      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+    ),
+  ),
       home: Home(),
     );
   }
@@ -98,7 +114,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor:  pinkRedColor,
+        selectedItemColor:  Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[800],
         backgroundColor: Colors.white,
         onTap: _onItemTapped,

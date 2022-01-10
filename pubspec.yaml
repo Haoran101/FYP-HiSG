@@ -16,15 +16,15 @@ dependencies:
   location: ^4.1.1
   path_provider: ^2.0.1
   wakelock: ^0.5.1
-  #firebase_core: ^0.3.0
-  #firebase_auth:
-  #cloud_firestore:
   material_floating_search_bar: ^0.2.6
 
   augmented_reality_plugin_wikitude:
     path: ./plugin/augmented_reality_plugin_wikitude/
   http: ^0.13.3
   flutter_html: ^2.1.5
+  firebase_core: ^1.11.0
+  firebase_auth: ^3.3.5
+  firebase_dynamic_links: ^4.0.4
 
 dev_dependencies:
   flutter_test:
