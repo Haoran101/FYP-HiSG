@@ -30,16 +30,28 @@
 @import firebase_dynamic_links;
 #endif
 
+#if __has_include(<flutter_login_facebook/FlutterLoginFacebookPlugin.h>)
+#import <flutter_login_facebook/FlutterLoginFacebookPlugin.h>
+#else
+@import flutter_login_facebook;
+#endif
+
+#if __has_include(<google_sign_in/FLTGoogleSignInPlugin.h>)
+#import <google_sign_in/FLTGoogleSignInPlugin.h>
+#else
+@import google_sign_in;
+#endif
+
 #if __has_include(<location/LocationPlugin.h>)
 #import <location/LocationPlugin.h>
 #else
 @import location;
 #endif
 
-#if __has_include(<path_provider/FLTPathProviderPlugin.h>)
-#import <path_provider/FLTPathProviderPlugin.h>
+#if __has_include(<path_provider_ios/FLTPathProviderPlugin.h>)
+#import <path_provider_ios/FLTPathProviderPlugin.h>
 #else
-@import path_provider;
+@import path_provider_ios;
 #endif
 
 #if __has_include(<video_player/FLTVideoPlayerPlugin.h>)
@@ -54,10 +66,10 @@
 @import wakelock;
 #endif
 
-#if __has_include(<webview_flutter/FLTWebViewFlutterPlugin.h>)
-#import <webview_flutter/FLTWebViewFlutterPlugin.h>
+#if __has_include(<webview_flutter_wkwebview/FLTWebViewFlutterPlugin.h>)
+#import <webview_flutter_wkwebview/FLTWebViewFlutterPlugin.h>
 #else
-@import webview_flutter;
+@import webview_flutter_wkwebview;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -67,6 +79,8 @@
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseDynamicLinksPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseDynamicLinksPlugin"]];
+  [FlutterLoginFacebookPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLoginFacebookPlugin"]];
+  [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];

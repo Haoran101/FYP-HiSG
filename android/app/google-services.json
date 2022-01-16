@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "422246644740-k6je8u4k4vkkmo4siui8ejkihp9pg1ab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wikitude.fluttersamples",
+            "certificate_hash": "bd1d0e7162436a1e1dbdf45adb367cf12aaefac6"
+          }
+        },
+        {
           "client_id": "422246644740-rejnqqlp8tdar9tle9q867bhsdnmks5o.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "422246644740-rejnqqlp8tdar9tle9q867bhsdnmks5o.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "422246644740-65tphjc12dupfkf2d4lr3bsqiuah4n53.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "y"
+              }
             }
           ]
         }

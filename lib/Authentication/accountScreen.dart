@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import "register.dart";
-import 'globals.dart' as globals;
 
-final _auth = globals.auth;
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SignInScreen extends StatefulWidget {
-  final String title = "Sign in demo";
+  final String title = "My Account";
   const SignInScreen({ Key? key }) : super(key: key);
-  
+
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  bool justRegistered = false;
 
   
   @override
   Widget build(BuildContext context) {
+    User? user = _auth.currentUser;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Theme.of(context).primaryColor,
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
-//5
+//5       
+          if (user != null) {
             return TextButton(
               child: const Text('Sign out', 
                 style: TextStyle(
@@ -34,7 +35,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ), 
             ),
               onPressed: () async {
-                final User? user = _auth.currentUser;
                 if (user == null) {
 //6
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -49,17 +49,25 @@ class _SignInScreenState extends State<SignInScreen> {
                 ));
               },
             );
-          })
+          }
+          else {
+            return Text("");
+          }})
         ],
       ),
       body: Builder(builder: (BuildContext context) {
 //7
-        return ListView(
+        return SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          padding: const EdgeInsets.all(16),
-          children: <Widget>[
-            new _RegisterEmailSection(),
-          ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(user == null? "No User" : user.email.toString()),
+                new _SignInEmailSection(),
+              ],
+            ),
+          )
         );
       }),
     );
@@ -151,191 +159,163 @@ class LoginSection extends StatelessWidget {
   }
 }
 
-class _RegisterEmailSection extends StatefulWidget {
-  final String title = 'Registration';
+class _SignInEmailSection extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => 
-      _RegisterEmailSectionState();
+  State<StatefulWidget> createState() => _SignInEmailSectionState();
 }
-class _RegisterEmailSectionState extends State<_RegisterEmailSection> {
 
+class _SignInEmailSectionState extends State<_SignInEmailSection> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _popupWindow = false;
   bool _success = false;
   dynamic _userEmail = "";
 
-  
-void _register() async {
-  final User? user = (await 
-      _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      )
-  ).user;
-  if (user != null) {
-    setState(() {
-      _success = true;
-      _userEmail = user.email;
-    });
-  } else {
-    setState(() {
-      _success = true;
-    });
-  }
-}
 
-@override
-void dispose() {
-  _emailController.dispose();
-  _passwordController.dispose();
-  super.dispose();
-}
+  void _showLoginStatusDialog() {
 
-@override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-            validator: (String? value) {
-              if (value != null && value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 
-                'Password'),
-            validator: (String? value) {
-              if (value != null && value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: RaisedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _register();
-                }
-              },
-              child: const Text('Submit'),
+    var _dialogContent = _success ? 'Successfully signed in ' + _userEmail: 
+    'Email or password entered is incorrect. Please try again.';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 12.0,
+          content: Container(
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(_dialogContent),
+                ],
+              ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(_success == null
-                ? ''
-                : (_success
-                    ? 'Successfully registered ' + _userEmail
-                    : 'Registration failed')),
-          )
-        ],
-      ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () => {
+                Navigator.of(context).pop(context)
+              }
+            )
+          ]
+        );
+    },
   );
-  }
-}
 
-class _EmailPasswordForm extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _EmailPasswordFormState();
+  setState(() {
+    _popupWindow = false;
+  });
 }
-
-class _EmailPasswordFormState extends State<_EmailPasswordForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _success = false;
-  dynamic _userEmail = "";
 
   void _signInWithEmailAndPassword() async {
-  final User? user = (await _auth.signInWithEmailAndPassword(
+
+  try {
+    UserCredential _userCredential = await _auth.signInWithEmailAndPassword(
     email: _emailController.text,
     password: _passwordController.text,
-  )).user;
-  
-  if (user != null) {
+  );
+
+  if (_userCredential.user != null) {
     setState(() {
       _success = true;
-      _userEmail = user.email;
+      _userEmail = _userCredential.user?.email;
     });
   } else {
     setState(() {
       _success = false;
     });
   }
+
+} on FirebaseAuthException catch (e) {
+  if (e.code == 'user-not-found') {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('No user found for that email.'))
+    );
+  } else if (e.code == 'wrong-password') {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Wrong password provided for that user.'))
+    );
+  }
+}
 }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
+    return Container(
+      padding: EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: const Text('Test sign in with email and password'),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+        Text(
+          "popupwindow   " + _popupWindow.toString() + "\n"
+          + "success   " + _success.toString() + '\n'
+          + "useremail" + _userEmail
+        ),
+        SizedBox(height: 150),
+        RichText(
+            text: TextSpan(
+              text: 'Welcome to ',
+              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color:Colors.black),
+              children: <TextSpan>[
+                TextSpan(text: 'HiSG', style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+              ],
+            ),
           ),
+          SizedBox(height: 50),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Email'
+            ),
             validator: (String? value) {
               if (value !=null && value.isEmpty) {
                 return 'Please enter some text';
               }
               return null;
             },
+        ),
+        SizedBox(height: 30),
+        TextFormField(
+          controller: _passwordController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Password'
           ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            validator: (String? value) {
+          validator: (String? value) {
               if (value !=null && value.isEmpty) {
                 return 'Please enter some text';
               }
               return null;
             },
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: RaisedButton(
-              onPressed: () async {
+        ),
+        SizedBox(height: 50),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+            foregroundColor: MaterialStateProperty.all<Color> (Colors.white)),
+          child: Text("Sign in", style: TextStyle(fontSize: 20),), 
+          onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _signInWithEmailAndPassword();
                 }
-              },
-              child: const Text('Submit'),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              _success == null
-                  ? ''
-                  : (_success
-                  ? 'Successfully signed in ' + _userEmail
-                  : 'Sign in failed'),
-              style: TextStyle(color: Colors.red),
-            ),
-          )
-        ],
-      ),
+              },)),
+          SizedBox(height: 20),
+          InkWell(
+              child: new Text('Forgot password?', style: TextStyle(color: Colors.blue[900], fontSize: 17, fontWeight: FontWeight.bold,),),
+              onTap: null),
+      ],
+      )
     );
   }
+
   @override
   void dispose() {
     _emailController.dispose();

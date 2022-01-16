@@ -34,7 +34,7 @@ class CustomExpansionTile extends StatefulWidget {
     this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
-    this.initiallyExpanded = false,
+    this.initiallyExpanded = true,
   })  : assert(initiallyExpanded != null),
         super(key: key);
 

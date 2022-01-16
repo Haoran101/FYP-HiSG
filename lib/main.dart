@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
+import 'Authentication/login.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,23 +29,42 @@ void main() async {
   runApp(MyApp());
 }
 
+//Main App Runner
 class MyApp extends StatelessWidget {
-  const MyApp({ Key? key }) : super(key: key);
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-    theme: ThemeData(
-    brightness: Brightness.light,
-    primaryColor: Color.fromRGBO(255, 0, 117, 1),
-    textTheme: const TextTheme(
-      button: TextStyle(fontSize: 15.0, color: Colors.white),
-      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-    ),
-  ),
-      home: Home(),
-    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print("Something went wrong");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            //Show circular progress indicator if loading
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          //Material App
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            //Theme Data
+            theme: ThemeData(
+              brightness: Brightness.light,
+              primaryColor: Color.fromRGBO(255, 0, 117, 1),
+              textTheme: const TextTheme(
+                button: TextStyle(fontSize: 15.0, color: Colors.white),
+                headline1:
+                    TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+                bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              ),
+            ),
+            home: Home(),//Home Page of the App
+          );
+        });
   }
 }
 
@@ -58,7 +78,6 @@ class Home extends StatefulWidget {
 
 /// This is the private State class that goes with Home.
 class _HomeState extends State<Home> {
-  
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -68,9 +87,8 @@ class _HomeState extends State<Home> {
     MainMenu(),
     //Text("AR place holder"),
     MyWebView(
-      title: "DigitalOcean",
-      selectedUrl: "https://www.digitalocean.com"),
-    SignInScreen(),
+        title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
+    loginPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -83,8 +101,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   title: const Text('HiSG !', style: TextStyle(fontFamily: 'Jomhuria', fontSize: 80, color: pinkRedColor)),
-      //   backgroundColor: Colors.white,
+      // title: const Text('HiSG !', style: TextStyle(fontFamily: 'Jomhuria', fontSize: 80, color: pinkRedColor)),
+      // backgroundColor: Colors.white,
       // ),
       body: Container(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -114,7 +132,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor:  Theme.of(context).primaryColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[800],
         backgroundColor: Colors.white,
         onTap: _onItemTapped,
