@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Authentication/forget_password.dart';
+import 'package:wikitude_flutter_app/Authentication/signup.dart';
 import 'package:wikitude_flutter_app/Authentication/user_main.dart';
 
 class loginPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class _loginPageState extends State<loginPage> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.blueGrey,
           content: Text('No user found for that email.',
-              style: TextStyle(fontSize: 18.0, color: Colors.amber)),
+              style: TextStyle(fontSize: 15.0, color: Colors.amber)),
         ));
       }
       //if user email is registered but password is wrong
@@ -41,7 +43,7 @@ class _loginPageState extends State<loginPage> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.blueGrey,
           content: Text('Wrong password provided by the user.',
-              style: TextStyle(fontSize: 18.0, color: Colors.amber)),
+              style: TextStyle(fontSize: 15.0, color: Colors.amber)),
         ));
       }
     }
@@ -59,7 +61,8 @@ class _loginPageState extends State<loginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        backgroundColor: Theme.of(context).primaryColor,),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Form(
         key: _formkey,
         child: Padding(
@@ -154,11 +157,12 @@ class _loginPageState extends State<loginPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: null),
+                      onTap: () => {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword(),))
+                      }),
                 ),
               ),
-              
-              
+
               //Login button
               Container(
                   margin: EdgeInsets.only(top: 40.0, bottom: 20.0),
@@ -175,35 +179,48 @@ class _loginPageState extends State<loginPage> {
                             "Sign in",
                             style: TextStyle(fontSize: 20),
                           ),
-                          onPressed: () {}))),
+                          onPressed: () {
+                            if (_formkey.currentState!.validate()) {
+                              setState(() {
+                                email = emailController.text;
+                                password = passwordController.text;
+                              });
+                              userLogin();
+                            }
+                          }))),
               //sign up navigator
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8.0),
                 child: Align(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text('Not have an account yet?  ',
-                      style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      InkWell(
-                      child: new Text(
-                        'Create an account',
-                        style: TextStyle(
-                          color: Colors.blue[900],
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          'Not have an account yet?  ',
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      onTap: null),
-                    ],
-                  )
-                ),
+                        InkWell(
+                            child: new Text(
+                              'Create an account',
+                              style: TextStyle(
+                                color: Colors.blue[900],
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () => {
+                              Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                                pageBuilder: (context, a, b) => SignUp(), transitionDuration: Duration(seconds: 0)),
+                                 (route) => false)
+                            }),
+                      ],
+                    )),
               ),
               //or
               Container(

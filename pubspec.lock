@@ -527,6 +527,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  money_converter:
+    dependency: "direct main"
+    description:
+      name: money_converter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   mongo_dart:
     dependency: "direct main"
     description:

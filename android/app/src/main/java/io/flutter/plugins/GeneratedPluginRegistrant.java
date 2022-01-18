@@ -53,6 +53,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin location, com.lyokone.location.LocationPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.mohamed.essam.money_converter.MoneyConverterPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin money_converter, com.mohamed.essam.money_converter.MoneyConverterPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin path_provider_android, io.flutter.plugins.pathprovider.PathProviderPlugin", e);
