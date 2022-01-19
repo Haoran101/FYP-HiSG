@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'emptySearch.dart';
 
-class searchPage extends StatefulWidget {
-  const searchPage({ Key? key }) : super(key: key);
+class SearchPage extends StatefulWidget {
+  const SearchPage({ Key? key }) : super(key: key);
 
   @override
-  _searchPageState createState() => _searchPageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _searchPageState extends State<searchPage> with TickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   static const historyLength = 3;
   List<String> _searchHistory = ["NTU", "NUS", "SMU"];
   String selectedTerm = "";
@@ -189,16 +190,16 @@ class SearchResultsListView extends StatelessWidget {
       children: List.generate(
         10,
         (index) => 
-           searchResultCard(title: "$searchTerm $index"),
+           SearchResultCard(title: "$searchTerm $index"),
         
       ),
     );
   }
 }
 
-class searchResultCard extends StatelessWidget {
+class SearchResultCard extends StatelessWidget {
   final title;
-  const searchResultCard({ Key? key , @required this.title}) : super(key: key);
+  const SearchResultCard({ Key? key , @required this.title}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {

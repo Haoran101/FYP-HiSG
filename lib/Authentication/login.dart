@@ -1,17 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Authentication/forget_password.dart';
-import 'package:wikitude_flutter_app/Authentication/signup.dart';
-import 'package:wikitude_flutter_app/Authentication/user_main.dart';
+import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/main.dart';
 
-class loginPage extends StatefulWidget {
-  const loginPage({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class LoginPage extends StatefulWidget {
+  Function setPage;
 
+  LoginPage({required this.setPage});
   @override
-  _loginPageState createState() => _loginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _loginPageState extends State<loginPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
 
   var email = " ";
@@ -20,13 +22,14 @@ class _loginPageState extends State<loginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+//login with email and password
   userLogin() async {
     try {
       //if email & password correct -> navigate to user main page
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserMain()));
+          context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (error) {
       //if user email is not registered
       if (error.code == 'user-not-found') {
@@ -49,6 +52,30 @@ class _loginPageState extends State<loginPage> {
     }
   }
 
+//login with Googld
+  signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    try { await FirebaseAuth.instance.signInWithCredential(credential);
+    Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
+    } on FirebaseAuthException catch (error){
+      print(error.code);
+    }
+  }
+
   @override
   void dispose() {
     emailController.dispose();
@@ -59,10 +86,6 @@ class _loginPageState extends State<loginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
       body: Form(
         key: _formkey,
         child: Padding(
@@ -157,9 +180,7 @@ class _loginPageState extends State<loginPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword(),))
-                      }),
+                      onTap: () => {widget.setPage(AuthPage.forget)}),
                 ),
               ),
 
@@ -214,11 +235,7 @@ class _loginPageState extends State<loginPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            onTap: () => {
-                              Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
-                                pageBuilder: (context, a, b) => SignUp(), transitionDuration: Duration(seconds: 0)),
-                                 (route) => false)
-                            }),
+                            onTap: () => {widget.setPage(AuthPage.signup)}),
                       ],
                     )),
               ),
@@ -243,7 +260,10 @@ class _loginPageState extends State<loginPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: null,
+                    onPressed: (){
+                      signInWithGoogle();
+
+                    },
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all<Color?>(Colors.blue[900]),
@@ -261,7 +281,7 @@ class _loginPageState extends State<loginPage> {
                               padding: EdgeInsets.only(left: 5),
                               child: Image.asset(
                                 "assets/icons/google.png",
-                                width: 30,
+                                width: 25,
                               )),
                         ),
                       ]),

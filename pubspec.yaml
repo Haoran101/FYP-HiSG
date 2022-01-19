@@ -30,6 +30,8 @@ dependencies:
   google_sign_in: ^5.2.2
   flutter_login_facebook: ^1.2.0
   money_converter: ^2.0.1
+  persistent_bottom_nav_bar: ^4.0.2
+  cloud_firestore: ^3.1.6
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +50,7 @@ flutter:
 
   assets:
     - assets/icons/AR.svg
+    - assets/img/avatar.png
     - assets/img/placeholder.png
     - assets/img/login/change.jpg
     - assets/img/login/dashboard.png

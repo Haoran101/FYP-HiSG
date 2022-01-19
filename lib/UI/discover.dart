@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-class discoverContent extends StatelessWidget {
-  const discoverContent
-({ Key? key }) : super(key: key);
+class DiscoverPage extends StatelessWidget {
+  final ValueChanged<String>? onPush;
+
+  const DiscoverPage({this.onPush});
   
   @override
   Widget build(BuildContext context) {

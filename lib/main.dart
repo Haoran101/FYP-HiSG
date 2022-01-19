@@ -1,25 +1,12 @@
-import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
-import 'Authentication/login.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
 
-import 'DataSource/editorial.dart';
-import 'Wikitude/arview.dart';
-import 'Wikitude/category.dart';
-import 'Wikitude/custom_expansion_tile.dart';
-import 'Wikitude/sample.dart';
-
-import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
-import 'package:augmented_reality_plugin_wikitude/wikitude_sdk_build_information.dart';
-import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 import 'Wikitude/armain.dart';
 import 'UI/discover.dart';
 import 'UI/search.dart';
 import 'Authentication/accountScreen.dart';
-import 'UI/webview.dart';
+import 'DataSource/webview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,13 +69,13 @@ class _HomeState extends State<Home> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    discoverContent(),
-    searchPage(),
+    DiscoverPage(),
+    SearchPage(),
     MainMenu(),
     //Text("AR place holder"),
     MyWebView(
         title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
-    loginPage(),
+    AuthScreenPlaceHolder(),
   ];
 
   void _onItemTapped(int index) {
