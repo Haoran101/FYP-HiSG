@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/main.dart';
 
 // ignore: must_be_immutable
@@ -57,9 +58,12 @@ class _LoginPageState extends State<LoginPage> {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+    String? displayName = googleUser!.displayName;
+    String? photoURL = googleUser.photoUrl;
+
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+        await googleUser.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -68,10 +72,15 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     // Once signed in, return the UserCredential
-    try { await FirebaseAuth.instance.signInWithCredential(credential);
-    Navigator.pushReplacement(
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+      //fetch the created uid, display name and photo and add it to firestore users database
+      UserDatabase().addDefaultGoogleUser(uid, displayName, photoURL);
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
-    } on FirebaseAuthException catch (error){
+    } on FirebaseAuthException catch (error) {
       print(error.code);
     }
   }
@@ -260,9 +269,8 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       signInWithGoogle();
-
                     },
                     style: ButtonStyle(
                         backgroundColor:

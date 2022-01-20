@@ -15,7 +15,7 @@ class AuthScreenPlaceHolder extends StatefulWidget {
   State<AuthScreenPlaceHolder> createState() => _AuthScreenPlaceHolderState();
 }
 
-class _AuthScreenPlaceHolderState extends State<AuthScreenPlaceHolder> {
+class _AuthScreenPlaceHolderState extends State<AuthScreenPlaceHolder> with AutomaticKeepAliveClientMixin{
   AuthPage _currentPage = FirebaseAuth.instance.currentUser!= null? 
       AuthPage.usermain: AuthPage.login;
   
@@ -46,6 +46,7 @@ class _AuthScreenPlaceHolderState extends State<AuthScreenPlaceHolder> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -55,4 +56,7 @@ class _AuthScreenPlaceHolderState extends State<AuthScreenPlaceHolder> {
       body: getBody()
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

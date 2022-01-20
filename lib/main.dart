@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'DataSource/cloud_firestore.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +10,7 @@ import 'UI/discover.dart';
 import 'UI/search.dart';
 import 'Authentication/accountScreen.dart';
 import 'DataSource/webview.dart';
+import 'globals.dart' as globals;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-
+          
           //Material App
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -72,9 +76,10 @@ class _HomeState extends State<Home> {
     DiscoverPage(),
     SearchPage(),
     MainMenu(),
-    //Text("AR place holder"),
-    MyWebView(
-        title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
+    Text("Plan place holder"),
+    //testCloudStore(),
+    // MyWebView(
+    //     title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
     AuthScreenPlaceHolder(),
   ];
 
@@ -86,6 +91,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       // appBar: AppBar(
       // title: const Text('HiSG !', style: TextStyle(fontFamily: 'Jomhuria', fontSize: 80, color: pinkRedColor)),

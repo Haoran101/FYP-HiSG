@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/main.dart';
 
 // ignore: must_be_immutable
@@ -34,6 +35,11 @@ class _SignUpState extends State<SignUp> {
             .createUserWithEmailAndPassword(email: email, password: password);
         print(userCredential);
 
+        //fetch the created uid and add it to firestore users database
+        String uid = userCredential.user!.uid;
+        //set global user
+        await UserDatabase().addDefaultUser(uid);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.blueGrey,
@@ -42,7 +48,7 @@ class _SignUpState extends State<SignUp> {
           ),
         );
 
-        widget.setPage(1);
+        widget.setPage(AuthPage.login);
 
       } on FirebaseAuthException catch (error) {
         //password is too weak
@@ -52,7 +58,7 @@ class _SignUpState extends State<SignUp> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.black26,
-              content: Text(' Password is too weak. ',
+              content: Text(' Password is too weak. (less than 6 characters)',
                   style: TextStyle(fontSize: 15.0, color: Colors.amber)),
             ),
           );
@@ -87,14 +93,17 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-//login with Googld
+//login with Google
   signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+    String? displayName = googleUser!.displayName;
+    String? photoURL = googleUser.photoUrl;
+
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+        await googleUser.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -103,15 +112,20 @@ class _SignUpState extends State<SignUp> {
     );
 
     // Once signed in, return the UserCredential
-    try { await FirebaseAuth.instance.signInWithCredential(credential);
-    Navigator.pushReplacement(
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      
+      //fetch the created uid, display name and photo and add it to firestore users database
+      //set global user
+      await UserDatabase().addDefaultGoogleUser(uid, displayName, photoURL);
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
-    } on FirebaseAuthException catch (error){
+    } on FirebaseAuthException catch (error) {
       print(error.code);
     }
   }
 
-  
   @override
   void dispose() {
     emailController.dispose();
