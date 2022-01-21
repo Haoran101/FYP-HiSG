@@ -13,7 +13,7 @@
             }
         },
         {
-            "name": "Badge Collection",
+            "name": "Badge Collection Option 1",
             "path": "01_ImageTracking_3_Interactivity/index.html",
                 "requiredFeatures": [
                     "image_tracking"
@@ -22,6 +22,16 @@
                     "camera_position": "back",
                     "camera_resolution": "auto"
                 }
+        },
+        {
+            "name": "Single Image Recognition",
+            "path": "04_CloudRecognition_1_SingleImageRecognition/index.html",
+            "requiredFeatures": [
+                "image_tracking"
+            ],
+            "startupConfiguration": {
+                "camera_position": "back"
+            }
         }
     ]}
 ]

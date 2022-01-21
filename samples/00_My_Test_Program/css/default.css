@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     height: 100%;
     overflow: hidden
@@ -8,7 +9,7 @@ html, body {
     position: absolute;
     text-align: center;
     width: 100%;
-    bottom: calc(1vh + env(safe-area-inset-bottom));
+    top: calc(2vh + env(safe-area-inset-top));
 }
 
 #popupButton {
@@ -25,18 +26,18 @@ html, body {
 }
 
 #popupButtonTooltip {
-  visibility: hidden;
-  background-color: #edeca8;
-  color: #000;
-  font-family: sans-serif;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+    visibility: hidden;
+    background-color: #edeca8;
+    color: #000;
+    font-family: sans-serif;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
 
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
 }
 
 #popupButton:hover #popupButtonTooltip {
@@ -80,7 +81,7 @@ html, body {
     align-items: center;
 }
 
-#panelRangeSliderValue{
+#panelRangeSliderValue {
     background-color: #ccc;
     border-radius: 4px;
     text-align: center;
@@ -111,7 +112,7 @@ html, body {
 
 .headerTitle {
     flex: 1;
-    text-align:center;
+    text-align: center;
     font-weight: normal;
 }
 
@@ -140,7 +141,7 @@ html, body {
         width: 70vw;
     }
 
-    #panelRangeSliderValue{
+    #panelRangeSliderValue {
         padding: 1vh;
         margin-right: 1vh;
         width: 8vw;
@@ -198,7 +199,7 @@ html, body {
         padding-right: env(safe-area-inset-right);
     }
 
-    #panelRangeSliderValue{
+    #panelRangeSliderValue {
         padding: 1vw;
         margin-right: 1vw;
         width: 8vh;
@@ -232,7 +233,78 @@ html, body {
     }
 }
 
-#filter {
-
+.wrap-collabsible {
+    text-align: center;
+    width: 20%;
+    margin-left: 40%;
+    background-color: white;
+    border: 2px black solid;
+    border-radius: 3vh;
+    padding: 3vh;
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom) - 1vh);
 }
 
+.wrap-expanded {
+    text-align: center;
+    width: 90%;
+    margin-left: 5%;
+    background-color: white;
+    border: 2px black solid;
+    border-radius: 3vh;
+    padding: 3vh;
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom) - 1vh);
+}
+
+.filter-icon, #collapsible-button {
+    background-color: white;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.filter-icon :active {
+    border: 3px yellow;
+}
+
+.collapsible img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wrap-collabsible .collapsible .coll-content,
+.filter-icon, .filter-text {
+    display: none;
+    overflow: hidden;
+}
+
+.filter-icon {
+    background-color: gray;
+    margin: 0 3vh;
+    width: 20vh;
+    height: 20vh;
+    border-radius: 50%;
+}
+
+.filter-icon img{
+    width: 80%;
+}
+
+.filter-text {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 2vh;
+    margin-bottom: 1vh;
+    font-size: 5vh;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+}
+
+.selected {
+    background-color: tomato;
+}

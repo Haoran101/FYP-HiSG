@@ -13,6 +13,7 @@ class POI {
   double? rating;
   int? numberOfUsersRated;
   bool? openNow;
+  String? businessStatus;
   List<String>? openingHour;
   List<Review>? reviews;
   List<String>? photoReferences;
@@ -20,7 +21,7 @@ class POI {
   toString() {
     return """POI(placeId: $placeId, name: $name, location: $location, types: $types,
     iconURL: $iconURL, website: $website, formattedAddress: $formattedAddress, phoneNumber: $phoneNumber, 
-    vicinity: $vicinity, rating: $rating, 
+    vicinity: $vicinity, rating: $rating, businessStatus: $businessStatus,
     numberOfUsersRated: $numberOfUsersRated, openNow: $openNow, 
     openingHour: $openingHour
     photoReferences: $photoReferences, 
@@ -43,6 +44,7 @@ class POI {
     vicinity = json["vicinity"];
     rating = json["rating"];
     numberOfUsersRated = json["user_ratings_total"];
+    businessStatus = json["business_status"];
     openNow = json["opening_hours"]["open_now"];
     openingHour = List.generate(
       json["opening_hours"]["weekday_text"].length,

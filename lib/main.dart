@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'package:wikitude_flutter_app/UI/POI_details.dart';
 import 'DataSource/cloud_firestore.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class _HomeState extends State<Home> {
     DiscoverPage(),
     SearchPage(),
     MainMenu(),
-    Text("Plan place holder"),
+    POIDetailsPage(placeId: '',),
     //testCloudStore(),
     // MyWebView(
     //     title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),

@@ -54,11 +54,23 @@ var World = {
         // World.categorySelected = new Set();
         // World.loadPoisFromJsonData(World.filterPOIdataBasedOnCat());
         // console.log(World.markerList.length);
+
+        AR.context.destroyAll();
         World.loadPoisFromJsonData([]);
+        all_ele = document.getElementById("all");
+        if (all_ele.className.includes("selected")){
+            //deselect
+            all_ele.className = all_ele.className.replace(" selected", "");
+        } else {
+            //select
+            all_ele.className += " selected";
+        }
     },
 
     categorySelector: function categorySelectorFn(ele) {
+        AR.context.destroyAll();
         var category = ele.id;
+        all_ele = document.getElementById("all");
         if (ele.className.includes("selected")){
             //deselect
             World.categorySelected.delete(category);
@@ -67,6 +79,8 @@ var World = {
             //select
             World.categorySelected.add(category);
             ele.className += " selected";
+            //deselect all button
+            all_ele.className = all_ele.className.replace(" selected", "");
         }
         console.log(JSON.stringify(World.categorySelected));
         World.loadPoisFromJsonData(World.filterPOIdataBasedOnCat());

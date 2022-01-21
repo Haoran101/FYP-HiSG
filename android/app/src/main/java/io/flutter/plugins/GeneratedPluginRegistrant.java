@@ -73,6 +73,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin video_player, io.flutter.plugins.videoplayer.VideoPlayerPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.example.video_player_360.VideoPlayer360Plugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin video_player_360, com.example.video_player_360.VideoPlayer360Plugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new creativemaybeno.wakelock.WakelockPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin wakelock, creativemaybeno.wakelock.WakelockPlugin", e);

@@ -72,6 +72,12 @@
 @import video_player;
 #endif
 
+#if __has_include(<video_player_360/VideoPlayer360Plugin.h>)
+#import <video_player_360/VideoPlayer360Plugin.h>
+#else
+@import video_player_360;
+#endif
+
 #if __has_include(<wakelock/WakelockPlugin.h>)
 #import <wakelock/WakelockPlugin.h>
 #else
@@ -98,6 +104,7 @@
   [MoneyConverterPlugin registerWithRegistrar:[registry registrarForPlugin:@"MoneyConverterPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];
+  [VideoPlayer360Plugin registerWithRegistrar:[registry registrarForPlugin:@"VideoPlayer360Plugin"]];
   [WakelockPlugin registerWithRegistrar:[registry registrarForPlugin:@"WakelockPlugin"]];
   [FLTWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTWebViewFlutterPlugin"]];
 }

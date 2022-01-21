@@ -1,12 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
 <head>
 
     <!--  basic meta information -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="Content-Type" content="application/json; charset=utf-8">
     <!-- disables pinch-scaling of the webview, so that gestures only do what they're supposed to -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
     <title>My ARchitect World</title>
     <script type="text/javascript" src="js/api_key.js"></script>
@@ -15,19 +17,21 @@
         scriptElement.src = "https://maps.googleapis.com/maps/api/js?key=" + api_key;
         document.head.appendChild(scriptElement);
     </script>
-    
+
     <script src="https://www.wikitude.com/libs/architect.js"></script>
     <script src="../ade.js"></script>
-    
-    <script src="js/mapsapi.js"></script>
+
+    <!-- <script src="js/mapsapi.js"></script> -->
 
     <!-- marker representation-->
     <script src="js/marker.js"></script>
 
+    <script type="text/javascript" src="js/ui.js"></script>
+
     <!-- World logic-->
     <script type="text/javascript" src="js/fromwebservice.js"></script>
 
-    <link rel="stylesheet" href="css/default.css"/>
+    <link rel="stylesheet" href="css/default.css" />
 </head>
 
 <body>
@@ -36,29 +40,74 @@
             <button class="customButton" id="closePanelPoiDetailButton" onclick="World.closePanel()">Close</button>
             <h3 class="headerTitle">Details</h3>
         </div>
-        
+
         <div class="content">
             <h3 id="poiDetailTitle"></h3>
             <h4 id="poiDetailDescription"></h4>
             <h4> Distance: <a id="poiDetailDistance"></a></h4>
-            <button class="customButton" id="#poiDetailMoreButton" onclick="World.onPoiDetailMoreButtonClicked();">More</button>
+            <button class="customButton" id="#poiDetailMoreButton"
+                onclick="World.onPoiDetailMoreButtonClicked();">More</button>
         </div>
     </div>
 
-    <div id="filter">
-        <button class="all-button" id="all" onClick="World.categorySelectDefault();">All</button>
-        <button class="restaurant-button" id="restaurant" onClick="World.categorySelector(this);">Restaurant</button>
-        <button class="atm-button" id="atm" onClick="World.categorySelector(this);">ATM</button>
-        <button class="transit-button" id="transit_station" onClick="World.categorySelector(this);">Station</button>
-        <button class="tourist-attraction-button" id="tourist_attraction" onClick="World.categorySelector(this);">Attractions</button>
-        <button class="supermarket-button" id="supermarket" onClick="World.categorySelector(this);">Supermarket</button>
+    <div id="wrap-collabsible" class="wrap-collabsible">
+        <button type="button" class="collapsible" id="collapsible-button" onclick="expand(this);">
+            <img id="expand_more" class="arrow" src="assets/outline_expand_more_black_48dp.png" width="100px">
+        </button>
+        <div id="filter" class="grid-container">
+            <div class="all-button coll-content" style="margin-top: 5vh;">
+                <button class="all-button filter-icon coll-content selected" id="all" onClick="World.categorySelectDefault();">
+                    <img src="assets/ALL.png" style="padding-inline-start: 2vh;">
+                </button><br>
+                <p class="coll-content filter-text">All</p>
+            </div>
+            <div class="all-button coll-content">
+                <button class="restaurant-button filter-icon coll-content" id="restaurant"
+                    onClick="World.categorySelector(this);">
+                    <div class="img-container">
+                        <img src="assets/outline_restaurant_white_24dp.png" style="padding-inline-start: 1.5vh;">
+                    </div>
+                </button><br>
+                <p class="coll-content filter-text">Food</p>
+            </div>
+            <div class="all-button coll-content">
+                <button class="atm-button filter-icon coll-content" id="atm" onClick="World.categorySelector(this);">
+                    <img src="assets/outline_local_atm_white_24dp.png" style="padding-inline-start: 2vh;">
+                </button><br>
+                <p class="coll-content filter-text">ATM</p>
+            </div>
+            <div class="all-button coll-content">
+                <button class="transit-button filter-icon coll-content" id="transit_station"
+                    onClick="World.categorySelector(this);">
+                    <img src="assets/outline_directions_bus_white_24dp.png" style="padding-inline-start: 1.6vh;">
+                </button>
+                <br>
+                <p class="coll-content filter-text">Transport</p>
+            </div>
+            <div class="all-button coll-content">
+                <button class="tourist-attraction-button filter-icon coll-content" id="tourist_attraction"
+                    onClick="World.categorySelector(this);">
+                    <img src="assets/outline_attractions_white_24dp.png" style="padding-inline-start: 2vh;">
+                </button><br>
+                <p class="coll-content filter-text">Attractions</p>
+            </div>
+            <div class="all-button coll-content">
+                <button class="supermarket-button filter-icon coll-content " id="supermarket"
+                    onClick="World.categorySelector(this);">
+                    <img src="assets/outline_storefront_white_24dp.png" style="padding-inline-start: 2vh;">
+                </button><br>
+                <p class="coll-content filter-text">Shop</p>
+            </div>
+        </div>
     </div>
-    
+
     <div id="footer">
         <div id="popupButton">
-            <img id="popupButtonImage" src="assets/warning_icon.png"/>
+            <img id="popupButtonImage" src="assets/warning_icon.png" />
             <span id="popupButtonTooltip">Trying to find out where you are</span>
         </div>
     </div>
+
 </body>
+
 </html>
