@@ -13,7 +13,7 @@ var ServerInformation = {
 };
 
 var defaultCategory = ["tourist_attraction", "restaurant", "atm", "transit_station", "supermarket"];
-
+var allResult = null;
 /* Implementation of AR-Experience (aka "World"). */
 
 var World = {
@@ -51,24 +51,28 @@ var World = {
     categorySelected: new Set(),
 
     categorySelectDefault: function categorySelectDefaultFn(){
-        // World.categorySelected = new Set();
+        World.categorySelected = new Set();
         // World.loadPoisFromJsonData(World.filterPOIdataBasedOnCat());
         // console.log(World.markerList.length);
 
-        AR.context.destroyAll();
-        World.loadPoisFromJsonData([]);
+        
         all_ele = document.getElementById("all");
+        cat_eles = document.getElementsByClassName("filter-icon");
         if (all_ele.className.includes("selected")){
             //deselect
             all_ele.className = all_ele.className.replace(" selected", "");
         } else {
             //select
+            for (var x of cat_eles){
+                x.className = x.className.replace(" selected", "");
+            };
             all_ele.className += " selected";
+            
         }
+        World.loadPoisFromJsonData(World.filterPOIdataBasedOnCat());
     },
 
     categorySelector: function categorySelectorFn(ele) {
-        AR.context.destroyAll();
         var category = ele.id;
         all_ele = document.getElementById("all");
         if (ele.className.includes("selected")){
@@ -90,6 +94,9 @@ var World = {
     /* Called to inject new POI data. */
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
 
+        World.markerList.forEach((m) => 
+           { m.markerObject.destroy();}
+        );
         /* Empty list of visible markers. */
         World.markerList = [];
 

@@ -11,7 +11,6 @@ import 'UI/discover.dart';
 import 'UI/search.dart';
 import 'Authentication/accountScreen.dart';
 import 'DataSource/webview.dart';
-import 'globals.dart' as globals;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

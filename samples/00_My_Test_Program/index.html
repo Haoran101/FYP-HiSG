@@ -37,74 +37,97 @@
 <body>
     <div id="panelPoiDetail">
         <div class="header">
-            <button class="customButton" id="closePanelPoiDetailButton" onclick="World.closePanel()">Close</button>
-            <h3 class="headerTitle">Details</h3>
+            <p><a id="poiDetailDistance">12km</a></p>
+            <button class="customButton" id="closePanelPoiDetailButton" onclick="World.closePanel()">x</button>
         </div>
-
         <div class="content">
-            <h3 id="poiDetailTitle"></h3>
-            <h4 id="poiDetailDescription"></h4>
-            <h4> Distance: <a id="poiDetailDistance"></a></h4>
-            <button class="customButton" id="#poiDetailMoreButton"
-                onclick="World.onPoiDetailMoreButtonClicked();">More</button>
+            <button class="customButton" id="#poiDetailMoreButton" onclick="World.onPoiDetailMoreButtonClicked();">
+                <img src="assets/info.png" width="30px"><br>
+                <p style="margin-left: -5px;">Details</p>
+            </button>
+            <button class="customButton" id="#directionButton" onclick="World.onPoiDetailDirectionButtonClicked();">
+                <img src="assets/direct.png" width="30px"><br>
+                <p style="margin-left: -10px;">Direction</p>
+            </button>
+            <div class="POI-text-container">
+                <h3 id="poiDetailTitle">titletitle</h3>
+                <h4 id="poiDetailDescription">description description</h4>
+            </div>
+
         </div>
     </div>
 
-    <div id="wrap-collabsible" class="wrap-collabsible">
-        <button type="button" class="collapsible" id="collapsible-button" onclick="expand(this);">
-            <img id="expand_more" class="arrow" src="assets/outline_expand_more_black_48dp.png" width="100px">
-        </button>
-        <div id="filter" class="grid-container">
-            <div class="all-button coll-content" style="margin-top: 5vh;">
-                <button class="all-button filter-icon coll-content selected" id="all" onClick="World.categorySelectDefault();">
-                    <img src="assets/ALL.png" style="padding-inline-start: 2vh;">
-                </button><br>
-                <p class="coll-content filter-text">All</p>
-            </div>
-            <div class="all-button coll-content">
-                <button class="restaurant-button filter-icon coll-content" id="restaurant"
-                    onClick="World.categorySelector(this);">
-                    <div class="img-container">
-                        <img src="assets/outline_restaurant_white_24dp.png" style="padding-inline-start: 1.5vh;">
-                    </div>
-                </button><br>
-                <p class="coll-content filter-text">Food</p>
-            </div>
-            <div class="all-button coll-content">
-                <button class="atm-button filter-icon coll-content" id="atm" onClick="World.categorySelector(this);">
-                    <img src="assets/outline_local_atm_white_24dp.png" style="padding-inline-start: 2vh;">
-                </button><br>
-                <p class="coll-content filter-text">ATM</p>
-            </div>
-            <div class="all-button coll-content">
-                <button class="transit-button filter-icon coll-content" id="transit_station"
-                    onClick="World.categorySelector(this);">
-                    <img src="assets/outline_directions_bus_white_24dp.png" style="padding-inline-start: 1.6vh;">
-                </button>
-                <br>
-                <p class="coll-content filter-text">Transport</p>
-            </div>
-            <div class="all-button coll-content">
-                <button class="tourist-attraction-button filter-icon coll-content" id="tourist_attraction"
-                    onClick="World.categorySelector(this);">
-                    <img src="assets/outline_attractions_white_24dp.png" style="padding-inline-start: 2vh;">
-                </button><br>
-                <p class="coll-content filter-text">Attractions</p>
-            </div>
-            <div class="all-button coll-content">
-                <button class="supermarket-button filter-icon coll-content " id="supermarket"
-                    onClick="World.categorySelector(this);">
-                    <img src="assets/outline_storefront_white_24dp.png" style="padding-inline-start: 2vh;">
-                </button><br>
-                <p class="coll-content filter-text">Shop</p>
-            </div>
+    <div id="wrap-collabsible" class="wrap-expand">
+        <div id="filter" class="grid-container ">
+            <table>
+                <tr>
+                    <td>
+                        <div class="all-button coll-content button-container">
+                            <button class="all-button filter-icon coll-content selected" id="all"
+                                onClick="World.categorySelectDefault();">
+                                <img src="assets/ALL.png">
+                            </button><br>
+                            <p class="coll-content filter-text">All</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="all-button coll-content button-container">
+                            <button class="restaurant-button filter-icon coll-content" id="restaurant"
+                                onClick="World.categorySelector(this);">
+                                <div class="img-container">
+                                    <img src="assets/outline_restaurant_white_24dp.png">
+                                </div>
+                            </button><br>
+                            <p class="coll-content filter-text">Food</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="all-button coll-content button-container">
+                            <button class="atm-button filter-icon coll-content" id="atm"
+                                onClick="World.categorySelector(this);">
+                                <img src="assets/outline_local_atm_white_24dp.png">
+                            </button><br>
+                            <p class="coll-content filter-text">ATM</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="all-button coll-content button-container">
+                            <button class="transit-button filter-icon coll-content" id="transit_station"
+                                onClick="World.categorySelector(this);">
+                                <img src="assets/outline_directions_bus_white_24dp.png">
+                            </button>
+                            <br>
+                            <p class="coll-content filter-text button-container">Transport</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="all-button coll-content">
+                            <button class="tourist-attraction-button filter-icon coll-content" id="tourist_attraction"
+                                onClick="World.categorySelector(this);">
+                                <img src="assets/outline_attractions_white_24dp.png">
+                            </button><br>
+                            <p class="coll-content filter-text">Attractions</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="all-button coll-content button-container">
+                            <button class="supermarket-button filter-icon coll-content " id="supermarket"
+                                onClick="World.categorySelector(this);">
+                                <img src="assets/outline_storefront_white_24dp.png">
+                            </button><br>
+                            <p class="coll-content filter-text">Shop</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
-    <div id="footer">
+    <div id="footer" width="100%">
         <div id="popupButton">
-            <img id="popupButtonImage" src="assets/warning_icon.png" />
             <span id="popupButtonTooltip">Trying to find out where you are</span>
+            <img id="popupButtonImage" src="assets/warning_icon.png" />
+
         </div>
     </div>
 

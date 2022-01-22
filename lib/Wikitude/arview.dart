@@ -72,7 +72,21 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(sample.name)),
+      appBar: AppBar(title: Text(sample.name),
+      backgroundColor: Theme.of(context).primaryColor,
+      actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: null,
+            itemBuilder: (BuildContext context) {
+              return {'Logout', 'Settings'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],),
       body: WillPopScope(
         onWillPop: () async {
           if(defaultTargetPlatform == TargetPlatform.android && !loadFailed) {
