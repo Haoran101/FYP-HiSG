@@ -26,7 +26,6 @@ class CustomExpansionTile extends StatefulWidget {
     this.headerBackgroundColorAccent,
     this.headerContentPadding,
     this.leading,
-    required this.title,
     this.backgroundColor,
     this.borderColor,
     this.borderHeight,
@@ -43,7 +42,6 @@ class CustomExpansionTile extends StatefulWidget {
   final Color? headerBackgroundColorAccent;
   final EdgeInsets? headerContentPadding;
   final Widget? leading;
-  final Widget title;
   final Color? backgroundColor;
   final Color? borderColor;
   final double? borderHeight;
@@ -91,17 +89,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile> with SingleTic
   }
 
   void _handleTap() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
-    });
-    if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged!(_isExpanded);
+    
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
@@ -113,14 +101,13 @@ class CustomExpansionTileState extends State<CustomExpansionTile> with SingleTic
           child: ListTile(
             contentPadding: widget.headerContentPadding ?? EdgeInsets.all(0),
             leading: widget.leading,
-            title: widget.title,
             onTap: _handleTap,
             trailing: widget.trailing ??
               RotationTransition(
                 turns: _iconTurns,
                 child: Icon(
                   Icons.expand_more,
-                  color: widget.iconColor ?? Colors.grey,
+                  color: widget.iconColor ?? Colors.white,
                 ),
               ),
           ),
@@ -132,8 +119,8 @@ class CustomExpansionTileState extends State<CustomExpansionTile> with SingleTic
           ),
         ),
         Container(
-          color: widget.borderColor ?? Colors.transparent,
-          height: _isExpanded ? (widget.borderHeight ?? 0.75) : 0
+          color: widget.borderColor ?? Colors.white,
+          height: _isExpanded ? (widget.borderHeight ?? 0.75) : 0.75
         ),
       ],
     );
@@ -142,8 +129,8 @@ class CustomExpansionTileState extends State<CustomExpansionTile> with SingleTic
   @override
   void didChangeDependencies() {
     _headerBackgroundColorTween
-      ..begin = widget.headerBackgroundColor ?? Colors.black
-      ..end = widget.headerBackgroundColorAccent ?? (widget.headerBackgroundColor ?? Colors.black);
+      ..begin = widget.headerBackgroundColor ?? Colors.white
+      ..end = widget.headerBackgroundColorAccent ?? (widget.headerBackgroundColor ?? Colors.white);
     super.didChangeDependencies();
   }
 

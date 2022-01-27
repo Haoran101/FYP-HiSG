@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mongo_dart: ^0.7.2
   flutter_math_fork: ^0.5.0
   cupertino_icons: ^1.0.3
   location: ^4.1.1
@@ -25,7 +24,6 @@ dependencies:
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
   firebase_dynamic_links: ^4.0.4
-  rxdart: ^0.27.3
   random_string: ^2.3.1
   google_sign_in: ^5.2.2
   flutter_login_facebook: ^1.2.0
@@ -34,6 +32,11 @@ dependencies:
   cloud_firestore: ^3.1.6
   uuid: ^3.0.5
   video_player_360: ^0.1.5
+  panorama: ^0.4.1
+  flutter_google_places: ^0.3.0
+  web_scraper: ^0.1.4
+  beautiful_soup_dart: ^0.2.0
+  fuzzywuzzy: ^0.1.7
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +56,7 @@ flutter:
   assets:
     - assets/icons/AR.svg
     - assets/img/avatar.png
+    - assets/img/AR.png
     - assets/img/placeholder.png
     - assets/img/login/change.jpg
     - assets/img/login/dashboard.png
@@ -66,18 +70,6 @@ flutter:
     - samples/00_My_Test_Program/js/
     - samples/00_My_Test_Program/css/
     - samples/00_My_Test_Program/assets/
-    - samples/x_Demo_3_SolarSystem(2dTracking)/
-    - samples/x_Demo_3_SolarSystem(2dTracking)/js/
-    - samples/x_Demo_3_SolarSystem(2dTracking)/css/
-    - samples/x_Demo_3_SolarSystem(2dTracking)/assets/
-    - samples/x_Demo_2_SolarSystem(Geo)/
-    - samples/x_Demo_2_SolarSystem(Geo)/js/
-    - samples/x_Demo_2_SolarSystem(Geo)/css/
-    - samples/x_Demo_2_SolarSystem(Geo)/assets/
-    - samples/x_Demo_1_2dTrackingAndGeo/
-    - samples/x_Demo_1_2dTrackingAndGeo/js/
-    - samples/x_Demo_1_2dTrackingAndGeo/css/
-    - samples/x_Demo_1_2dTrackingAndGeo/assets/
     - samples/12_HardwareControl_3_AdvancedFeatures/
     - samples/12_HardwareControl_3_AdvancedFeatures/js/
     - samples/12_HardwareControl_3_AdvancedFeatures/css/

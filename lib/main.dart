@@ -3,12 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/UI/POI_details.dart';
 import 'DataSource/cloud_firestore.dart';
+import 'DataSource/web_scraper.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import 'Wikitude/armain.dart';
 import 'UI/discover.dart';
-import 'UI/search.dart';
+import 'SearchResults/search.dart';
 import 'Authentication/accountScreen.dart';
 import 'DataSource/webview.dart';
 
@@ -76,7 +77,8 @@ class _HomeState extends State<Home> {
     DiscoverPage(),
     SearchPage(),
     MainMenu(),
-    POIDetailsPage(placeId: '',),
+    WebScraperApp(),
+    //POIDetailsPage(placeId: '',),
     //testCloudStore(),
     // MyWebView(
     //     title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
@@ -101,6 +103,7 @@ class _HomeState extends State<Home> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -127,7 +130,6 @@ class _HomeState extends State<Home> {
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[800],
-        backgroundColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );

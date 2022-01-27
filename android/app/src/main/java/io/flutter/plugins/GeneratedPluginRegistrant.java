@@ -48,6 +48,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin flutter_login_facebook, ru.innim.flutter_login_facebook.FlutterLoginFacebookPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new io.github.zeshuaro.google_api_headers.GoogleApiHeadersPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin google_api_headers, io.github.zeshuaro.google_api_headers.GoogleApiHeadersPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.googlesignin.GoogleSignInPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin google_sign_in, io.flutter.plugins.googlesignin.GoogleSignInPlugin", e);
@@ -61,6 +66,16 @@ public final class GeneratedPluginRegistrant {
       flutterEngine.getPlugins().add(new com.mohamed.essam.money_converter.MoneyConverterPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin money_converter, com.mohamed.essam.money_converter.MoneyConverterPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new finaldev.motion_sensors.MotionSensorsPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin motion_sensors, finaldev.motion_sensors.MotionSensorsPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin package_info_plus, dev.fluttercommunity.plus.packageinfo.PackageInfoPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.pathprovider.PathProviderPlugin());

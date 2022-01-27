@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
-import 'applicationModelPois.dart';
 import 'poi.dart';
 
 import 'sample.dart';
@@ -110,11 +109,6 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   Future<void> onArchitectWidgetCreated() async {
     this.architectWidget.load(loadPath, onLoadSuccess, onLoadFailed);
     this.architectWidget.resume();
-
-    if(sample.requiredExtensions.contains("application_model_pois")) {
-      List<Poi> pois = await ApplicationModelPois.prepareApplicationDataModel();
-      this.architectWidget.callJavascript("World.loadPoisFromJsonData(" + jsonEncode(pois) + ");");
-    }
     
     if((sample.requiredExtensions.contains("screenshot") ||
         sample.requiredExtensions.contains("save_load_instant_target") ||

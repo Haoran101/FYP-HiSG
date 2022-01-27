@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../Models/poi_model.dart';
-import 'google_maps_api_key.dart' as maps_api;
+import 'api_key.dart' as maps_api;
 
 class TestPOI extends StatefulWidget {
   const TestPOI({Key? key}) : super(key: key);
@@ -51,7 +51,30 @@ class _TestPOIState extends State<TestPOI> {
 
 class PlaceApiProvider {
   final httpClient = Client();
-  final API_KEY = maps_api.api_key;
+  final API_KEY = maps_api.google_maps_api_key;
+
+  Future<List<Map<String, dynamic>>?> getGooglePlaceListByTextSearch(text) async{
+    final Uri request = Uri.parse(
+      "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$text&location=1.290270,103.851959&radius=30000&key=$API_KEY"
+    );
+    print(request.toString());
+    final response = await httpClient.get(request);
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status'] == 'OK') {
+        final list = result['results'];
+        print(list);
+        final jsonPlaceList = List.generate(
+          list.length,
+          (index) => list[index] as  Map<String, dynamic>
+        );
+        return jsonPlaceList;
+      } else {
+        print("Error fetching place from google places text search API!");
+        return null;
+      }
+    }
+  }
 
   Future<POI?> getPlaceDetailFromId(String placeId) async {
     final Uri request = Uri.parse(

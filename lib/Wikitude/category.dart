@@ -2,10 +2,9 @@ import 'sample.dart';
 
 class Category {
   
-  String categoryName;
   List<Sample> samples;
 
-  Category({required this.categoryName, required this.samples});
+  Category({required this.samples});
 
   factory Category.fromJson(Map<String, dynamic> jsonMap){
     List<dynamic> samplesFromJson = jsonMap["samples"];
@@ -15,7 +14,6 @@ class Category {
     }
 
     return Category(
-      categoryName: jsonMap["category_name"],
       samples: samples
     );
   }

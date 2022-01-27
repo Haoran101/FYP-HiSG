@@ -2,7 +2,7 @@
     "category_name": "Point of Interest",
     "samples": [
         {
-            "name": "POI Recognition",
+            "name": "Search Nearby",
             "path": "00_My_Test_Program/index.html",
             "requiredFeatures": [
                 "geo"
@@ -13,18 +13,7 @@
             }
         },
         {
-            "name": "Badge Collection Option 1",
-            "path": "01_ImageTracking_3_Interactivity/index.html",
-                "requiredFeatures": [
-                    "image_tracking"
-                ],
-                "startupConfiguration": {
-                    "camera_position": "back",
-                    "camera_resolution": "auto"
-                }
-        },
-        {
-            "name": "Single Image Recognition",
+            "name": "Collect Badges",
             "path": "04_CloudRecognition_1_SingleImageRecognition/index.html",
             "requiredFeatures": [
                 "image_tracking"
