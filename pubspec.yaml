@@ -37,6 +37,7 @@ dependencies:
   web_scraper: ^0.1.4
   beautiful_soup_dart: ^0.2.0
   fuzzywuzzy: ^0.1.7
+  flutter_rating_bar: ^4.0.0
 
 dev_dependencies:
   flutter_test:

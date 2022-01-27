@@ -20,7 +20,7 @@ class SearchResult {
 
   SearchResult.fromGoogle(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-    print(title);
+    
     subtitle = textConverter(jsondata["types"].first);
     icon = Icon(Icons.place, color: Colors.red);
     source = DataSource.Google;
@@ -29,7 +29,7 @@ class SearchResult {
 
   SearchResult.fromTIH(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-    print(title);
+    
     icon = Icon(Icons.event_available_outlined);
     subtitle = textConverter(jsondata["dataset"]);
     source = DataSource.TIH;
@@ -38,7 +38,7 @@ class SearchResult {
 
   SearchResult.from360ImageDataset(Map<String, dynamic> jsondata) {
     title = jsondata["title"].toString();
-    print(title);
+    
     icon = Icon(
       Icons.vrpano_outlined,
     );
@@ -49,7 +49,7 @@ class SearchResult {
 
   SearchResult.from360VideoStorage(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-    print(title);
+    
     icon = Icon(Icons.video_collection_outlined);
     source = DataSource.Video360;
     details = jsondata;
@@ -58,7 +58,7 @@ class SearchResult {
 
   SearchResult.from360VideoYouTube(Map<String, dynamic> jsondata) {
     title = jsondata["snippet"]["title"].toString();
-    print(title);
+    
     icon = Icon(Icons.video_collection_outlined);
     source = DataSource.Video360YouTube;
     details = jsondata;
@@ -67,7 +67,7 @@ class SearchResult {
 
   SearchResult.fromMRTdataset(Map<String, dynamic> jsondata) {
     title = jsondata["Name Engish Malay"].toString();
-    print(title);
+    
     icon = Icon(Icons.directions_transit);
     source = DataSource.MRT;
     details = jsondata;
@@ -76,7 +76,7 @@ class SearchResult {
 
   SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-    print(title);
+    
     icon = Icon(Icons.local_hotel);
     source = DataSource.Hotels;
     details = jsondata;

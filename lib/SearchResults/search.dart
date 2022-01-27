@@ -3,6 +3,7 @@ import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';
@@ -87,9 +88,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       //var len = placeResult.length;
       //print("Place results: $len");
       placeResult.forEach((place) {
-        
-        if (place["types"].contains("subway_station")) {
-          print(place["name"]);
+        if (place["photos"] == null) {
+          print(place["name"] + "has no photos");
         } else {
           setState(() {
             searchResult.add(SearchResult.fromGoogle(place));
@@ -158,7 +158,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       print("No results from Storage video 360");
     } else {
       //var len = VideoStorage360Result.length;
-     // print("VideoYoutube360Result results: $len");
+      // print("VideoYoutube360Result results: $len");
       VideoStorage360Result.forEach((video) {
         setState(() {
           searchResult.add(SearchResult.from360VideoStorage(video));
@@ -275,7 +275,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                           search();
                         });
                         controller.close();
-                        
                       },
                     );
                   } else {
@@ -305,7 +304,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   searchResult = [];
                                   search();
                                 });
-        
+
                                 controller.close();
                               },
                             ),
@@ -330,30 +329,33 @@ class SearchResultsListView extends StatelessWidget {
   final searchResult;
   final searchTerm;
 
-  const SearchResultsListView({required this.searchResult, required this.searchTerm});
-
+  const SearchResultsListView(
+      {required this.searchResult, required this.searchTerm});
 
   int compareScores(SearchResult a, SearchResult b) {
-  if (getScore(a.title) < getScore(b.title)){
-    return -1;
+    if (getScore(a.title) < getScore(b.title)) {
+      return -1;
+    }
+    if (getScore(a.title) > getScore(b.title)) {
+      return 1;
+    }
+    return 0;
   }
-  if (getScore(a.title) > getScore(b.title)){
-    return 1;
-  }
-  return 0;
-}
 
   int getScore(term) {
-    return -ratio(term.toString().toLowerCase(), this.searchTerm.toString().toLowerCase()).toInt();
+    return -ratio(term.toString().toLowerCase(),
+            this.searchTerm.toString().toLowerCase())
+        .toInt();
   }
 
   @override
   Widget build(BuildContext context) {
     //sort search result on fuzzywuzzy score
-    if (searchResult != null && searchResult.length > 1 && searchTerm !=null){
-      try{
-        searchResult.sort((SearchResult a,SearchResult b) => compareScores(a,b));
-      } catch (error, stacktrace){
+    if (searchResult != null && searchResult.length > 1 && searchTerm != null) {
+      try {
+        searchResult
+            .sort((SearchResult a, SearchResult b) => compareScores(a, b));
+      } catch (error, stacktrace) {
         print("error on sorting result list");
         print(error);
         print(stacktrace.toString());
@@ -361,16 +363,14 @@ class SearchResultsListView extends StatelessWidget {
     }
     final fsb = FloatingSearchBar.of(context);
     return ListView(
-      padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
-      children: 
-      (searchResult != null)?
-      List.generate(searchResult.length, (index) {
-        var resultItem = searchResult[index];
-        //print(resultItem.title + ratio(searchTerm, resultItem.title).toString());
-        return SearchResultCard(item: resultItem);
-      }):
-      [CircularProgressIndicator()]
-    );
+        padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
+        children: (searchResult != null)
+            ? List.generate(searchResult.length, (index) {
+                var resultItem = searchResult[index];
+                //print(resultItem.title + ratio(searchTerm, resultItem.title).toString());
+                return SearchResultCard(item: resultItem);
+              })
+            : [CircularProgressIndicator()]);
   }
 }
 
@@ -378,21 +378,40 @@ class SearchResultCard extends StatelessWidget {
   final item;
   const SearchResultCard({Key? key, @required this.item}) : super(key: key);
 
+  navigateToSubPage(item) {
+    print(item.source);
+    switch (item.source) {
+      case DataSource.Google:
+        return POISubPage(
+          placeId: item.details["place_id"],
+          placeName: item.title,
+        );
+      default:
+        Text("default page");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: 
-        this.item.title != null && this.item.subtitle != null?
-        Card(
-            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      ListTile(
-          leading: this.item.icon,
-          title: Text(this.item.title),
-          subtitle: Text(this.item.subtitle))
-    ])):
-    
-    CircularProgressIndicator()
-    
-    );
+        child: this.item.title != null && this.item.subtitle != null
+            ? Card(
+                child:
+                    Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                ListTile(
+                  leading: this.item.icon,
+                  title: Text(this.item.title),
+                  subtitle: Text(this.item.subtitle),
+                  onTap: () {
+                    //navigate to subpage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => navigateToSubPage(this.item)),
+                    );
+                  },
+                )
+              ]))
+            : CircularProgressIndicator());
   }
 }
