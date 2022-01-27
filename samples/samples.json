@@ -7,6 +7,9 @@
             "requiredFeatures": [
                 "geo"
             ],
+            "required_extensions": [
+                "native_detail"
+            ],
             "startupConfiguration": {
                 "camera_position": "back",
                 "camera_resolution": "auto"

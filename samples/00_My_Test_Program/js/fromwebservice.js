@@ -119,7 +119,7 @@ var World = {
                 "longitude": parseFloat(poiData[currentPlaceNr].geometry.location.lng),
                 "altitude": 100.0 + (Math.random() * 10),
                 "title": poiData[currentPlaceNr].name,
-                "description": poiData[currentPlaceNr].vicinity
+                "description": poiData[currentPlaceNr].types[0],
             };
 
             World.markerList.push(new Marker(singlePoi));

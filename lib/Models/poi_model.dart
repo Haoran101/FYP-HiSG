@@ -42,7 +42,7 @@ class POI {
     formattedAddress = json["formatted_address"];
     phoneNumber = json["international_phone_number"];
     vicinity = json["vicinity"];
-    rating = json["rating"];
+    rating = json["rating"].toDouble();
     numberOfUsersRated = json["user_ratings_total"];
     businessStatus = json["business_status"];
     openNow = json["opening_hours"]["open_now"];

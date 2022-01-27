@@ -81,7 +81,7 @@ h4 {
     position: absolute;
     font-family: sans-serif;
     left:5%;
-    visibility: visible;
+    visibility: hidden;
 }
 
 #poiDetailDistance {

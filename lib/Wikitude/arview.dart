@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
-import 'poi.dart';
+import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 
 import 'sample.dart';
 
@@ -12,7 +11,6 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:augmented_reality_plugin_wikitude/architect_widget.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
-import 'package:wikitude_flutter_app/Wikitude/poiDetails.dart';
 
 class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   late ArchitectWidget architectWidget;
@@ -126,10 +124,9 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
         case "present_poi_details":
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PoiDetailsWidget(
-              id: jsonObject["id"],
-              title: jsonObject["title"],
-              description: jsonObject["description"]
+            MaterialPageRoute(builder: (context) => POISubPage(
+              placeId: jsonObject["id"],
+              placeName: jsonObject["title"],
             )),
           );
           break;

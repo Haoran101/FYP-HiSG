@@ -1,4 +1,3 @@
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 
 final defaultProfilePhotoURL = "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
 

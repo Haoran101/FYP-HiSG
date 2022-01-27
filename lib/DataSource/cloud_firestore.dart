@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/user_model.dart';
@@ -88,7 +87,6 @@ class Image360Provider {
 }
 
 class Video360Provider {
-  //TODO: change query method
   final CollectionReference _video360YoutubeCollection =
       firestore.collection('360_videos');
   final CollectionReference _video360StorageCollection =

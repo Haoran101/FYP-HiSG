@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/UI/POI_details.dart';
-import 'DataSource/cloud_firestore.dart';
 import 'DataSource/web_scraper.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +7,6 @@ import 'Wikitude/armain.dart';
 import 'UI/discover.dart';
 import 'SearchResults/search.dart';
 import 'Authentication/accountScreen.dart';
-import 'DataSource/webview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
