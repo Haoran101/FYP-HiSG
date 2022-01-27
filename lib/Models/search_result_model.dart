@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
-enum DataSource { Google, TIH, MRT, Video360, Article, Photo360, Video360YouTube, Hotels}
+enum DataSource {
+  Google,
+  TIH,
+  MRT,
+  Video360,
+  Article,
+  Photo360,
+  Video360YouTube,
+  Hotels
+}
 
-class SearchResult{
-
-  String? title;
+class SearchResult {
+  String title = " ";
   String? subtitle;
   Icon? icon;
   DataSource? source;
   Map<String, dynamic>? details;
 
   SearchResult.fromGoogle(Map<String, dynamic> jsondata) {
-    title = jsondata["name"];
+    title = jsondata["name"].toString();
+    print(title);
     subtitle = textConverter(jsondata["types"].first);
     icon = Icon(Icons.place, color: Colors.red);
     source = DataSource.Google;
@@ -19,7 +28,8 @@ class SearchResult{
   }
 
   SearchResult.fromTIH(Map<String, dynamic> jsondata) {
-    title = jsondata["name"];
+    title = jsondata["name"].toString();
+    print(title);
     icon = Icon(Icons.event_available_outlined);
     subtitle = textConverter(jsondata["dataset"]);
     source = DataSource.TIH;
@@ -27,15 +37,19 @@ class SearchResult{
   }
 
   SearchResult.from360ImageDataset(Map<String, dynamic> jsondata) {
-    title = jsondata["title"];
-    icon = Icon(Icons.event_available_outlined);
+    title = jsondata["title"].toString();
+    print(title);
+    icon = Icon(
+      Icons.vrpano_outlined,
+    );
     source = DataSource.Photo360;
     details = jsondata;
     subtitle = "360 PHOTO";
   }
 
   SearchResult.from360VideoStorage(Map<String, dynamic> jsondata) {
-    title = jsondata["title"];
+    title = jsondata["name"].toString();
+    print(title);
     icon = Icon(Icons.video_collection_outlined);
     source = DataSource.Video360;
     details = jsondata;
@@ -43,29 +57,31 @@ class SearchResult{
   }
 
   SearchResult.from360VideoYouTube(Map<String, dynamic> jsondata) {
-    title = jsondata["snippet"]["title"];
+    title = jsondata["snippet"]["title"].toString();
+    print(title);
     icon = Icon(Icons.video_collection_outlined);
     source = DataSource.Video360YouTube;
     details = jsondata;
     subtitle = "360 VIDEO";
   }
 
-  SearchResult.fromMRTdataset(Map<String, dynamic> jsondata){
-    title = jsondata["Name Engish Malay"];
+  SearchResult.fromMRTdataset(Map<String, dynamic> jsondata) {
+    title = jsondata["Name Engish Malay"].toString();
+    print(title);
     icon = Icon(Icons.directions_transit);
     source = DataSource.MRT;
     details = jsondata;
     subtitle = "MRT STATION";
   }
 
-  SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata){
-    title = jsondata["name"];
+  SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata) {
+    title = jsondata["name"].toString();
+    print(title);
     icon = Icon(Icons.local_hotel);
     source = DataSource.Hotels;
     details = jsondata;
     subtitle = "HOTEL";
   }
-
 }
 
 String textConverter(String text) {

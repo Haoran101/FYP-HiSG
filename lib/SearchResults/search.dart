@@ -84,8 +84,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (placeResult == null) {
       print("No results from Google Places");
     } else {
-      var len = placeResult.length;
-      print("Place results: $len");
+      //var len = placeResult.length;
+      //print("Place results: $len");
       placeResult.forEach((place) {
         
         if (place["types"].contains("subway_station")) {
@@ -105,8 +105,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (TIHResult == null) {
       print("No results from TIH");
     } else {
-      var len = TIHResult.length;
-      print("TIHResult results: $len");
+      //var len = TIHResult.length;
+      //print("TIHResult results: $len");
       TIHResult.forEach((tih) {
         setState(() {
           searchResult.add(SearchResult.fromTIH(tih));
@@ -125,8 +125,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (Image360Result == null) {
       print("No results from Image 360");
     } else {
-      var len = Image360Result.length;
-      print("Image360Result results: $len");
+      //var len = Image360Result.length;
+      //print("Image360Result results: $len");
       Image360Result.forEach((image) {
         setState(() {
           searchResult.add(SearchResult.from360ImageDataset(image));
@@ -141,8 +141,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (VideoYoutube360Result == null) {
       print("No results from Youtube video 360");
     } else {
-      var len = VideoYoutube360Result.length;
-      print("VideoYoutube360Result results: $len");
+      //var len = VideoYoutube360Result.length;
+      //print("VideoYoutube360Result results: $len");
       VideoYoutube360Result.forEach((video) {
         setState(() {
           searchResult.add(SearchResult.from360VideoYouTube(video));
@@ -157,8 +157,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (VideoStorage360Result == null) {
       print("No results from Storage video 360");
     } else {
-      var len = VideoStorage360Result.length;
-      print("VideoYoutube360Result results: $len");
+      //var len = VideoStorage360Result.length;
+     // print("VideoYoutube360Result results: $len");
       VideoStorage360Result.forEach((video) {
         setState(() {
           searchResult.add(SearchResult.from360VideoStorage(video));
@@ -173,8 +173,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (mrtResult == null) {
       print("No results from MRT dataset");
     } else {
-      var len = mrtResult.length;
-      print("mrtResult results: $len");
+      //var len = mrtResult.length;
+      //print("mrtResult results: $len");
       mrtResult.forEach((mrt) {
         setState(() {
           searchResult.add(SearchResult.fromMRTdataset(mrt));
@@ -237,8 +237,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             addSearchTerm(query);
             selectedTerm = query;
             searchResult = [];
+            search();
           });
-          search();
+
           controller.close();
         },
         builder: (context, transition) {
@@ -271,9 +272,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                           addSearchTerm(controller.query);
                           selectedTerm = controller.query;
                           searchResult = [];
+                          search();
                         });
-                        search();
                         controller.close();
+                        
                       },
                     );
                   } else {
@@ -301,8 +303,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   putSearchTermFirst(term);
                                   selectedTerm = term;
                                   searchResult = [];
+                                  search();
                                 });
-                                search();
+        
                                 controller.close();
                               },
                             ),
@@ -327,21 +330,46 @@ class SearchResultsListView extends StatelessWidget {
   final searchResult;
   final searchTerm;
 
-  const SearchResultsListView({Key? key, @required this.searchResult, @required this.searchTerm})
-      : super(key: key);
+  const SearchResultsListView({required this.searchResult, required this.searchTerm});
+
+
+  int compareScores(SearchResult a, SearchResult b) {
+  if (getScore(a.title) < getScore(b.title)){
+    return -1;
+  }
+  if (getScore(a.title) > getScore(b.title)){
+    return 1;
+  }
+  return 0;
+}
+
+  int getScore(term) {
+    return -ratio(term.toString().toLowerCase(), this.searchTerm.toString().toLowerCase()).toInt();
+  }
 
   @override
   Widget build(BuildContext context) {
     //sort search result on fuzzywuzzy score
-    searchResult.sort((a,b) => (-ratio(a.title, searchTerm)).toInt().compareTo(-ratio(b.title, searchTerm)).toInt());
+    if (searchResult != null && searchResult.length > 1 && searchTerm !=null){
+      try{
+        searchResult.sort((SearchResult a,SearchResult b) => compareScores(a,b));
+      } catch (error, stacktrace){
+        print("error on sorting result list");
+        print(error);
+        print(stacktrace.toString());
+      }
+    }
     final fsb = FloatingSearchBar.of(context);
     return ListView(
       padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
-      children: List.generate(searchResult.length, (index) {
+      children: 
+      (searchResult != null)?
+      List.generate(searchResult.length, (index) {
         var resultItem = searchResult[index];
-        print(resultItem.title + ratio(searchTerm, resultItem.title).toString());
+        //print(resultItem.title + ratio(searchTerm, resultItem.title).toString());
         return SearchResultCard(item: resultItem);
-      }),
+      }):
+      [CircularProgressIndicator()]
     );
   }
 }
@@ -353,12 +381,18 @@ class SearchResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Card(
+        child: 
+        this.item.title != null && this.item.subtitle != null?
+        Card(
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
           leading: this.item.icon,
           title: Text(this.item.title),
           subtitle: Text(this.item.subtitle))
-    ])));
+    ])):
+    
+    CircularProgressIndicator()
+    
+    );
   }
 }

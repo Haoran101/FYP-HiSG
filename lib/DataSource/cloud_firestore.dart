@@ -69,12 +69,13 @@ class Image360Provider {
   Future<List<Map<String, dynamic>>?> queryImage360ByTitle(text) async {
     try {
       final _lookup = lookuptables.photos360LookUp;
-      Set<Map<String, dynamic>> resultList = Set();
+      Set<Map<String, dynamic>> resultList = {};
       for (final fullText in _lookup.keys){
         if (fullText.toLowerCase().contains(text.toLowerCase())){
-          var returnedJson = _image360Collection.doc(_lookup[fullText]).get() as Map<String, dynamic>;
+          var returnedResult = await _image360Collection.doc(_lookup[fullText]).get();
+          var returnedJson = returnedResult.data() as Map<String, dynamic>;
           resultList.add(returnedJson);
-          if (resultList.length >= 20) break;
+          if (resultList.length >= 20) {break;}
         }
       }
       return resultList.toList();
@@ -96,10 +97,11 @@ class Video360Provider {
   Future<List<Map<String, dynamic>>?> queryYoutubeVideo360ByTitle(text) async {
     try {
       final _lookup = lookuptables.video360YouTubeLookUp;
-      Set<Map<String, dynamic>> resultList = Set();
+      Set<Map<String, dynamic>> resultList = {};
       for (final fullText in _lookup.keys){
         if (fullText.toLowerCase().contains(text.toLowerCase())){
-          var returnedJson = _video360YoutubeCollection.doc(_lookup[fullText]).get() as Map<String, dynamic>;
+          var returnedResult = await _video360YoutubeCollection.doc(_lookup[fullText]).get();
+          var returnedJson = returnedResult.data() as Map<String, dynamic>;
           resultList.add(returnedJson);
           if (resultList.length >= 20) break;
         }
@@ -115,10 +117,11 @@ class Video360Provider {
   Future<List<Map<String, dynamic>>?> queryStorageVideo360ByTitle(text) async {
     try {
       final _lookup = lookuptables.video360StorageLookUp;
-      Set<Map<String, dynamic>> resultList = Set();
+      Set<Map<String, dynamic>> resultList = {};
       for (final fullText in _lookup.keys){
         if (fullText.toLowerCase().contains(text.toLowerCase())){
-          var returnedJson = _video360YoutubeCollection.doc(_lookup[fullText]).get() as Map<String, dynamic>;
+          var returnedResult = await _video360StorageCollection.doc(_lookup[fullText]).get();
+          var returnedJson = returnedResult.data() as Map<String, dynamic>;
           resultList.add(returnedJson);
           if (resultList.length >= 20) break;
         }
@@ -139,10 +142,11 @@ class MRTProvider {
   Future<List<Map<String, dynamic>>?> queryMRT(text) async {
     try {
       final _lookup = lookuptables.mrtLookUp;
-      Set<Map<String, dynamic>> resultList = Set();
+      Set<Map<String, dynamic>> resultList = {};
       for (final fullText in _lookup.keys){
         if (fullText.toLowerCase().contains(text.toLowerCase())){
-          var returnedJson = _mrtCollection.doc(_lookup[fullText]).get() as Map<String, dynamic>;
+          var returnedResult = await _mrtCollection.doc(_lookup[fullText]).get();
+          var returnedJson = returnedResult.data() as Map<String, dynamic>;
           resultList.add(returnedJson);
           if (resultList.length >= 20) break;
         }
@@ -163,10 +167,11 @@ class HotelProvider {
   Future<List<Map<String, dynamic>>?> queryHotelByName(text) async {
     try {
       final _lookup = lookuptables.hotelsLookUp;
-      Set<Map<String, dynamic>> resultList = Set();
+      Set<Map<String, dynamic>> resultList = {};
       for (final fullText in _lookup.keys){
         if (fullText.toLowerCase().contains(text.toLowerCase())){
-          var returnedJson = _hotelCollection.doc(_lookup[fullText]).get() as Map<String, dynamic>;
+          var returnedResult = await _hotelCollection.doc(_lookup[fullText]).get();
+          var returnedJson = returnedResult.data() as Map<String, dynamic>;
           resultList.add(returnedJson);
           if (resultList.length >= 20) break;
         }
