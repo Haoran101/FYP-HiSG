@@ -7,6 +7,7 @@ import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';
+import 'detail_page_container.dart';
 import 'emptySearch.dart';
 
 class SearchPage extends StatefulWidget {
@@ -69,13 +70,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   search() {
-    fetchGooglePlacesResultsList(); //Google places search
+    //fetchGooglePlacesResultsList(); //Google places search
     fetchTIHResultsList(); //TIH database search
-    fetchImage360ResultsList(); //Image 360 search (cloud storage)
+    //fetchImage360ResultsList(); //Image 360 search (cloud storage)
     fetchVideo360YoutubeResultsList(); //Video 360 Youtube
-    fetchVideo360StorageResultsList(); //Video 360 Storage
-    fetchMRTResultsList(); //MRT dataset implemented with places
-    fetchHotelResultsList(); //hotel dataset
+    //fetchVideo360StorageResultsList(); //Video 360 Storage
+    //fetchMRTResultsList(); //MRT dataset implemented with places
+    //fetchHotelResultsList(); //hotel dataset
   }
 
   fetchGooglePlacesResultsList() async {
@@ -378,19 +379,6 @@ class SearchResultCard extends StatelessWidget {
   final item;
   const SearchResultCard({Key? key, @required this.item}) : super(key: key);
 
-  navigateToSubPage(item) {
-    print(item.source);
-    switch (item.source) {
-      case DataSource.Google:
-        return POISubPage(
-          placeId: item.details["place_id"],
-          placeName: item.title,
-        );
-      default:
-        Text("default page");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -407,7 +395,7 @@ class SearchResultCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => navigateToSubPage(this.item)),
+                          builder: (context) => DetailPageContainer(searchResult: this.item)),
                     );
                   },
                 )

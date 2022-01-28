@@ -55,89 +55,86 @@ class _POISubPageState extends State<POISubPage> {
       }
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.placeName),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-        body: FutureBuilder(
-            future: fetchPOIDetails(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                print(snapshot.stackTrace);
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                //Show circular progress indicator if loading
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              print("Number of photos: " + place.photoReferences!.length.toString());
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    //Image scrollable horizontal
-                    getPhotoView()
-                    ,
-                    //Title
-                    Padding(
-                      padding: _pageElementPadding,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text( place.name!,
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
-                    ),
-
-                    //rating bar and direction arrow
-                    Padding(
-                      padding: _pageElementPadding,
-                      child: Row(
-                        children: [
-                          //rating bar
-                          place.rating == null
-                              ? SizedBox(
-                                  width: 0,
-                                )
-                              : RatingBarIndicator(
-                                  rating: place.rating!,
-                                  itemBuilder: (context, index) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  itemCount: 5,
-                                  itemSize: 30.0,
-                                  direction: Axis.horizontal,
-                                ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(place.rating.toString(),
-                            style: TextStyle(fontSize: 20),),
-                          ),
-                          Spacer(),
-                          //direction button
-                          InkWell(
-                            child: Icon(
-                              Icons.near_me_outlined,
-                              size: 40,
-                              color: Colors.red[400]
-                            ),
-                            onTap: () => print("Tapped direction arrow"),
-                            //TODO: navigate to directions page
-                          )
-                        ],
+    return Container(
+      child: FutureBuilder(
+              future: fetchPOIDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  print(snapshot.stackTrace);
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  //Show circular progress indicator if loading
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                print("Number of photos: " + place.photoReferences!.length.toString());
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      //Image scrollable horizontal
+                      getPhotoView()
+                      ,
+                      //Title
+                      Padding(
+                        padding: _pageElementPadding,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text( place.name!,
+                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
                       ),
-                    ),
 
-                    //TODO: details info: address, opening hours, phone number, website
-                    //TODO: 360 experiences
-                    //TODO: reviews
-                    //TODO: related articles
-                    //TODO: Nearby places/events/something
-                  ],
-                ),
-              );
-            }));
+                      //rating bar and direction arrow
+                      Padding(
+                        padding: _pageElementPadding,
+                        child: Row(
+                          children: [
+                            //rating bar
+                            place.rating == null
+                                ? SizedBox(
+                                    width: 0,
+                                  )
+                                : RatingBarIndicator(
+                                    rating: place.rating!,
+                                    itemBuilder: (context, index) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    itemCount: 5,
+                                    itemSize: 30.0,
+                                    direction: Axis.horizontal,
+                                  ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(place.rating.toString(),
+                              style: TextStyle(fontSize: 20),),
+                            ),
+                            Spacer(),
+                            //direction button
+                            InkWell(
+                              child: Icon(
+                                Icons.near_me_outlined,
+                                size: 40,
+                                color: Colors.red[400]
+                              ),
+                              onTap: () => print("Tapped direction arrow"),
+                              //TODO: navigate to directions page
+                            )
+                          ],
+                        ),
+                      ),
+
+                      //TODO: details info: address, opening hours, phone number, website
+                      //TODO: 360 experiences
+                      //TODO: reviews
+                      //TODO: related articles
+                      //TODO: Nearby places/events/something
+                    ],
+                  ),
+                );
+              }),
+    );
   }
 }
 

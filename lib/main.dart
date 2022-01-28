@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
 import 'DataSource/web_scraper.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -72,11 +73,8 @@ class _HomeState extends State<Home> {
     DiscoverPage(),
     SearchPage(),
     MainMenu(),
-    WebScraperApp(),
-    //POIDetailsPage(placeId: '',),
-    //testCloudStore(),
-    // MyWebView(
-    //     title: "StreetView", selectedUrl: "https://www.360cities.net/image/monastiri-agiou-dionisiou-olympus-trapeza-dinning-room-greece/vr"),
+    //WebScraperApp(),
+    Text("test place holder"),
     AuthScreenPlaceHolder(),
   ];
 
