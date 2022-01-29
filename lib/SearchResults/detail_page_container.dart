@@ -1,12 +1,27 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
 
-class DetailPageContainer extends StatelessWidget {
+class DetailPageContainer extends StatefulWidget {
   final searchResult;
   const DetailPageContainer({required this.searchResult});
+
+  @override
+  State<DetailPageContainer> createState() => _DetailPageContainerState();
+}
+
+class _DetailPageContainerState extends State<DetailPageContainer> {
+  final UserService _user = UserService();
+  late bool isFavorated;
+  late bool isInPlan;
+
+  initState() {
+    super.initState();
+    isFavorated = _user.checkItemFavorited(widget.searchResult);
+    //TODO: is in plan
+    isInPlan = false;
+  }
 
   String subPageTitle(item) {
     switch (item.source) {
@@ -45,11 +60,11 @@ class DetailPageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(subPageTitle(this.searchResult)),
+        title: Text(subPageTitle(this.widget.searchResult)),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: subpageContent(this.searchResult),
-          //Text("test"),
+      body: subpageContent(this.widget.searchResult),
+      //Text("test"),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
         child: SizedBox(
@@ -60,21 +75,27 @@ class DetailPageContainer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  child: isFavorated
+                      ? Icon(Icons.favorite_outlined,
+                          color: Colors.amber, size: 30)
+                      : Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(
-                  child: Icon(
-                    Icons.insert_invitation_outlined,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  child: isInPlan
+                      ? Icon(Icons.event_available_outlined,
+                          color: Colors.amber, size: 30)
+                      : Icon(
+                          Icons.insert_invitation_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                 ),
               )
             ],

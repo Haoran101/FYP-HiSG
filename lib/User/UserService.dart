@@ -1,5 +1,7 @@
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/user_model.dart';
+import 'package:wikitude_flutter_app/Models/plan_model.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/User/user_database.dart';
+import 'package:wikitude_flutter_app/User/user_model.dart';
 
 class UserService {
   static final UserService _instance = UserService._internal();
@@ -12,6 +14,9 @@ class UserService {
   }
 
   UserDetails? _currentUser;
+  List<SearchResult> _favoriteItems = <SearchResult>[];
+  bool _fetchedFavoriteFromDatabase = false;
+  Plan? plan;
 
   //short getter for my variable
   UserDetails? get getCurrentUser => _currentUser;
@@ -26,7 +31,6 @@ class UserService {
       UserDetails? existedEmailUser = await _cloudstore.getUser(uid);
       if (existedEmailUser == null){
         UserDetails user = UserDetails.newDefaultUser(uid);
-      _currentUser = user;
       _cloudstore.addDefaultUser(user);
       print("SUCCESS: email user created and added to database: $uid");
       } else {
@@ -80,4 +84,40 @@ class UserService {
     }
   }
 
+  void addToFavorite(SearchResult item) {
+    _favoriteItems.add(item);
+    if (_currentUser == null){
+      print("WARNNING: cannot add to favorite, not logged in");
+    } else {
+      _cloudstore.addFavoriteItem(_currentUser!.uid!, item);
+    }
+  }
+
+  void deleteFromFavorite(SearchResult item) {
+    _favoriteItems.remove(item);
+    if (_currentUser == null){
+      print("WARNNING: cannot delete from favorite, not logged in");
+    } else {
+      _cloudstore.deleteFavoriteItem(_currentUser!.uid!, item);
+    }
+  }
+
+  Future<List<SearchResult>> getFavoriteItems() async{
+    if (!_fetchedFavoriteFromDatabase){
+      //fetch from database
+      var _favoriteJSONList = await _cloudstore.getFavoriteItemList(_currentUser!.uid!);
+      _favoriteItems = List.generate(_favoriteJSONList.length, (index) => 
+      SearchResult.fromDataBaseJSON(_favoriteJSONList[index]));
+      _fetchedFavoriteFromDatabase = true;
+    }
+    return _favoriteItems;
+  }
+
+  bool checkItemFavorited(SearchResult item) {
+    if (!_fetchedFavoriteFromDatabase){
+      getFavoriteItems();
+      return _favoriteItems.contains(item);
+    }
+    return _favoriteItems.contains(item);
+  }
 }

@@ -1,69 +1,105 @@
-import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
-import 'package:drag_and_drop_lists/drag_and_drop_list.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'data/draggable_lists.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/services.dart';
 
-import 'model/draggable_list.dart';
+class ExpansionTileExample extends StatefulWidget {
+  ExpansionTileExample({Key? key}) : super(key: key);
 
-class PlanPage extends StatefulWidget {
   @override
-  _PlanPageState createState() => _PlanPageState();
+  _ListTileExample createState() => _ListTileExample();
 }
 
-class _PlanPageState extends State<PlanPage> {
-  late List<DragAndDropList> lists;
+class InnerList {
+  final String name;
+  List<String> children;
+  InnerList({required this.name, required this.children});
+}
+
+class _ListTileExample extends State<ExpansionTileExample> {
+  late List<InnerList> _lists;
 
   @override
   void initState() {
     super.initState();
-    lists = allLists.map(buildList).toList();
+
+    _lists = List.generate(3, (outerIndex) {
+      return InnerList(
+        name: outerIndex.toString(),
+        children: List.generate(5, (innerIndex) => '$outerIndex.$innerIndex'),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = Color.fromARGB(255, 243, 242, 248);
-
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("test plan page"),
-        centerTitle: true,
+        title: Text('Plan'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: DragAndDropLists(
-        // lastItemTargetHeight: 50,
-        // addLastItemTargetHeightToTop: true,
-        // lastListTargetSize: 30,
-        listPadding: EdgeInsets.all(16),
-        listInnerDecoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(10),
+      body: Container(
+        height: 900,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: DragAndDropLists(
+              children:
+                  List.generate(_lists.length, (index) => _buildList(index)),
+              onItemReorder: _onItemReorder,
+              onListReorder: _onListReorder,
+              itemDragOnLongPress: true,
+              listDragOnLongPress: true,
+              listDecorationWhileDragging: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+              ),
+              listDivider: Divider(thickness: 2, height: 2, color: Colors.grey),
+              itemDecorationWhileDragging: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 5)],
+              ),
+              listDragHandle: _buildDragHandle(isList: true),
+              itemDragHandle: _buildDragHandle(),
+              // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+              listGhost: Container(
+                height: 70,
+                color: Colors.grey,
+              )),
         ),
-        children: lists,
-        itemDivider: Divider(thickness: 2, height: 2, color: backgroundColor),
-        itemDecorationWhileDragging: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-        ),
-        listDragHandle: buildDragHandle(isList: true),
-        itemDragHandle: buildDragHandle(),
-        onItemReorder: onReorderListItem,
-        onListReorder: onReorderList,
       ),
     );
   }
 
-  DragHandle buildDragHandle({bool isList = false}) {
-    final verticalAlignment = isList
-        ? DragHandleVerticalAlignment.top
-        : DragHandleVerticalAlignment.center;
+  _buildList(int outerIndex) {
+    var innerList = _lists[outerIndex];
+    return DragAndDropListExpansion(
+      canDrag: false,
+      initiallyExpanded: outerIndex == 0? true: false,
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'List ${innerList.name}',
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+      children: List.generate(innerList.children.length,
+          (index) => _buildItem(innerList.children[index])),
+      listKey: ObjectKey(innerList),
+    );
+  }
+
+  DragHandle _buildDragHandle({bool isList = false}) {
+    if (isList) {
+      return DragHandle(
+        child: Container(
+          height: 0,
+        ),
+      );
+    }
+
     final color = isList ? Colors.blueGrey : Colors.black26;
 
     return DragHandle(
-      verticalAlignment: verticalAlignment,
+      verticalAlignment: DragHandleVerticalAlignment.center,
       child: Container(
         padding: EdgeInsets.only(right: 10),
         child: Icon(Icons.menu, color: color),
@@ -71,47 +107,26 @@ class _PlanPageState extends State<PlanPage> {
     );
   }
 
-  DragAndDropList buildList(DraggableList list) => DragAndDropList(
-        header: Container(
-          padding: EdgeInsets.all(8),
-          child: Text(
-            list.day,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-        ),
-        children: list.activities
-            .map((item) => DragAndDropItem(
-                  child: ListTile(
-                    //TODO: change to ICON
-                    leading: item.icon,
-                    title: Text(item.title),
-                  ),
-                ))
-            .toList(),
-      );
+  _buildItem(String item) {
+    return DragAndDropItem(
+      child: ListTile(
+        title: Text(item),
+      ),
+    );
+  }
 
-  void onReorderListItem(
-    int oldItemIndex,
-    int oldListIndex,
-    int newItemIndex,
-    int newListIndex,
-  ) {
+  _onItemReorder(
+      int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
-      final oldListItems = lists[oldListIndex].children;
-      final newListItems = lists[newListIndex].children;
-
-      final movedItem = oldListItems.removeAt(oldItemIndex);
-      newListItems.insert(newItemIndex, movedItem);
+      var movedItem = _lists[oldListIndex].children.removeAt(oldItemIndex);
+      _lists[newListIndex].children.insert(newItemIndex, movedItem);
     });
   }
 
-  void onReorderList(
-    int oldListIndex,
-    int newListIndex,
-  ) {
+  _onListReorder(int oldListIndex, int newListIndex) {
     setState(() {
-      final movedList = lists.removeAt(oldListIndex);
-      lists.insert(newListIndex, movedList);
+      var movedList = _lists.removeAt(oldListIndex);
+      _lists.insert(newListIndex, movedList);
     });
   }
 }

@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
     SearchPage(),
     MainMenu(),
     //WebScraperApp(),
-    PlanPage(),
+    ExpansionTileExample(),
     AuthScreenPlaceHolder(),
   ];
 

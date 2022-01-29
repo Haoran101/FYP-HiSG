@@ -1,59 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/user_model.dart';
 import 'cloud_firestore_look_up.dart' as lookuptables;
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-class UserDatabase {
-  final CollectionReference _userCollection = firestore.collection('users');
-
-  //add a new default user (email)
-  void addDefaultUser(UserDetails user) async {
-    DocumentReference documentReferencer = _userCollection.doc(user.uid);
-    var data = user.toJSON();
-    var uid = user.uid;
-    await documentReferencer.set(data).whenComplete(() {
-      print("New user $uid added to the database");
-      return user;
-    }).catchError((e, stackTrace) {
-      print(e);
-      print(stackTrace);
-    });
-  }
-
-  //add a new default google user
-  void addDefaultGoogleUser(UserDetails googleUser) async {
-    DocumentReference documentReferencer = _userCollection.doc(googleUser.uid);
-
-    var data = googleUser.toJSON();
-    var uid = googleUser.uid;
-
-    await documentReferencer.set(data).whenComplete(() {
-      print("New user $uid added to the database");
-    }).catchError((e) => print(e));
-  }
-
-  //get user document from firestore
-  Future<UserDetails?> getUser(String? uid) async {
-    try {
-      var userFromDataBaseSnapshot = await _userCollection.doc(uid).get();
-      Map<String, dynamic> userdata =
-          userFromDataBaseSnapshot.data() as Map<String, dynamic>;
-      return UserDetails.fromMap(userdata);
-    } catch (error, stacktrace) {
-      print(error);
-      print(stacktrace);
-      return null;
-    }
-  }
-
-  //update properties of user
-  updateUserProperty(UserDetails userInfo) async {
-    Map<String, dynamic> updateItems = userInfo.toJSON();
-    DocumentReference docRef = _userCollection.doc(userInfo.uid);
-    await docRef.set(updateItems);
-  }
-}
 
 class Image360Provider {
   final CollectionReference _image360Collection =

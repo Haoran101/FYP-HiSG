@@ -21,6 +21,7 @@ extension ParseToString on DataSource {
 }
 
 class SearchResult {
+  String resultId = " ";
   String title = " ";
   String? subtitle;
   Icon? icon;
@@ -33,13 +34,12 @@ class SearchResult {
 
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> mapData = new Map<String, dynamic>();
+    mapData["resultId"] = resultId;
     mapData["title"] = title;
     mapData["subtitle"] = subtitle;
     mapData["icon"] = _iconProvider.IconToString(icon!);
     mapData["source"] = source!.toShortString();
     mapData["details"] = details;
-    mapData["favoriated"] = favoriated;
-    mapData["planned"] = planned;
     return mapData;
   }
 
@@ -49,8 +49,7 @@ class SearchResult {
     icon = _iconProvider.stringToIcon(jsondata["icon"]);
     source = _stringToDataSource[jsondata["source"]];
     details = jsondata["details"];
-    favoriated = jsondata["favoriated"];
-    planned = jsondata["planned"];
+    resultId = jsondata["resultId"];
   }
 
   SearchResult.fromGoogle(Map<String, dynamic> jsondata) {
@@ -60,6 +59,8 @@ class SearchResult {
     icon = _iconProvider.mapGoogleIcon(jsondata["types"].first);
     source = DataSource.Google;
     details = jsondata;
+    var placeId = jsondata["details"]["place_id"];
+    resultId = "Google>$placeId";
   }
 
   SearchResult.fromTIH(Map<String, dynamic> jsondata) {
@@ -68,15 +69,19 @@ class SearchResult {
     subtitle = _textConverter(jsondata["dataset"]);
     source = DataSource.TIH;
     details = jsondata;
+    var dataset = jsondata["dataset"];
+    var uuid = jsondata["uuid"];
+    resultId = "TIH>$dataset>$uuid";
   }
 
   SearchResult.from360ImageDataset(Map<String, dynamic> jsondata) {
     title = jsondata["title"].toString();
-
     icon = _iconProvider.IMAGE_360_ICON;
     source = DataSource.Photo360;
     details = jsondata;
     subtitle = "360 PHOTO";
+    var docref = jsondata["data_handle"];
+    resultId = "cloud>360_photos>$docref";
   }
 
   SearchResult.from360VideoStorage(Map<String, dynamic> jsondata) {
@@ -86,6 +91,8 @@ class SearchResult {
     source = DataSource.Video360;
     details = jsondata;
     subtitle = "360 VIDEO";
+    var docref = jsondata["name"].toLowerCase().replace("-", "").replace(" ", "_");
+    resultId = "cloud>360_video_storage>$docref";
   }
 
   SearchResult.from360VideoYouTube(Map<String, dynamic> jsondata) {
@@ -95,6 +102,8 @@ class SearchResult {
     source = DataSource.Video360YouTube;
     details = jsondata;
     subtitle = "360 VIDEO";
+    var docref = jsondata["ContentDetails"]["videoId"];
+    resultId = "cloud>360_videos>$docref";
   }
 
   SearchResult.fromMRTdataset(Map<String, dynamic> jsondata) {
@@ -104,6 +113,8 @@ class SearchResult {
     source = DataSource.MRT;
     details = jsondata;
     subtitle = "MRT STATION";
+    var docref = jsondata["Name English Malay"].replace(" ", "_").toLowerCase();
+    resultId = "cloud>MRT>$docref";
   }
 
   SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata) {
@@ -113,6 +124,8 @@ class SearchResult {
     source = DataSource.Hotels;
     details = jsondata;
     subtitle = "HOTEL";
+    var docref = jsondata["place_id"];
+    resultId = "cloud>hotels>$docref";
   }
 }
 

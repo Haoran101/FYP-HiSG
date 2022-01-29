@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/user_model.dart';
+import 'package:wikitude_flutter_app/User/user_database.dart';
+import 'package:wikitude_flutter_app/User/user_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 // ignore: must_be_immutable
