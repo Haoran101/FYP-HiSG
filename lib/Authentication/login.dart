@@ -3,6 +3,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+import 'package:wikitude_flutter_app/Models/user_model.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 import 'package:wikitude_flutter_app/main.dart';
 
 // ignore: must_be_immutable
@@ -15,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final UserService _user = UserService();
   final _formkey = GlobalKey<FormState>();
 
   var email = " ";
@@ -27,8 +30,10 @@ class _LoginPageState extends State<LoginPage> {
   userLogin() async {
     try {
       //if email & password correct -> navigate to user main page
-      await FirebaseAuth.instance
+      UserCredential credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      //set user to global user service
+      _user.setDefaultEmailUser(credential.user!.uid);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (error) {
@@ -73,11 +78,11 @@ class _LoginPageState extends State<LoginPage> {
 
     // Once signed in, return the UserCredential
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
-
+      UserCredential signInCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      String? uid = signInCredential.user!.uid;
+      print(uid);
       //fetch the created uid, display name and photo and add it to firestore users database
-      UserDatabase().addDefaultGoogleUser(uid, displayName, photoURL);
+      _user.setDefaultGoogleUser(uid, displayName, photoURL);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (error) {

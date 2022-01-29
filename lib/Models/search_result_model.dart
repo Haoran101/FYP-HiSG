@@ -1,4 +1,7 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 
 enum DataSource {
   Google,
@@ -11,26 +14,57 @@ enum DataSource {
   Hotels
 }
 
+extension ParseToString on DataSource {
+  String toShortString() {
+    return this.toString().split('.').last;
+  }
+}
+
 class SearchResult {
   String title = " ";
   String? subtitle;
   Icon? icon;
   DataSource? source;
   Map<String, dynamic>? details;
+  bool favoriated = false;
+  bool planned = false;
+
+  final _iconProvider = IconProvider();
+
+  Map<String, dynamic> toJSON() {
+    Map<String, dynamic> mapData = new Map<String, dynamic>();
+    mapData["title"] = title;
+    mapData["subtitle"] = subtitle;
+    mapData["icon"] = _iconProvider.IconToString(icon!);
+    mapData["source"] = source!.toShortString();
+    mapData["details"] = details;
+    mapData["favoriated"] = favoriated;
+    mapData["planned"] = planned;
+    return mapData;
+  }
+
+  SearchResult.fromDataBaseJSON(Map<String, dynamic> jsondata) {
+    title = jsondata["title"];
+    subtitle = jsondata["subtitle"];
+    icon = _iconProvider.stringToIcon(jsondata["icon"]);
+    source = _stringToDataSource[jsondata["source"]];
+    details = jsondata["details"];
+    favoriated = jsondata["favoriated"];
+    planned = jsondata["planned"];
+  }
 
   SearchResult.fromGoogle(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
 
     subtitle = _textConverter(jsondata["types"].first);
-    icon = _mapGoogleIcon(jsondata["types"].first);
+    icon = _iconProvider.mapGoogleIcon(jsondata["types"].first);
     source = DataSource.Google;
     details = jsondata;
   }
 
   SearchResult.fromTIH(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-
-    icon = _mapTIHIcon(jsondata["dataset"]);
+    icon = _iconProvider.mapTIHIcon(jsondata["dataset"]);
     subtitle = _textConverter(jsondata["dataset"]);
     source = DataSource.TIH;
     details = jsondata;
@@ -39,7 +73,7 @@ class SearchResult {
   SearchResult.from360ImageDataset(Map<String, dynamic> jsondata) {
     title = jsondata["title"].toString();
 
-    icon = Icon(Icons.vrpano_outlined, color: Colors.indigo);
+    icon = _iconProvider.IMAGE_360_ICON;
     source = DataSource.Photo360;
     details = jsondata;
     subtitle = "360 PHOTO";
@@ -48,7 +82,7 @@ class SearchResult {
   SearchResult.from360VideoStorage(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
 
-    icon = Icon(Icons.video_collection_outlined, color: Colors.indigo);
+    icon = _iconProvider.VIDEO_360_ICON;
     source = DataSource.Video360;
     details = jsondata;
     subtitle = "360 VIDEO";
@@ -57,7 +91,7 @@ class SearchResult {
   SearchResult.from360VideoYouTube(Map<String, dynamic> jsondata) {
     title = jsondata["snippet"]["title"].toString();
 
-    icon = Icon(Icons.video_collection_outlined, color: Colors.indigo);
+    icon = _iconProvider.VIDEO_360_ICON;
     source = DataSource.Video360YouTube;
     details = jsondata;
     subtitle = "360 VIDEO";
@@ -66,7 +100,7 @@ class SearchResult {
   SearchResult.fromMRTdataset(Map<String, dynamic> jsondata) {
     title = jsondata["Name Engish Malay"].toString();
 
-    icon = Icon(Icons.directions_transit, color: Colors.blueGrey[300]);
+    icon = _iconProvider.MRT_ICON;
     source = DataSource.MRT;
     details = jsondata;
     subtitle = "MRT STATION";
@@ -75,135 +109,24 @@ class SearchResult {
   SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
 
-    icon = Icon(Icons.local_hotel, color: Colors.cyan);
+    icon = _iconProvider.HOTEL_ICON;
     source = DataSource.Hotels;
     details = jsondata;
     subtitle = "HOTEL";
   }
 }
 
-final _BUS_iCON =
-    Icon(Icons.directions_bus_filled_outlined, color: Colors.blueGrey[300]);
-final _STORE_iCON = Icon(Icons.storefront_outlined, color: Colors.deepOrange);
-
-final _HEALTH_ICON = Icon(
-  Icons.local_hospital_outlined,
-  color: Colors.teal,
-);
-
-final _FOOD_ICON = Icon(Icons.restaurant_menu_outlined, color: Colors.amber);
-
-final _ATTRACTION_ICON =
-    Icon(Icons.attractions_outlined, color: Colors.pink[700]);
-
-final _SCHOOL_ICON = Icon(Icons.school_outlined, color: Colors.teal);
-
-final _MONEY_ICON = Icon(Icons.attach_money_outlined, color: Colors.orange);
-
-final _WINE_ICON = Icon(Icons.nightlife_outlined, color: Colors.purple[300]);
-
-final _TREE_ICON = Icon(Icons.park_outlined, color: Colors.green);
-
-_mapGoogleIcon(firstType) {
-  switch (firstType) {
-    case "bus_station":
-      return _BUS_iCON;
-    case "convenience_store":
-      return _STORE_iCON;
-    case "clothing_store":
-      return _STORE_iCON;
-    case "department_store":
-      return _STORE_iCON;
-    case "supermarket":
-      return _STORE_iCON;
-    case "shopping_mall":
-      return _STORE_iCON;
-    case "pet_store":
-      return _STORE_iCON;
-    case "pharmacy":
-      return _HEALTH_ICON;
-    case "drugstore":
-      return _HEALTH_ICON;
-    case "hospital":
-      return _HEALTH_ICON;
-    case "dentist":
-      return _HEALTH_ICON;
-    case "bakery":
-      return _FOOD_ICON;
-    case "cafe":
-      return _FOOD_ICON;
-    case "restaurant":
-      return _FOOD_ICON;
-    case "food":
-      return _FOOD_ICON;
-    case "meal_delivery":
-      return _FOOD_ICON;
-    case "meal_takeaway":
-      return _FOOD_ICON;
-    case "tourist_attraction":
-      return _ATTRACTION_ICON;
-    case "zoo":
-      return _ATTRACTION_ICON;
-    case "amusement_park":
-      return _ATTRACTION_ICON;
-    case "art_gallery":
-      return _ATTRACTION_ICON;
-    case "museum":
-      return _ATTRACTION_ICON;
-    case "university":
-      return _SCHOOL_ICON;
-    case "primary_school":
-      return _SCHOOL_ICON;
-    case "school":
-      return _SCHOOL_ICON;
-    case "secondary_school":
-      return _SCHOOL_ICON;
-    case "library":
-      return _SCHOOL_ICON;
-    case "atm":
-      return _MONEY_ICON;
-    case "bank":
-      return _MONEY_ICON;
-    case "bar":
-      return _WINE_ICON;
-    case "night_club":
-      return _WINE_ICON;
-    case "park":
-      return _TREE_ICON;
-    case "natural_feature":
-      return _TREE_ICON;
-    case "health":
-      return _HEALTH_ICON;
-    case "finance":
-      return _MONEY_ICON;
-    case "landmark":
-      return _ATTRACTION_ICON;
-
-    default:
-      return Icon(Icons.place, color: Colors.red);
-  }
-}
-
-_mapTIHIcon(dataset) {
-  switch (dataset) {
-    case "event":
-      return Icon(
-        Icons.local_activity_outlined,
-        color: Colors.amber,
-      );
-    case "precincts":
-      return Icon(Icons.villa_outlined, color: Colors.pink[700]);
-
-    case "tour":
-      return Icon(Icons.tour_outlined, color: Colors.red);
-
-    case "walking_trail":
-      return Icon(Icons.hiking_outlined, color: Colors.teal);
-    default:
-      return Icon(Icons.event_available_outlined);
-  }
-}
-
 String _textConverter(String text) {
   return text.split("_").join(" ").toUpperCase();
 }
+
+Map<String, DataSource> _stringToDataSource = {
+  "Google" : DataSource.Google,
+  "TIH" : DataSource.TIH,
+  "MRT" : DataSource.MRT,
+  "Video360" : DataSource.Video360,
+  "Article" : DataSource.Article,
+  "Photo360" : DataSource.Photo360,
+  "Video360YouTube" : DataSource.Video360YouTube,
+  "Hotels" : DataSource.Hotels,
+};

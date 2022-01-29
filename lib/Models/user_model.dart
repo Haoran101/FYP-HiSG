@@ -36,10 +36,10 @@ class UserDetails {
     settings = Map<String, dynamic>();
   }
 
-  UserDetails.newDefaultGoogleUser(String uidInput, String displayNameInput, String photoURLInput){
+  UserDetails.newDefaultGoogleUser(String uidInput, String? displayNameInput, String? photoURLInput){
     uid = uidInput;
-    displayName = displayNameInput;
-    photoURL = photoURLInput;
+    displayName = displayNameInput == null? "USER " + uidInput.substring(0,8): displayNameInput;
+    photoURL = photoURLInput == null? defaultProfilePhotoURL : photoURLInput;
     collectedBadges = <Map<String, dynamic>>[];
     searchHistory = <String>[];
     savedItems = <Map<String, dynamic>>[];

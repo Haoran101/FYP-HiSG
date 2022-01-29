@@ -4,6 +4,7 @@ import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';
@@ -18,8 +19,9 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  static const historyLength = 3;
-  List<String> _searchHistory = ["NTU", "NUS", "SMU"];
+  final UserService _user = UserService();
+  static const historyLength = 7;
+  List<String> _searchHistory = [];
   String selectedTerm = "";
   List<String> filteredSearchHistory = [];
   List<SearchResult> searchResult = [];
@@ -65,11 +67,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _searchHistory = _user.getSearchHistory();
     controller = FloatingSearchBarController();
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
   search() {
+    _user.syncSearchHistory(_searchHistory);
     //fetchGooglePlacesResultsList(); //Google places search
     fetchTIHResultsList(); //TIH database search
     //fetchImage360ResultsList(); //Image 360 search (cloud storage)
@@ -190,8 +194,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     if (hotelResult == null) {
       print("No results from Hotels dataset");
     } else {
-      var len = hotelResult.length;
-      print("hotelResult results: $len");
       hotelResult.forEach((hotel) {
         setState(() {
           searchResult.add(SearchResult.fromHotelsDataset(hotel));
@@ -219,6 +221,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _searchHistory = _user.getSearchHistory();
     return Container(
       padding: (EdgeInsets.only(top: 10)),
       child: FloatingSearchBar(
@@ -240,7 +243,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             searchResult = [];
             search();
           });
-
           controller.close();
         },
         builder: (context, transition) {
@@ -305,7 +307,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                                   searchResult = [];
                                   search();
                                 });
-
                                 controller.close();
                               },
                             ),

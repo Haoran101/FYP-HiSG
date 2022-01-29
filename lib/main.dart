@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
-import 'DataSource/web_scraper.dart';
+import 'package:wikitude_flutter_app/Plan/plan_main.dart';
+import 'package:wikitude_flutter_app/UI/test.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +18,13 @@ void main() async {
 }
 
 //Main App Runner
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder(
         future: _initialization,
         builder: (context, snapshot) {
@@ -57,8 +59,9 @@ class MyApp extends StatelessWidget {
 }
 
 /// This is the stateful widget that the main application instantiates.
+// ignore: must_be_immutable
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -74,7 +77,7 @@ class _HomeState extends State<Home> {
     SearchPage(),
     MainMenu(),
     //WebScraperApp(),
-    Text("test place holder"),
+    PlanPage(),
     AuthScreenPlaceHolder(),
   ];
 
@@ -88,10 +91,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      // appBar: AppBar(
-      // title: const Text('HiSG !', style: TextStyle(fontFamily: 'Jomhuria', fontSize: 80, color: pinkRedColor)),
-      // backgroundColor: Colors.white,
-      // ),
       body: Container(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

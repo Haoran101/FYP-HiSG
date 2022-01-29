@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/forget_password.dart';
 import 'package:wikitude_flutter_app/Authentication/login.dart';
 import 'package:wikitude_flutter_app/Authentication/signup.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 
 import 'user_main.dart';
 
@@ -10,14 +11,28 @@ enum AuthPage { login, signup, forget, usermain }
 
 // ignore: camel_case_types
 class AuthScreenPlaceHolder extends StatefulWidget {
+  AuthScreenPlaceHolder();
   
   @override
   State<AuthScreenPlaceHolder> createState() => _AuthScreenPlaceHolderState();
 }
 
 class _AuthScreenPlaceHolderState extends State<AuthScreenPlaceHolder> with AutomaticKeepAliveClientMixin{
-  AuthPage _currentPage = FirebaseAuth.instance.currentUser!= null? 
+  final UserService _user = UserService();
+  var _currentPage;
+
+  @override
+  void initState() {
+    defineCurrentPage();
+    super.initState();
+  }
+  
+  defineCurrentPage(){
+    _currentPage = _user.getCurrentUser != null? 
       AuthPage.usermain: AuthPage.login;
+  }
+  // AuthPage _currentPage = FirebaseAuth.instance.currentUser!= null? 
+  //     AuthPage.usermain: AuthPage.login;
   
   Map<AuthPage, String> title = {
     AuthPage.login: 'Login', 

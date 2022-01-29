@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/user_model.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 
 // ignore: must_be_immutable
 class UserMain extends StatefulWidget {
@@ -15,8 +16,14 @@ class UserMain extends StatefulWidget {
 }
 
 class _UserMainState extends State<UserMain>{
-
+  final UserService _user = UserService();
   UserDetails? user;
+
+  @override
+  void initState() {
+    user = _user.getCurrentUser;
+    super.initState();
+  }
   
   final defaultProfilePhotoURL =
       "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
@@ -24,7 +31,7 @@ class _UserMainState extends State<UserMain>{
   
   signout() async {
     await FirebaseAuth.instance.signOut();
-
+    _user.setCurrentUser = null;
     widget.setPage(AuthPage.login);
   }
 
@@ -32,7 +39,7 @@ class _UserMainState extends State<UserMain>{
     if (user == null) {
       UserDetails? fetchedUser =
           await UserDatabase().getUser(FirebaseAuth.instance.currentUser!.uid);
-
+      _user.setCurrentUser = fetchedUser;
       setState(() {
         user = fetchedUser;
       });
@@ -82,7 +89,6 @@ class _UserMainState extends State<UserMain>{
     if (user != null) {
       return getUIBody();
     } else {
-      print("implemented future");
       return FutureBuilder(
           future: getUser(),
           builder: (context, snapshot) {
