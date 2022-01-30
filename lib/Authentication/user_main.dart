@@ -31,7 +31,7 @@ class _UserMainState extends State<UserMain>{
   
   signout() async {
     await FirebaseAuth.instance.signOut();
-    _user.setCurrentUser = null;
+    _user.logout();
     widget.setPage(AuthPage.login);
   }
 

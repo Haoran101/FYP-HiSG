@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
+import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
 
@@ -13,14 +14,104 @@ class DetailPageContainer extends StatefulWidget {
 
 class _DetailPageContainerState extends State<DetailPageContainer> {
   final UserService _user = UserService();
-  late bool isFavorated;
-  late bool isInPlan;
+  bool isFavorated = false;
+  bool isInPlan = false;
 
   initState() {
     super.initState();
-    isFavorated = _user.checkItemFavorited(widget.searchResult);
-    //TODO: is in plan
+    _user
+        .checkItemFavorited(this.widget.searchResult)
+        .then((value) {
+          setState(() {
+            this.isFavorated = value;
+          });
+        });
+
     isInPlan = false;
+  }
+
+  _toggleFavorite() {
+    if (_user.getCurrentUser == null) {
+      //cannot do without login
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Not logged in. Cannot add to favorite."),
+        duration: Duration(seconds: 1),
+      ));
+      return;
+    }
+
+    //interact with database
+    if (isFavorated) {
+      //delete from favorite
+      try {
+        _user.deleteFromFavorite(this.widget.searchResult);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Deleted from Faviorite."),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      } catch (error, stacktrace) {
+        print(error);
+        print(stacktrace);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to delete from Faviorite."),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    } else {
+      //add to favorite
+      try {
+        _user.addToFavorite(this.widget.searchResult);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Added to Faviorite."),
+          duration: Duration(seconds: 1),
+        ));
+      } catch (error, stacktrace) {
+        print(error);
+        print(stacktrace);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to add to Faviorite."),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    }
+    setState(() {
+      //change current page state
+      isFavorated = !isFavorated;
+    });
+  }
+
+  _toggleInPlan() {
+    print(isInPlan);
+
+    if (_user.getCurrentUser == null) {
+      //cannot do without login
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Not logged in. Cannot add to plan."),
+        duration: Duration(seconds: 1),
+      ));
+      return;
+    }
+
+    if (isInPlan) {
+      //Notify item is already in plan
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Already in plan. Please edit in 'Plan' menu."),
+        duration: Duration(seconds: 1),
+      ));
+    } else {
+      //TODO: add to plan list
+
+    }
+
+    setState(() {
+      isInPlan = true;
+    });
   }
 
   String subPageTitle(item) {
@@ -33,7 +124,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
     }
   }
 
-  subpageContent(item) {
+  subpageContent(SearchResult item) {
     print(item.source);
     switch (item.source) {
       //TODO: uncomment this when need to form google page
@@ -52,12 +143,13 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
         return Experiences360Pages.display360VideoYouTube(item.details);
 
       default:
-        Text("default page");
+        return Text(item.toJSON().toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print("IsFavorited: " + isFavorated.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(subPageTitle(this.widget.searchResult)),
@@ -72,22 +164,19 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
           child: Row(
             children: [
               Spacer(),
+              //Favorite icon
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(
-                  child: isFavorated
-                      ? Icon(Icons.favorite_outlined,
-                          color: Colors.amber, size: 30)
-                      : Icon(
-                          Icons.favorite_border,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                ),
+                    onTap: _toggleFavorite,
+                    child: isFavorated
+                        ? IconProvider().FAVORITED_ICON
+                        : IconProvider().NOT_FAVORITED_ICON),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(
+                  onTap: _toggleInPlan,
                   child: isInPlan
                       ? Icon(Icons.event_available_outlined,
                           color: Colors.amber, size: 30)

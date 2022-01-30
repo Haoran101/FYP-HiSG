@@ -3,196 +3,203 @@
 import 'package:flutter/material.dart';
 
 class IconProvider {
-  
-final VIDEO_360_ICON = Icon(Icons.video_collection_outlined, color: Colors.indigo);
+  final NOT_FAVORITED_ICON = Icon(
+    Icons.favorite_border,
+    color: Colors.white,
+    size: 30,
+  );
 
-final MRT_ICON = Icon(Icons.directions_transit, color: Colors.blueGrey[300]);
+  final FAVORITED_ICON =
+      Icon(Icons.favorite_outlined, color: Colors.amber, size: 30);
 
-final HOTEL_ICON = Icon(Icons.local_hotel, color: Colors.cyan);
+  final VIDEO_360_ICON =
+      Icon(Icons.video_collection_outlined, color: Colors.indigo);
 
-final BUS_iCON =
-    Icon(Icons.directions_bus_filled_outlined, color: Colors.blueGrey[300]);
-final STORE_iCON = Icon(Icons.storefront_outlined, color: Colors.deepOrange);
+  final MRT_ICON = Icon(Icons.directions_transit, color: Colors.blueGrey[300]);
 
-final HEALTH_ICON = Icon(
-  Icons.local_hospital_outlined,
-  color: Colors.teal,
-);
+  final HOTEL_ICON = Icon(Icons.local_hotel, color: Colors.cyan);
 
-final IMAGE_360_ICON = Icon(Icons.vrpano_outlined, color: Colors.indigo);
+  final BUS_iCON =
+      Icon(Icons.directions_bus_filled_outlined, color: Colors.blueGrey[300]);
+  final STORE_iCON = Icon(Icons.storefront_outlined, color: Colors.deepOrange);
 
-final FOOD_ICON = Icon(Icons.restaurant_menu_outlined, color: Colors.amber);
+  final HEALTH_ICON = Icon(
+    Icons.local_hospital_outlined,
+    color: Colors.teal,
+  );
 
-final ATTRACTION_ICON =
-    Icon(Icons.attractions_outlined, color: Colors.pink[700]);
+  final IMAGE_360_ICON = Icon(Icons.vrpano_outlined, color: Colors.indigo);
 
-final SCHOOL_ICON = Icon(Icons.school_outlined, color: Colors.teal);
+  final FOOD_ICON = Icon(Icons.restaurant_menu_outlined, color: Colors.amber);
 
-final MONEY_ICON = Icon(Icons.attach_money_outlined, color: Colors.orange);
+  final ATTRACTION_ICON =
+      Icon(Icons.attractions_outlined, color: Colors.pink[700]);
 
-final WINE_ICON = Icon(Icons.nightlife_outlined, color: Colors.purple[300]);
+  final SCHOOL_ICON = Icon(Icons.school_outlined, color: Colors.teal);
 
-final TREE_ICON = Icon(Icons.park_outlined, color: Colors.green);
+  final MONEY_ICON = Icon(Icons.attach_money_outlined, color: Colors.orange);
 
-final EVENT_ICON = Icon(
-        Icons.local_activity_outlined,
-        color: Colors.amber,
-      );
+  final WINE_ICON = Icon(Icons.nightlife_outlined, color: Colors.purple[300]);
 
-final PRECINCT_ICON = Icon(Icons.villa_outlined, color: Colors.pink[700]);
+  final TREE_ICON = Icon(Icons.park_outlined, color: Colors.green);
 
-final TOUR_ICON = Icon(Icons.tour_outlined, color: Colors.red);
+  final EVENT_ICON = Icon(
+    Icons.local_activity_outlined,
+    color: Colors.amber,
+  );
 
-final WALKING_TRAIL_ICON = Icon(Icons.hiking_outlined, color: Colors.teal);
+  final PRECINCT_ICON = Icon(Icons.villa_outlined, color: Colors.pink[700]);
 
-final TIH_DEFAULT_ICON = Icon(Icons.event_available_outlined);
+  final TOUR_ICON = Icon(Icons.tour_outlined, color: Colors.red);
 
-final GOOGLE_DEFAULT_ICON = Icon(Icons.place, color: Colors.red);
+  final WALKING_TRAIL_ICON = Icon(Icons.hiking_outlined, color: Colors.teal);
 
-Icon stringToIcon(String iconString) {
-  
-  Map<String, Icon> map = {
-  "GOOGLE_DEFAULT_ICON" : GOOGLE_DEFAULT_ICON,
-  "TIH_DEFAULT_ICON" : TIH_DEFAULT_ICON,
-  "WALKING_TRAIL_ICON" : WALKING_TRAIL_ICON,
-  "TOUR_ICON" : TOUR_ICON,
-  "VIDEO_360_ICON" : VIDEO_360_ICON,
-  "MRT_ICON" : MRT_ICON,
-  "HOTEL_ICON" : HOTEL_ICON,
-  "BUS_iCON" : BUS_iCON,
-  "HEALTH_ICON" : HEALTH_ICON,
-  "IMAGE_360_ICON" : IMAGE_360_ICON,
-  "FOOD_ICON" : FOOD_ICON,
-  "ATTRACTION_ICON" : ATTRACTION_ICON,
-  "SCHOOL_ICON" : SCHOOL_ICON,
-  "MONEY_ICON" : MONEY_ICON,
-  "WINE_ICON" : WINE_ICON,
-  "TREE_ICON" : TREE_ICON,
-  "EVENT_ICON" : EVENT_ICON,
-  "PRECINCT_ICON" : PRECINCT_ICON,
-  };
-  return map[iconString]!;
-}
+  final TIH_DEFAULT_ICON = Icon(Icons.event_available_outlined);
 
-String IconToString(Icon icon) {
+  final GOOGLE_DEFAULT_ICON = Icon(Icons.place, color: Colors.red);
 
-  Map <Icon, String> map = {
-  GOOGLE_DEFAULT_ICON : "GOOGLE_DEFAULT_ICON",
-  TIH_DEFAULT_ICON : "TIH_DEFAULT_ICON",
-  WALKING_TRAIL_ICON : "WALKING_TRAIL_ICON",
-  TOUR_ICON : "TOUR_ICON",
-  VIDEO_360_ICON : "VIDEO_360_ICON",
-  MRT_ICON : "MRT_ICON",
-  HOTEL_ICON : "HOTEL_ICON",
-  BUS_iCON : "BUS_iCON",
-  HEALTH_ICON : "HEALTH_ICON",
-  IMAGE_360_ICON : "IMAGE_360_ICON",
-  FOOD_ICON : "FOOD_ICON",
-  ATTRACTION_ICON : "ATTRACTION_ICON",
-  SCHOOL_ICON : "SCHOOL_ICON",
-  MONEY_ICON : "MONEY_ICON",
-  WINE_ICON : "WINE_ICON",
-  TREE_ICON : "TREE_ICON",
-  EVENT_ICON : "EVENT_ICON",
-  PRECINCT_ICON : "PRECINCT_ICON",
-  };
-  return map[icon]!;
-}
-
-mapGoogleIcon(firstType) {
-  switch (firstType) {
-    case "bus_station":
-      return BUS_iCON;
-    case "convenience_store":
-      return STORE_iCON;
-    case "clothing_store":
-      return STORE_iCON;
-    case "department_store":
-      return STORE_iCON;
-    case "supermarket":
-      return STORE_iCON;
-    case "shopping_mall":
-      return STORE_iCON;
-    case "pet_store":
-      return STORE_iCON;
-    case "pharmacy":
-      return HEALTH_ICON;
-    case "drugstore":
-      return HEALTH_ICON;
-    case "hospital":
-      return HEALTH_ICON;
-    case "dentist":
-      return HEALTH_ICON;
-    case "bakery":
-      return FOOD_ICON;
-    case "cafe":
-      return FOOD_ICON;
-    case "restaurant":
-      return FOOD_ICON;
-    case "food":
-      return FOOD_ICON;
-    case "meal_delivery":
-      return FOOD_ICON;
-    case "meal_takeaway":
-      return FOOD_ICON;
-    case "tourist_attraction":
-      return ATTRACTION_ICON;
-    case "zoo":
-      return ATTRACTION_ICON;
-    case "amusement_park":
-      return ATTRACTION_ICON;
-    case "art_gallery":
-      return ATTRACTION_ICON;
-    case "museum":
-      return ATTRACTION_ICON;
-    case "university":
-      return SCHOOL_ICON;
-    case "primary_school":
-      return SCHOOL_ICON;
-    case "school":
-      return SCHOOL_ICON;
-    case "secondary_school":
-      return SCHOOL_ICON;
-    case "library":
-      return SCHOOL_ICON;
-    case "atm":
-      return MONEY_ICON;
-    case "bank":
-      return MONEY_ICON;
-    case "bar":
-      return WINE_ICON;
-    case "night_club":
-      return WINE_ICON;
-    case "park":
-      return TREE_ICON;
-    case "natural_feature":
-      return TREE_ICON;
-    case "health":
-      return HEALTH_ICON;
-    case "finance":
-      return MONEY_ICON;
-    case "landmark":
-      return ATTRACTION_ICON;
-
-    default:
-      return GOOGLE_DEFAULT_ICON;
+  Icon stringToIcon(String iconString) {
+    Map<String, Icon> map = {
+      "GOOGLE_DEFAULT_ICON": GOOGLE_DEFAULT_ICON,
+      "TIH_DEFAULT_ICON": TIH_DEFAULT_ICON,
+      "WALKING_TRAIL_ICON": WALKING_TRAIL_ICON,
+      "TOUR_ICON": TOUR_ICON,
+      "VIDEO_360_ICON": VIDEO_360_ICON,
+      "MRT_ICON": MRT_ICON,
+      "HOTEL_ICON": HOTEL_ICON,
+      "BUS_iCON": BUS_iCON,
+      "HEALTH_ICON": HEALTH_ICON,
+      "IMAGE_360_ICON": IMAGE_360_ICON,
+      "FOOD_ICON": FOOD_ICON,
+      "ATTRACTION_ICON": ATTRACTION_ICON,
+      "SCHOOL_ICON": SCHOOL_ICON,
+      "MONEY_ICON": MONEY_ICON,
+      "WINE_ICON": WINE_ICON,
+      "TREE_ICON": TREE_ICON,
+      "EVENT_ICON": EVENT_ICON,
+      "PRECINCT_ICON": PRECINCT_ICON,
+    };
+    return map[iconString]!;
   }
-}
 
-mapTIHIcon(dataset) {
-  switch (dataset) {
-    case "event":
-      return EVENT_ICON;
-    case "precincts":
-      return PRECINCT_ICON;
-
-    case "tour":
-      return TOUR_ICON;
-
-    case "walking_trail":
-      return WALKING_TRAIL_ICON;
-    default:
-      return TIH_DEFAULT_ICON;
+  String IconToString(Icon icon) {
+    Map<Icon, String> map = {
+      GOOGLE_DEFAULT_ICON: "GOOGLE_DEFAULT_ICON",
+      TIH_DEFAULT_ICON: "TIH_DEFAULT_ICON",
+      WALKING_TRAIL_ICON: "WALKING_TRAIL_ICON",
+      TOUR_ICON: "TOUR_ICON",
+      VIDEO_360_ICON: "VIDEO_360_ICON",
+      MRT_ICON: "MRT_ICON",
+      HOTEL_ICON: "HOTEL_ICON",
+      BUS_iCON: "BUS_iCON",
+      HEALTH_ICON: "HEALTH_ICON",
+      IMAGE_360_ICON: "IMAGE_360_ICON",
+      FOOD_ICON: "FOOD_ICON",
+      ATTRACTION_ICON: "ATTRACTION_ICON",
+      SCHOOL_ICON: "SCHOOL_ICON",
+      MONEY_ICON: "MONEY_ICON",
+      WINE_ICON: "WINE_ICON",
+      TREE_ICON: "TREE_ICON",
+      EVENT_ICON: "EVENT_ICON",
+      PRECINCT_ICON: "PRECINCT_ICON",
+    };
+    return map[icon]!;
   }
-}
+
+  mapGoogleIcon(firstType) {
+    switch (firstType) {
+      case "bus_station":
+        return BUS_iCON;
+      case "convenience_store":
+        return STORE_iCON;
+      case "clothing_store":
+        return STORE_iCON;
+      case "department_store":
+        return STORE_iCON;
+      case "supermarket":
+        return STORE_iCON;
+      case "shopping_mall":
+        return STORE_iCON;
+      case "pet_store":
+        return STORE_iCON;
+      case "pharmacy":
+        return HEALTH_ICON;
+      case "drugstore":
+        return HEALTH_ICON;
+      case "hospital":
+        return HEALTH_ICON;
+      case "dentist":
+        return HEALTH_ICON;
+      case "bakery":
+        return FOOD_ICON;
+      case "cafe":
+        return FOOD_ICON;
+      case "restaurant":
+        return FOOD_ICON;
+      case "food":
+        return FOOD_ICON;
+      case "meal_delivery":
+        return FOOD_ICON;
+      case "meal_takeaway":
+        return FOOD_ICON;
+      case "tourist_attraction":
+        return ATTRACTION_ICON;
+      case "zoo":
+        return ATTRACTION_ICON;
+      case "amusement_park":
+        return ATTRACTION_ICON;
+      case "art_gallery":
+        return ATTRACTION_ICON;
+      case "museum":
+        return ATTRACTION_ICON;
+      case "university":
+        return SCHOOL_ICON;
+      case "primary_school":
+        return SCHOOL_ICON;
+      case "school":
+        return SCHOOL_ICON;
+      case "secondary_school":
+        return SCHOOL_ICON;
+      case "library":
+        return SCHOOL_ICON;
+      case "atm":
+        return MONEY_ICON;
+      case "bank":
+        return MONEY_ICON;
+      case "bar":
+        return WINE_ICON;
+      case "night_club":
+        return WINE_ICON;
+      case "park":
+        return TREE_ICON;
+      case "natural_feature":
+        return TREE_ICON;
+      case "health":
+        return HEALTH_ICON;
+      case "finance":
+        return MONEY_ICON;
+      case "landmark":
+        return ATTRACTION_ICON;
+
+      default:
+        return GOOGLE_DEFAULT_ICON;
+    }
+  }
+
+  mapTIHIcon(dataset) {
+    switch (dataset) {
+      case "event":
+        return EVENT_ICON;
+      case "precincts":
+        return PRECINCT_ICON;
+
+      case "tour":
+        return TOUR_ICON;
+
+      case "walking_trail":
+        return WALKING_TRAIL_ICON;
+      default:
+        return TIH_DEFAULT_ICON;
+    }
+  }
 }

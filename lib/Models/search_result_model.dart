@@ -102,7 +102,7 @@ class SearchResult {
     source = DataSource.Video360YouTube;
     details = jsondata;
     subtitle = "360 VIDEO";
-    var docref = jsondata["ContentDetails"]["videoId"];
+    var docref = jsondata["contentDetails"]["videoId"];
     resultId = "cloud>360_videos>$docref";
   }
 

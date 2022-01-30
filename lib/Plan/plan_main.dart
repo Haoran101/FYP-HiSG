@@ -1,5 +1,13 @@
+// ignore_for_file: unnecessary_import
+
+import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
+import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:drag_and_drop_lists/drag_handle.dart';
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/Plan/plan_model.dart';
+import 'package:wikitude_flutter_app/User/UserService.dart';
 
 class ExpansionTileExample extends StatefulWidget {
   ExpansionTileExample({Key? key}) : super(key: key);
@@ -8,25 +16,15 @@ class ExpansionTileExample extends StatefulWidget {
   _ListTileExample createState() => _ListTileExample();
 }
 
-class InnerList {
-  final String name;
-  List<String> children;
-  InnerList({required this.name, required this.children});
-}
-
 class _ListTileExample extends State<ExpansionTileExample> {
-  late List<InnerList> _lists;
+  late Plan _plan;
+  final UserService _user = UserService();
 
   @override
   void initState() {
     super.initState();
-
-    _lists = List.generate(3, (outerIndex) {
-      return InnerList(
-        name: outerIndex.toString(),
-        children: List.generate(5, (innerIndex) => '$outerIndex.$innerIndex'),
-      );
-    });
+    //TODO: get plan from user database
+    
   }
 
   @override
@@ -42,7 +40,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
           padding: const EdgeInsets.all(20.0),
           child: DragAndDropLists(
               children:
-                  List.generate(_lists.length, (index) => _buildList(index)),
+                  List.generate(_plan.days.length, (index) => _buildList(index)),
               onItemReorder: _onItemReorder,
               onListReorder: _onListReorder,
               itemDragOnLongPress: true,
@@ -69,21 +67,21 @@ class _ListTileExample extends State<ExpansionTileExample> {
   }
 
   _buildList(int outerIndex) {
-    var innerList = _lists[outerIndex];
+    Day day = _plan.days[outerIndex];
     return DragAndDropListExpansion(
       canDrag: false,
       initiallyExpanded: outerIndex == 0? true: false,
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'List ${innerList.name}',
+          'List ${day.dayRef}',
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-      children: List.generate(innerList.children.length,
-          (index) => _buildItem(innerList.children[index])),
-      listKey: ObjectKey(innerList),
+      children: List.generate(day.activities.length,
+          (index) => _buildItem(day.activities[index])),
+      listKey: ObjectKey(day.activities),
     );
   }
 
@@ -107,10 +105,23 @@ class _ListTileExample extends State<ExpansionTileExample> {
     );
   }
 
-  _buildItem(String item) {
+  _buildItem(SearchResult item) {
     return DragAndDropItem(
-      child: ListTile(
-        title: Text(item),
+      child: Dismissible(
+        key: Key(item.resultId),
+        child: ListTile(
+          leading: item.icon,
+          title: Text(item.title),
+          subtitle: Text(item.subtitle!),
+        ),
+        onDismissed: (direction) {
+          //left to right
+          if (direction == DismissDirection.startToEnd) {
+            //TODO: add to archieve
+          } else if (direction == DismissDirection.endToStart){
+            //TODO: delete item  
+          }
+        },
       ),
     );
   }
@@ -118,15 +129,15 @@ class _ListTileExample extends State<ExpansionTileExample> {
   _onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
-      var movedItem = _lists[oldListIndex].children.removeAt(oldItemIndex);
-      _lists[newListIndex].children.insert(newItemIndex, movedItem);
+      var movedItem = _plan.days[oldListIndex].activities.removeAt(oldItemIndex);
+      _plan.days[newListIndex].activities.insert(newItemIndex, movedItem);
     });
   }
 
   _onListReorder(int oldListIndex, int newListIndex) {
     setState(() {
-      var movedList = _lists.removeAt(oldListIndex);
-      _lists.insert(newListIndex, movedList);
+      var movedList = _plan.days.removeAt(oldListIndex);
+      _plan.days.insert(newListIndex, movedList);
     });
   }
 }

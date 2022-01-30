@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wikitude_flutter_app/Plan/favorites.dart';
 import 'package:wikitude_flutter_app/Plan/plan_main.dart';
 import 'package:wikitude_flutter_app/UI/test.dart';
 import 'firebase_options.dart';
@@ -77,7 +78,8 @@ class _HomeState extends State<Home> {
     SearchPage(),
     MainMenu(),
     //WebScraperApp(),
-    ExpansionTileExample(),
+    //ExpansionTileExample(),
+    Favorites(),
     AuthScreenPlaceHolder(),
   ];
 
