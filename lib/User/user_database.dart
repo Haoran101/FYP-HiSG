@@ -130,7 +130,7 @@ class UserDatabase {
     CollectionReference<Map<String, dynamic>> _planCollection =
         _userCollection.doc(uid).collection("plan");
     DocumentReference<Map<String, dynamic>> planMain =
-        await _planCollection.doc("main");
+        _planCollection.doc("main");
     try {
       await planMain.set(updatedPlanMain).whenComplete(() {
         print("SUCCESS: updated plan main");

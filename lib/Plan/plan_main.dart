@@ -155,6 +155,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
       var movedItem = _plan.dayList[oldListIndex].activities.removeAt(oldItemIndex);
       _plan.dayList[newListIndex].activities.insert(newItemIndex, movedItem);
     });
+    _plan.updateMain();
+    _user.updatePlanMainInDatabase(_plan.toMainJSON());
   }
 
   _onListReorder(int oldListIndex, int newListIndex) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import 'package:wikitude_flutter_app/User/user_database.dart';
+
 final _userService = UserService();
 
 class Plan {
@@ -15,32 +16,34 @@ class Plan {
     return this.toMainJSON().toString();
   }
 
-  Future init() async{
+  Future init() async {
     //init list day
     List<Day> listday = [];
-    for (Map<String, dynamic> dayItem in this.main["day_list"]){
+    for (Map<String, dynamic> dayItem in this.main["day_list"]) {
       Day day = Day(name: dayItem["name"].toString());
-      await day.initActivities(dayItem["activities"]);
-      listday.add(day);
+      day
+          .initActivities(dayItem["activities"])
+          .whenComplete(() => listday.add(day));
     }
-    
-    Day archieve = Day(name: "Archieve");
-    await archieve.initActivities(this.main["archieve"]);
-    listday.add(archieve);
 
-    this.dayList = listday;
-    this.archieve = archieve;
+    Day archieve = Day(name: "Archieve");
+    archieve.initActivities(this.main["archieve"]).whenComplete(() {
+      listday.add(archieve);
+
+      this.dayList = listday;
+      this.archieve = archieve;
+    });
   }
 
   void updateMain() {
-    this.main["next_day"] = this.dayList.length + 1;
+    this.main["next_day"] = this.dayList.length;
     this.main["day_list"] = List.generate(
-      this.dayList.length - 1, (index) => this.dayList[index].toMainJSON());
+        this.dayList.length - 1, (index) => this.dayList[index].toMainJSON());
     this.main["archieve"] = this.archieve.toMainJSON()["activities"];
   }
 
   Map<String, dynamic> toMainJSON() {
-    //updateMain();
+    print("Main: " + this.main.toString());
     print("DayList:  " + this.dayList.toString());
     return this.main;
   }
@@ -48,7 +51,6 @@ class Plan {
   void addToArchieve(SearchResult item) {
     this.archieve.activities.add(item);
   }
-
 }
 
 class Day {
@@ -61,15 +63,15 @@ class Day {
   }
 
   List<String> getActivityIdList() {
-    return List.generate(this.activities.length, (index) => 
-      this.activities[index].resultId);
+    return List.generate(
+        this.activities.length, (index) => this.activities[index].resultId);
   }
 
   Map<String, dynamic> toMainJSON() {
     Map<String, dynamic> mapData = Map<String, dynamic>();
     mapData["name"] = this.name;
-    var resultIdList = List.generate(this.activities.length, (index) => 
-      this.activities[index].resultId);
+    var resultIdList = List.generate(
+        this.activities.length, (index) => this.activities[index].resultId);
     //print(resultIdList);
     mapData["activities"] = resultIdList;
     return mapData;
@@ -78,15 +80,15 @@ class Day {
   Map<String, dynamic> toJSON() {
     Map<String, dynamic> mapData = Map<String, dynamic>();
     mapData["name"] = this.name;
-    mapData["activities"] = List.generate(this.activities.length, (index) => 
-      this.activities[index].toJSON());
+    mapData["activities"] = List.generate(
+        this.activities.length, (index) => this.activities[index].toJSON());
     return mapData;
   }
 
-  Future initActivities(List<dynamic> resultIdList) async{
+  Future initActivities(List<dynamic> resultIdList) async {
     List<String> activities = List.castFrom(resultIdList);
-    _userService.fetchSearchResultsFromId(activities).then(
-      (searchResultList) => this.activities = searchResultList
-    );
+    _userService
+        .fetchSearchResultsFromId(activities)
+        .then((searchResultList) => this.activities = searchResultList);
   }
 }

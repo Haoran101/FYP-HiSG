@@ -163,10 +163,11 @@ class UserService {
           await _cloudstore.getPlannedItemMain(_currentUser!.uid!);
       print(planKeyJSON);
       Plan _p = Plan(main: planKeyJSON);
-      await _p.init();
-      this.plan = _p;
-      print("Plan fetched from database");
-      return _p;
+      _p.init().whenComplete(() {
+        this.plan = _p;
+        print("Plan fetched from database");
+        return _p;
+      });
     }
   }
 
@@ -233,5 +234,11 @@ class UserService {
       }
     }
     return false;
+  }
+
+  updatePlanMainInDatabase(Map<String, dynamic> planMain){
+    _cloudstore.updatePlannMainJSON(_currentUser!.uid!, planMain).whenComplete(
+      () => print("SUCCESS: updated plan main in collection.")
+    );
   }
 }
