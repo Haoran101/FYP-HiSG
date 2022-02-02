@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:wikitude_flutter_app/Plan/favorites.dart';
 import 'package:wikitude_flutter_app/Plan/plan_main.dart';
@@ -70,9 +72,7 @@ class Home extends StatefulWidget {
 /// This is the private State class that goes with Home.
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
+  
   @override
   void initState() {
     super.initState();

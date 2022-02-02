@@ -3,7 +3,6 @@
 import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'package:drag_and_drop_lists/drag_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
@@ -48,7 +47,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
           }
 
           if (snapshot.data == null) {
-            //TODO: not logged in page
+            //Not logged in page
             return Container(
                 child: Column(children: [
               SizedBox(
@@ -61,14 +60,14 @@ class _ListTileExample extends State<ExpansionTileExample> {
                     text: TextSpan(
                       text: 'Login to ',
                       style: TextStyle(
-                          fontSize: 28.0,
+                          fontSize: 32.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                       children: <TextSpan>[
                         TextSpan(
                             text: 'start a plan',
                             style: TextStyle(
-                                fontSize: 28.0,
+                                fontSize: 32.0,
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).primaryColor)),
                       ],
@@ -76,27 +75,37 @@ class _ListTileExample extends State<ExpansionTileExample> {
                   ),
                 ),
               ),
+              SizedBox(height: 70,),
               Container(
-                child: TextButton(
-                    child: Text("Login >>",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20
-                    ),),
-                    onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AuthScreenPlaceHolder()),
-                        )),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).primaryColor),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white)),
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AuthScreenPlaceHolder()),
+                            )),
+                  ),
+                ),
               ),
               Spacer(),
               Image.asset("assets/img/plan.jpg"),
-              SizedBox(
-                height: 50,
-              )
             ]));
           }
 
+          //Logged in plan page
           this._plan = snapshot.data!;
           return Container(
             height: 900,
@@ -123,12 +132,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
                       BoxShadow(color: Colors.black45, blurRadius: 5)
                     ],
                   ),
-                  // listDragHandle: _buildDragHandle(isList: true),
-                  // itemDragHandle: _buildDragHandle(),
                   // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
                   listGhost: Container(
                     height: 70,
-                    color: Colors.grey,
+                    color: Colors.grey[800]
                   )),
             ),
           );
@@ -153,26 +160,6 @@ class _ListTileExample extends State<ExpansionTileExample> {
       children: List.generate(day.activities.length,
           (index) => _buildItem(day.activities[index], index, outerIndex)),
       listKey: ObjectKey(day.activities),
-    );
-  }
-
-  DragHandle _buildDragHandle({bool isList = false}) {
-    if (isList) {
-      return DragHandle(
-        child: Container(
-          height: 0,
-        ),
-      );
-    }
-
-    final color = isList ? Colors.blueGrey : Colors.black26;
-
-    return DragHandle(
-      verticalAlignment: DragHandleVerticalAlignment.center,
-      child: Container(
-        padding: EdgeInsets.only(right: 10),
-        child: Icon(Icons.menu, color: color),
-      ),
     );
   }
 
@@ -217,9 +204,6 @@ class _ListTileExample extends State<ExpansionTileExample> {
           subtitle: Text(item.subtitle!),
         ),
         confirmDismiss: (DismissDirection direction) async {
-          final String alertTitle = (direction == DismissDirection.startToEnd)
-              ? "Archieve Confirmation"
-              : "Delete Confirmation";
           final String alertText = (direction == DismissDirection.startToEnd)
               ? "Move item to archieve?"
               : "Delete this item from plan?";
@@ -292,9 +276,6 @@ class _ListTileExample extends State<ExpansionTileExample> {
   }
 
   _onListReorder(int oldListIndex, int newListIndex) {
-    setState(() {
-      var movedList = _plan.dayList.removeAt(oldListIndex);
-      _plan.dayList.insert(newListIndex, movedList);
-    });
+    return;
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 class Test extends StatefulWidget {
@@ -13,13 +12,11 @@ class _TestState extends State<Test> {
   final UserService _user = UserService();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var userInfo = _user.getCurrentUser.toString();
     return Padding(
       padding: const EdgeInsets.all(40.0),
       child: Container(

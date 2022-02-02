@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'api_key.dart' as tih_api;
 import 'package:http/http.dart';
 
+// ignore: non_constant_identifier_names
 final API_KEY = tih_api.tih_authentication_key;
 
 class TIHDataProvider {
   final httpClient = Client();
 
   Future<List<Map<String, dynamic>>?> getTIHSearchResult(text) async {
-    String request_url =
+    String requestURL =
         "https://tih-api.stb.gov.sg/content/v1/search/all?dataset=event%2C%20precincts%2C%20tour%2C%20walking_trail&keyword=$text&language=en&distinct=Yes&apikey=$API_KEY";
-    final Uri request = Uri.parse(request_url);
+    final Uri request = Uri.parse(requestURL);
 
     print(request.toString());
     final response = await httpClient.get(request);

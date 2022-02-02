@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
@@ -16,7 +15,6 @@ class _FavoritesState extends State<Favorites> {
   @override
   void initState() {
     _user.getFavoriteItems();
-    // TODO: implement initState
     super.initState();
   }
   @override

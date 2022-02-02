@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
-import 'package:wikitude_flutter_app/User/user_database.dart';
 
 final _userService = UserService();
 

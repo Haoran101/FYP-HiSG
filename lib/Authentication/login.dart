@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/User/user_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import 'package:wikitude_flutter_app/main.dart';
 

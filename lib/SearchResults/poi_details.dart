@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../DataSource/google_maps_platform.dart';
@@ -138,6 +137,7 @@ class _POISubPageState extends State<POISubPage> {
   }
 }
 
+// ignore: must_be_immutable
 class GoogleImage extends StatefulWidget {
   final photoRef;
   bool cover = false;

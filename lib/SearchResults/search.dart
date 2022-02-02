@@ -3,7 +3,6 @@ import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
@@ -105,14 +104,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   fetchTIHResultsList() async {
-    List<Map<String, dynamic>>? TIHResult =
+    List<Map<String, dynamic>>? tihResult =
         await TIHDataProvider().getTIHSearchResult(selectedTerm);
-    if (TIHResult == null) {
+    if (tihResult == null) {
       print("No results from TIH");
     } else {
       //var len = TIHResult.length;
       //print("TIHResult results: $len");
-      TIHResult.forEach((tih) {
+      tihResult.forEach((tih) {
         setState(() {
           searchResult.add(SearchResult.fromTIH(tih));
         });
@@ -125,14 +124,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   fetchImage360ResultsList() async {
-    List<Map<String, dynamic>>? Image360Result =
+    List<Map<String, dynamic>>? image360Result =
         await Image360Provider().queryImage360ByTitle(selectedTerm);
-    if (Image360Result == null) {
+    if (image360Result == null) {
       print("No results from Image 360");
     } else {
       //var len = Image360Result.length;
       //print("Image360Result results: $len");
-      Image360Result.forEach((image) {
+      image360Result.forEach((image) {
         setState(() {
           searchResult.add(SearchResult.from360ImageDataset(image));
         });
@@ -141,14 +140,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   fetchVideo360YoutubeResultsList() async {
-    List<Map<String, dynamic>>? VideoYoutube360Result =
+    List<Map<String, dynamic>>? videoYoutube360Result =
         await Video360Provider().queryYoutubeVideo360ByTitle(selectedTerm);
-    if (VideoYoutube360Result == null) {
+    if (videoYoutube360Result == null) {
       print("No results from Youtube video 360");
     } else {
       //var len = VideoYoutube360Result.length;
       //print("VideoYoutube360Result results: $len");
-      VideoYoutube360Result.forEach((video) {
+      videoYoutube360Result.forEach((video) {
         setState(() {
           searchResult.add(SearchResult.from360VideoYouTube(video));
         });
@@ -157,14 +156,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   fetchVideo360StorageResultsList() async {
-    List<Map<String, dynamic>>? VideoStorage360Result =
+    List<Map<String, dynamic>>? videoStorage360Result =
         await Video360Provider().queryStorageVideo360ByTitle(selectedTerm);
-    if (VideoStorage360Result == null) {
+    if (videoStorage360Result == null) {
       print("No results from Storage video 360");
     } else {
       //var len = VideoStorage360Result.length;
       // print("VideoYoutube360Result results: $len");
-      VideoStorage360Result.forEach((video) {
+      videoStorage360Result.forEach((video) {
         setState(() {
           searchResult.add(SearchResult.from360VideoStorage(video));
         });

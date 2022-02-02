@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -25,7 +27,6 @@ class _TestPOIState extends State<TestPOI> {
   @override
   Widget build(BuildContext context) {
 
-    final test = getPOI();
     return Container(
       child: FutureBuilder(
         future: getPOI(), 

@@ -112,7 +112,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
         duration: Duration(seconds: 1),
       ));
     } else {
-      //TODO: add to plan list
+      //Add to plan list archieve
       try{
         _user.addToPlanArchieve(this.widget.searchResult);
         print("added to plan archieve.");
