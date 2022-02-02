@@ -120,8 +120,8 @@ class _SignUpState extends State<SignUp> {
       //fetch the created uid, display name and photo and add it to firestore users database
       //set global user
       _user.setDefaultGoogleUser(uid, displayName, photoURL);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
       print(error.code);
     }

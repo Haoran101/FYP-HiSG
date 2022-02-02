@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
         future: _initialization,
         builder: (context, snapshot) {
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          
+
           //Material App
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -53,7 +52,7 @@ class MyApp extends StatelessWidget {
                 bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
               ),
             ),
-            home: Home(),//Home Page of the App
+            home: Home(), //Home Page of the App
           );
         });
   }
@@ -73,14 +72,19 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static List<Widget> _widgetOptions = <Widget>[
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<Widget> _widgetOptions = <Widget>[
     DiscoverPage(),
     SearchPage(),
     MainMenu(),
     //WebScraperApp(),
     ExpansionTileExample(),
     //Favorites(),
-    //Test(),
     AuthScreenPlaceHolder(),
   ];
 
@@ -92,7 +96,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Container(
         child: _widgetOptions.elementAt(_selectedIndex),

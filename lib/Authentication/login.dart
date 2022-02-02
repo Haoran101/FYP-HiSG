@@ -34,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
           .signInWithEmailAndPassword(email: email, password: password);
       //set user to global user service
       _user.setDefaultEmailUser(credential.user!.uid);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
       //if user email is not registered
       if (error.code == 'user-not-found') {
@@ -83,8 +83,8 @@ class _LoginPageState extends State<LoginPage> {
       print(uid);
       //fetch the created uid, display name and photo and add it to firestore users database
       _user.setDefaultGoogleUser(uid, displayName, photoURL);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
       print(error.code);
     }

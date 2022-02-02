@@ -65,6 +65,7 @@ flutter:
     - assets/img/login/login.jpg
     - assets/img/login/profile.png
     - assets/img/login/signup.png
+    - assets/img/plan.jpg
     - assets/icons/google.png
     - samples/
     - samples/00_My_Test_Program/
