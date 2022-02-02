@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 class Test extends StatefulWidget {
@@ -9,13 +10,30 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  UserService _user = UserService();
+  final UserService _user = UserService();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var userInfo = _user.getCurrentUser.toString();
-    return Container(
-      child: Text(userInfo)
+    return Padding(
+      padding: const EdgeInsets.all(40.0),
+      child: Container(
+        child: 
+        FutureBuilder
+        (
+          future: _user.getPlan(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print("has error loading plan");
+            }
+            return Text("plan loaded");
+          })
+      ),
     );
   }
 }

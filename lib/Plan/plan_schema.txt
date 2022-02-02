@@ -1,0 +1,27 @@
+uid> plan (collection)
+
+doc: main
+{
+    "next_day" : int,
+    "day_list" : [
+        {
+            "name" : "Day 1",
+            "activities" : [
+             "activity_ref_1",
+             "activity_ref_2"
+            ]
+         },        
+    ],
+    "archieve" : 
+        {
+            name: "Archieve",
+            activities: [
+
+            ]
+        }
+}
+
+doc: activity_ref_1
+    activity json
+doc: activity_ref_2
+    activity json

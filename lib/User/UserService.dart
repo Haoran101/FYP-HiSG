@@ -35,8 +35,12 @@ class UserService {
       } else {
         _currentUser = existedEmailUser;
         favoriteItems = await getFavoriteItems().whenComplete(() {
-        print("Favorite item fetched from database.");
-      });
+          print("Favorite item fetched from database.");
+        });
+        await getPlan().then((p) {
+          this.plan = p;
+          print("Plan item fetched from database.");
+        });
         print("SUCCESS: email user existed retrieved from database: $uid");
       }
     }
@@ -64,6 +68,10 @@ class UserService {
       _currentUser = existedGoogleUser;
       favoriteItems = await getFavoriteItems().whenComplete(() {
         print("Favorite item fetched from database.");
+      });
+      await getPlan().then((p) {
+        this.plan = p;
+        print("Plan item fetched from database.");
       });
     }
   }
@@ -132,10 +140,96 @@ class UserService {
         print("SUCCESS: Favorite item fetched from database.");
       });
     }
-    for (SearchResult faveItem in favoriteItems){
+    for (SearchResult faveItem in favoriteItems) {
       if (faveItem.resultId == item.resultId) {
         print("Item is favorited");
         return true;
+      }
+    }
+    return false;
+  }
+
+  Future<Plan?> getPlan() async {
+    if (_currentUser == null) {
+      print("WARNING: unable to get plan due to not logged in");
+      return null;
+    }
+
+    if (this.plan != null) {
+      print("Plan fetched from cache");
+      return this.plan;
+    } else {
+      Map<String, dynamic> planKeyJSON =
+          await _cloudstore.getPlannedItemMain(_currentUser!.uid!);
+      print(planKeyJSON);
+      Plan _p = Plan(main: planKeyJSON);
+      await _p.init();
+      this.plan = _p;
+      print("Plan fetched from database");
+      return _p;
+    }
+  }
+
+  Future<List<SearchResult>> fetchSearchResultsFromId(
+      List<String> itemRefs) async {
+    List<SearchResult> dayItemList = [];
+    for (final itemRef in itemRefs) {
+      _cloudstore
+          .getPlannedDayItem(_currentUser!.uid!, itemRef)
+          .then((itemJSON) {
+        SearchResult sr = SearchResult.fromDataBaseJSON(itemJSON);
+        print(sr.resultId);
+        dayItemList.add(sr);
+      });
+    }
+    return dayItemList;
+  }
+
+  void addToPlanArchieve(SearchResult item) async {
+    print(plan!.toString());
+    if (_currentUser == null) {
+      print("WARNING: unable to get plan due to not logged in");
+      return;
+    }
+    if (plan == null) {
+      await getPlan().then((p) {
+        this.plan = p;
+        print("SUCCESS: unable to get plan due to not logged in");
+        try {
+          plan!.addToArchieve(item);
+          print(plan.toString());
+          _cloudstore.addPlanItem(_currentUser!.uid!, item);
+          print("SUCCESS: item added to plan > archieve");
+        } catch (error, stacktrace) {
+          print(error);
+          print(stacktrace);
+        }
+      });
+    } else {
+      try {
+        plan!.addToArchieve(item);
+        _cloudstore.addPlanItem(_currentUser!.uid!, item);
+        print("SUCCESS: item added to plan > archieve");
+      } catch (error, stacktrace) {
+        print(error);
+        print(stacktrace);
+      }
+    }
+  }
+
+  Future<bool> checkItemInPlan(SearchResult item) async {
+    if (_currentUser == null) {
+      print("WARNING: unable to get plan due to not logged in");
+      return false;
+    }
+    await getPlan().then((p) {
+      this.plan = p;
+      print("plan: " + plan!.toString());
+    });
+
+    for (Day d in plan!.dayList) {
+      for (var planedRef in d.getActivityIdList()) {
+        if (planedRef == item.resultId) return true;
       }
     }
     return false;

@@ -17,14 +17,13 @@ class ExpansionTileExample extends StatefulWidget {
 }
 
 class _ListTileExample extends State<ExpansionTileExample> {
-  late Plan _plan;
   final UserService _user = UserService();
+  late Plan _plan;
 
   @override
   void initState() {
     super.initState();
     //TODO: get plan from user database
-    
   }
 
   @override
@@ -34,47 +33,71 @@ class _ListTileExample extends State<ExpansionTileExample> {
         title: Text('Plan'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Container(
-        height: 900,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: DragAndDropLists(
-              children:
-                  List.generate(_plan.days.length, (index) => _buildList(index)),
-              onItemReorder: _onItemReorder,
-              onListReorder: _onListReorder,
-              itemDragOnLongPress: true,
-              listDragOnLongPress: true,
-              listDecorationWhileDragging: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-              ),
-              listDivider: Divider(thickness: 2, height: 2, color: Colors.grey),
-              itemDecorationWhileDragging: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 5)],
-              ),
-              listDragHandle: _buildDragHandle(isList: true),
-              itemDragHandle: _buildDragHandle(),
-              // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
-              listGhost: Container(
-                height: 70,
-                color: Colors.grey,
-              )),
-        ),
+      body: FutureBuilder(
+        future: _user.getPlan(),
+        builder: (context, AsyncSnapshot<Plan?> snapshot) {
+          if (snapshot.hasError) {
+            print("Error loading plan");
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Error loading plan"),
+            );
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.data == null) {
+            //TODO: not logged in page
+            return Text("not logged in exception");
+          } 
+
+          this._plan = snapshot.data!;
+          return Container(
+          height: 900,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: DragAndDropLists(
+                children:
+                    List.generate(_plan.dayList.length, (index) => _buildList(index)),
+                onItemReorder: _onItemReorder,
+                onListReorder: _onListReorder,
+                itemDragOnLongPress: true,
+                listDragOnLongPress: true,
+                listDecorationWhileDragging: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                ),
+                listDivider: Divider(thickness: 2, height: 2, color: Colors.grey),
+                itemDecorationWhileDragging: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 5)],
+                ),
+                listDragHandle: _buildDragHandle(isList: true),
+                itemDragHandle: _buildDragHandle(),
+                // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+                listGhost: Container(
+                  height: 70,
+                  color: Colors.grey,
+                )),
+          ),
+        );
+
+        },
       ),
     );
   }
 
   _buildList(int outerIndex) {
-    Day day = _plan.days[outerIndex];
+    Day day = _plan.dayList[outerIndex];
     return DragAndDropListExpansion(
       canDrag: false,
       initiallyExpanded: outerIndex == 0? true: false,
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          'List ${day.dayRef}',
+          '${day.name}',
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
@@ -129,15 +152,15 @@ class _ListTileExample extends State<ExpansionTileExample> {
   _onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
-      var movedItem = _plan.days[oldListIndex].activities.removeAt(oldItemIndex);
-      _plan.days[newListIndex].activities.insert(newItemIndex, movedItem);
+      var movedItem = _plan.dayList[oldListIndex].activities.removeAt(oldItemIndex);
+      _plan.dayList[newListIndex].activities.insert(newItemIndex, movedItem);
     });
   }
 
   _onListReorder(int oldListIndex, int newListIndex) {
     setState(() {
-      var movedList = _plan.days.removeAt(oldListIndex);
-      _plan.days.insert(newListIndex, movedList);
+      var movedList = _plan.dayList.removeAt(oldListIndex);
+      _plan.dayList.insert(newListIndex, movedList);
     });
   }
 }

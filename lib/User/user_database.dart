@@ -6,7 +6,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class UserDatabase {
   final CollectionReference _userCollection = firestore.collection('users');
-  final emptyPlanTemplate = {"days": [], "archieve": []};
+  final emptyPlanTemplate = {"days": ["archieve"], "archieve": []};
 
   //add a new default user (email)
   void addDefaultUser(UserDetails user) async {
@@ -149,9 +149,9 @@ class UserDatabase {
     DocumentReference<Map<String, dynamic>> planMain =
         _planCollection.doc("main");
     try {
-      await planMain.set({
-        "archieve": [item.resultId]
-      }, SetOptions(merge: true)).whenComplete(() {
+      await planMain.update({
+        "archieve": FieldValue.arrayUnion([item.resultId])
+      }, ).whenComplete(() {
         print("SUCCESS: updated plan main");
       });
     } catch (error, stacktrace) {

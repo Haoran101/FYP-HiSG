@@ -19,6 +19,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
 
   initState() {
     super.initState();
+    //is favorite?
     _user
         .checkItemFavorited(this.widget.searchResult)
         .then((value) {
@@ -26,8 +27,14 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
             this.isFavorated = value;
           });
         });
-
-    isInPlan = false;
+    //is in plan?
+    _user
+        .checkItemInPlan(this.widget.searchResult)
+        .then((value) {
+          setState(() {
+            this.isInPlan = value;
+          });
+        });
   }
 
   _toggleFavorite() {
@@ -106,7 +113,21 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
       ));
     } else {
       //TODO: add to plan list
-
+      try{
+        _user.addToPlanArchieve(this.widget.searchResult);
+        print("added to plan archieve.");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Added to plan."),
+        duration: Duration(seconds: 1),
+      ));
+      } catch (error, stacktrace) {
+        print(error);
+        print(stacktrace);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Failed to add to plan."),
+        duration: Duration(seconds: 1),
+      ));
+      }
     }
 
     setState(() {
@@ -150,6 +171,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
   @override
   Widget build(BuildContext context) {
     print("IsFavorited: " + isFavorated.toString());
+    print("IsInPlan: " + isInPlan.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(subPageTitle(this.widget.searchResult)),
