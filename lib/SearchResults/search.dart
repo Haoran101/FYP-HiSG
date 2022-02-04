@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
@@ -19,6 +21,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final UserService _user = UserService();
+  Position? userposition;
   static const historyLength = 7;
   List<String> _searchHistory = [];
   String selectedTerm = "";
@@ -71,15 +74,22 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
+  fetchUserPosition() async {
+    var pos = await determinePosition();
+    print(pos.toString());
+    setState(() {
+      userposition = pos;
+    });
+  }
+
   search() {
     _user.syncSearchHistory(_searchHistory);
-    //fetchGooglePlacesResultsList(); //Google places search
-    fetchTIHResultsList(); //TIH database search
+    fetchGooglePlacesResultsList(); //Google places search
+    //fetchTIHResultsList(); //TIH database search
     //fetchImage360ResultsList(); //Image 360 search (cloud storage)
-    fetchVideo360YoutubeResultsList(); //Video 360 Youtube
+    //fetchVideo360YoutubeResultsList(); //Video 360 Youtube
     //fetchVideo360StorageResultsList(); //Video 360 Storage
-    //fetchMRTResultsList(); //MRT dataset implemented with places
-    //fetchHotelResultsList(); //hotel dataset
+    fetchMRTResultsList(); //MRT dataset implemented with places
   }
 
   fetchGooglePlacesResultsList() async {
@@ -91,9 +101,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     } else {
       //var len = placeResult.length;
       //print("Place results: $len");
-      placeResult.forEach((place) {
+      placeResult.forEach((place) async {
         if (place["photos"] == null) {
           print(place["name"] + "has no photos");
+        } else if (place["types"].first == "subway_station") {
+          print(place["name"] + " duplicate with MRT dataset");
+        // } else if (place["types"].first == "lodging") {
+        //   print(place["name"] + " duplicate with hotels dataset");
         } else {
           setState(() {
             searchResult.add(SearchResult.fromGoogle(place));
@@ -220,6 +234,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    fetchUserPosition();
     _searchHistory = _user.getSearchHistory();
     return Container(
       padding: (EdgeInsets.only(top: 10)),
@@ -395,7 +410,8 @@ class SearchResultCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailPageContainer(searchResult: this.item)),
+                          builder: (context) =>
+                              DetailPageContainer(searchResult: this.item)),
                     );
                   },
                 )

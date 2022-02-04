@@ -108,6 +108,19 @@ class MRTProvider {
 class HotelProvider {
   final CollectionReference _hotelCollection = firestore.collection('hotels');
 
+  Future<Map<String, dynamic>?> queryHotelURLByPlaceId(id) async {
+    DocumentReference docref = _hotelCollection.doc(id);
+    DocumentSnapshot snapshot = await docref.get();
+    if (snapshot.exists) {
+      var data = snapshot.data() as Map<String, dynamic>;
+      print(data["url"]);
+      return data;
+    } else {
+      print("No hotel info found in database.");
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>?> queryHotelByName(text) async {
     try {
       final _lookup = lookuptables.hotelsLookUp;

@@ -5,6 +5,7 @@ class Review {
   String? authorName;
   int? timeEpochSeconds;
   String? content;
+  String? relativeTime;
 
   toString() {
     return """Review(placeId: $placeId, reviewSerialNo: $reviewSerialNo, profilePhotoURL: $profilePhotoURL,
@@ -18,5 +19,6 @@ class Review {
     authorName = json["author_name"];
     timeEpochSeconds = json["time"];
     content = json["text"];
+    relativeTime = json["relative_time_description"];
   }
 }

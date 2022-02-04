@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
+import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
@@ -149,11 +150,11 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
     print(item.source);
     switch (item.source) {
       //TODO: uncomment this when need to form google page
-      // case DataSource.Google:
-      //   return POISubPage(
-      //     placeId: item.details["place_id"],
-      //     placeName: item.title,
-      //   );
+      case DataSource.Google:
+        return POISubPage(
+          placeId: item.details?["place_id"],
+          placeName: item.title,
+      );
       case DataSource.Photo360:
         return Experiences360Pages.container360Photo(item.details);
 

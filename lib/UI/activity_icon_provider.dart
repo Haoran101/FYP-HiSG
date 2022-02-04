@@ -108,6 +108,8 @@ class IconProvider {
 
   mapGoogleIcon(firstType) {
     switch (firstType) {
+      case "lodging":
+        return HOTEL_ICON;
       case "bus_station":
         return BUS_iCON;
       case "convenience_store":

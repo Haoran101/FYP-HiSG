@@ -54,12 +54,12 @@ class SearchResult {
 
   SearchResult.fromGoogle(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
-
-    subtitle = _textConverter(jsondata["types"].first);
-    icon = _iconProvider.mapGoogleIcon(jsondata["types"].first);
+    var _typeImportant = _searchImportantGoogleType(jsondata["types"]);
+    subtitle = _textConverter(_typeImportant);
+    icon = _iconProvider.mapGoogleIcon(_typeImportant);
     source = DataSource.Google;
     details = jsondata;
-    var placeId = jsondata["details"]["place_id"];
+    var placeId = jsondata["place_id"];
     resultId = "Google>$placeId";
   }
 
@@ -130,7 +130,21 @@ class SearchResult {
 }
 
 String _textConverter(String text) {
+  if (text == "lodging") {
+    return "ACCOMMODATION";
+  }
   return text.split("_").join(" ").toUpperCase();
+}
+
+String _searchImportantGoogleType(List<dynamic> types) {
+  List<String> typePriority = ["lodging", "university", "school", 
+  "subway_station", "bank", "health", "shopping_mall", "health"];
+  for (final x in typePriority){
+    if (types.contains(x)) {
+    return x;
+    }
+  }
+  return types.first;
 }
 
 Map<String, DataSource> _stringToDataSource = {
