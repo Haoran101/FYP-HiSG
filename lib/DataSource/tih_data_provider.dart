@@ -32,4 +32,10 @@ class TIHDataProvider {
       }
     }
   }
+
+  static String getImageURLByImageUUID(String uuid) {
+    String imageURL = 
+      "https://tih-api.stb.gov.sg/media/v1/download/uuid/$uuid/?apikey=$API_KEY";
+    return imageURL;
+  }
 }

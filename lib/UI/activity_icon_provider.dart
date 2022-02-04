@@ -204,4 +204,42 @@ class IconProvider {
         return TIH_DEFAULT_ICON;
     }
   }
+
+  mapTIHEventIcon(eventType) {
+    switch (eventType) {
+      case "Arts":
+        return Icon(
+          Icons.palette_outlined,
+        );
+      case "Attractions":
+        return ATTRACTION_ICON;
+      case "Entertainment":
+        return Icon(
+          Icons.sentiment_very_satisfied_outlined,
+        );
+
+      case "Food & Beverages":
+        return FOOD_ICON;
+      case "History & Culture":
+        return Icon(
+          Icons.history_edu_outlined,
+        );
+      case "MICE":
+        return Icon(
+          Icons.groups_outlined,
+        );
+      case "Nature & Wildlife":
+        return TREE_ICON;
+      case "Shopping":
+        return STORE_iCON;
+      case "Sports":
+        return Icon(
+          Icons.directions_run_outlined,
+        );
+      default:
+        return EVENT_ICON;
+    }
+  }
+
+  
 }

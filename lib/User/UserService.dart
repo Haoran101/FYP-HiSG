@@ -86,9 +86,9 @@ class UserService {
     var history = <String>[];
     if (_currentUser != null && _currentUser?.searchHistory != null) {
       history = _currentUser!.searchHistory!;
-      print("SUCCESS: search history is fetched from user.");
+      //print("SUCCESS: search history is fetched from user.");
     } else {
-      print("WARNING: no search history found for current user.");
+      //print("WARNING: no search history found for current user.");
     }
     return history;
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/SearchResults/event_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
@@ -163,6 +164,14 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
 
       case DataSource.Video360YouTube:
         return Experiences360Pages.display360VideoYouTube(item.details);
+
+      case DataSource.TIH:
+        switch(item.subtitle){
+          case "EVENT":
+            return EventDetailsSubpage(details: item.details);
+          default:
+            return Text(item.toJSON().toString());
+        }
 
       default:
         return Text(item.toJSON().toString());

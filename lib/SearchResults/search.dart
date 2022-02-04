@@ -22,6 +22,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final UserService _user = UserService();
   Position? userposition;
+  DateTime? lastFetchLocationTime;
   static const historyLength = 7;
   List<String> _searchHistory = [];
   String selectedTerm = "";
@@ -74,22 +75,41 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
+  periodFetchLocation(int timeIntervalSeconds) {
+    if (lastFetchLocationTime == null) {
+      print(
+          "Fetching user location, last time: null, next time in $timeIntervalSeconds Seconds");
+      fetchUserPosition();
+      return;
+    }
+    DateTime now = DateTime.now();
+    if (now.difference(lastFetchLocationTime!).inSeconds >
+        timeIntervalSeconds) {
+      print(
+          "Fetching user location, last time ${lastFetchLocationTime!.toIso8601String()}, next time in $timeIntervalSeconds Seconds");
+      fetchUserPosition();
+    }
+  }
+
   fetchUserPosition() async {
     var pos = await determinePosition();
     print(pos.toString());
-    setState(() {
-      userposition = pos;
-    });
+    if (mounted) {
+      setState(() {
+        userposition = pos;
+        lastFetchLocationTime = DateTime.now();
+      });
+    }
   }
 
   search() {
     _user.syncSearchHistory(_searchHistory);
-    fetchGooglePlacesResultsList(); //Google places search
-    //fetchTIHResultsList(); //TIH database search
+    //fetchGooglePlacesResultsList(); //Google places search
+    fetchTIHResultsList(); //TIH database search
     //fetchImage360ResultsList(); //Image 360 search (cloud storage)
     //fetchVideo360YoutubeResultsList(); //Video 360 Youtube
     //fetchVideo360StorageResultsList(); //Video 360 Storage
-    fetchMRTResultsList(); //MRT dataset implemented with places
+    //fetchMRTResultsList(); //MRT dataset implemented with places
   }
 
   fetchGooglePlacesResultsList() async {
@@ -106,12 +126,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           print(place["name"] + "has no photos");
         } else if (place["types"].first == "subway_station") {
           print(place["name"] + " duplicate with MRT dataset");
-        // } else if (place["types"].first == "lodging") {
-        //   print(place["name"] + " duplicate with hotels dataset");
+          // } else if (place["types"].first == "lodging") {
+          //   print(place["name"] + " duplicate with hotels dataset");
         } else {
-          setState(() {
-            searchResult.add(SearchResult.fromGoogle(place));
-          });
+          if (mounted) {
+            setState(() {
+              searchResult.add(SearchResult.fromGoogle(place));
+            });
+          }
         }
       });
     }
@@ -234,7 +256,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    fetchUserPosition();
+    periodFetchLocation(20);
     _searchHistory = _user.getSearchHistory();
     return Container(
       padding: (EdgeInsets.only(top: 10)),
@@ -366,6 +388,23 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //No Result
+    if (searchResult.length < 1) {
+      print("No result found");
+      return Container(
+        padding: EdgeInsets.all(50),
+        child: Column(children: [
+          SizedBox(height: 200,),
+          Icon(
+            Icons.search_outlined,
+            color: Colors.grey,
+            size: 100,
+          ),
+          Text("Oops. No Result found. ", style: TextStyle(fontSize: 18, color: Colors.grey, height: 3),),
+          Text("Please try a different keyword.", style: TextStyle(fontSize: 18, height: 2, color: Colors.grey,),)
+        ]),
+      );
+    }
     //sort search result on fuzzywuzzy score
     if (searchResult != null && searchResult.length > 1 && searchTerm != null) {
       try {
@@ -377,6 +416,7 @@ class SearchResultsListView extends StatelessWidget {
         print(stacktrace.toString());
       }
     }
+
     final fsb = FloatingSearchBar.of(context);
     return ListView(
         padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),

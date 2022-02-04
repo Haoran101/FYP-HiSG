@@ -56,6 +56,11 @@ class _POISubPageState extends State<POISubPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var _pageElementPadding = EdgeInsets.all(20.0);
 
@@ -152,7 +157,7 @@ class _POISubPageState extends State<POISubPage> {
                           Spacer(),
                           //direction button
                           InkWell(
-                            child: Icon(Icons.near_me_outlined,
+                            child: Icon(Icons.near_me,
                                 size: 40, color: Colors.red[400]),
                             onTap: () => print("Tapped direction arrow"),
                             //TODO: navigate to directions page
