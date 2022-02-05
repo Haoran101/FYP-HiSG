@@ -18,9 +18,9 @@ var World = {
     */
     createTracker: function createTrackerFn() {
         this.cloudRecognitionService = new AR.CloudRecognitionService(
-            "b277eeadc6183ab57a83b07682b3ceba",
-            "B1QL5CTCZ",
-            "54e4b9fe6134bb74351b2aa3", {
+            "c5bd8fa7090c8f3174b6e26278b440f4",
+            "l5itwqsIY",
+            "61e9c657fa58f8005502417b", {
                 onInitialized: World.showInfoBar,
                 onError: World.onError
             }
@@ -57,6 +57,7 @@ var World = {
     */
     onRecognition: function onRecognitionFn(recognized, response) {
         if (recognized) {
+            console.log("Image recognized!");
             /* Clean Resources from previous recognitions. */
             if (World.wineLabel !== undefined) {
                 World.wineLabel.destroy();
@@ -72,9 +73,12 @@ var World = {
                 is read to load the equally named image file. The zOrder property (defaults to 0) is set to 1 to
                 make sure it will be positioned on top of the banner.
             */
-            World.wineLabel = new AR.ImageResource("assets/" + response.targetInfo.name + ".jpg", {
-                onError: World.onError
-            });
+            // World.wineLabel = new AR.ImageResource("assets/" + response.targetInfo.name + ".jpg", {
+            //     onError: World.onError
+            // });
+            World.wineLabel = new AR.ImageResource("assets/banner.jpg", {
+                    onError: World.onError
+                });
             World.wineLabelOverlay = new AR.ImageDrawable(World.wineLabel, 0.3, {
                 translate: {
                     x: -0.5,

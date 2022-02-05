@@ -1,0 +1,19 @@
+event:
+
+-uuid - "uuid"
+-name - "name"
+-description -"description"
+-body -"body"
+-price -"price"
+-location - "location" -> latitude, longtitude
+-organiser -"eventOrganizer":   OR "companyDisplayName"
+-images - images => url
+-type - "type" e.g. History & Culture
+-startdate "startDate": "2020-04-07T08:00:00Z",
+-enddate "endDate": "2022-12-31T08:00:00Z",
+-contactNumber? -"contact" -> primaryContactNo, secondaryContactNo
+-email? "officialEmail"
+-supportedLanguage -List "supportedLanguage"
+-officialWebsite - officialWebsite
+-nearestMrtStation? nearastMrtStation
+-address 
