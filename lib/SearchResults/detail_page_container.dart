@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/event_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/SearchResults/tour_details.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
@@ -166,15 +168,18 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
         return Experiences360Pages.display360VideoYouTube(item.details);
 
       case DataSource.TIH:
+
         switch(item.subtitle){
           case "EVENT":
             return EventDetailsSubpage(details: item.details);
+          case "TOUR":
+            return TourDetailsSubpage(details: item.details);
           default:
-            return Text(item.toJSON().toString());
+            return Container(child: Text(item.toJSON().toString()));
         }
 
       default:
-        return Text(item.toJSON().toString());
+        return Container(child: Text(item.toJSON().toString()));
     }
   }
 

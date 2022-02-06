@@ -148,9 +148,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       //var len = TIHResult.length;
       //print("TIHResult results: $len");
       tihResult.forEach((tih) {
-        setState(() {
-          searchResult.add(SearchResult.fromTIH(tih));
-        });
+        print("TIH end date " + tih["endDate"].toString());
+        if (tih["endDate"] == null ||
+            DateTime.parse(tih["endDate"]).difference(DateTime.now()) >
+                Duration.zero) {
+          setState(() {
+            searchResult.add(SearchResult.fromTIH(tih));
+          });
+        }
       });
     }
   }
@@ -394,14 +399,26 @@ class SearchResultsListView extends StatelessWidget {
       return Container(
         padding: EdgeInsets.all(50),
         child: Column(children: [
-          SizedBox(height: 200,),
+          SizedBox(
+            height: 200,
+          ),
           Icon(
             Icons.search_outlined,
             color: Colors.grey,
             size: 100,
           ),
-          Text("Oops. No Result found. ", style: TextStyle(fontSize: 18, color: Colors.grey, height: 3),),
-          Text("Please try a different keyword.", style: TextStyle(fontSize: 18, height: 2, color: Colors.grey,),)
+          Text(
+            "Oops. No Result found. ",
+            style: TextStyle(fontSize: 18, color: Colors.grey, height: 3),
+          ),
+          Text(
+            "Please try a different keyword.",
+            style: TextStyle(
+              fontSize: 18,
+              height: 2,
+              color: Colors.grey,
+            ),
+          )
         ]),
       );
     }

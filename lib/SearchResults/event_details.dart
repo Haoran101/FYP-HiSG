@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikitude_flutter_app/Models/tih_event_model.dart';
-import 'package:html/parser.dart' as htmlparser;
-import 'package:html/dom.dart' as dom;
+import 'package:wikitude_flutter_app/Models/tih_model.dart';
 
 class EventDetailsSubpage extends StatefulWidget {
   final details;
@@ -16,11 +14,11 @@ class EventDetailsSubpage extends StatefulWidget {
 }
 
 class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
-  late TIHEventDetails event;
+  late TIHDetails event;
 
   @override
   void initState() {
-    this.event = TIHEventDetails.fromEventJSON(this.widget.details);
+    this.event = TIHDetails.fromEventJSON(this.widget.details);
     super.initState();
   }
 

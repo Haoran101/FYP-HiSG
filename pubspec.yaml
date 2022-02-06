@@ -40,6 +40,9 @@ dependencies:
   drag_and_drop_lists: ^0.3.2+2
   date_format: ^2.0.5
   geolocator: ^8.0.5
+  basic_utils: ^3.9.0
+  google_maps_flutter: ^2.1.1
+  mapbox_gl: ^0.15.0
   
 
 dev_dependencies:
