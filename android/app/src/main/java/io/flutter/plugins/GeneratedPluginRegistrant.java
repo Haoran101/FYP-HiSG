@@ -73,11 +73,6 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin location, com.lyokone.location.LocationPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.mapbox.mapboxgl.MapboxMapsPlugin());
-    } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin mapbox_gl, com.mapbox.mapboxgl.MapboxMapsPlugin", e);
-    }
-    try {
       flutterEngine.getPlugins().add(new com.mohamed.essam.money_converter.MoneyConverterPlugin());
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin money_converter, com.mohamed.essam.money_converter.MoneyConverterPlugin", e);

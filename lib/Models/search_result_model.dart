@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 
 enum DataSource {
@@ -72,6 +73,17 @@ class SearchResult {
     var dataset = jsondata["dataset"];
     var uuid = jsondata["uuid"];
     resultId = "TIH>$dataset>$uuid";
+  }
+
+  SearchResult.fromPOIModel(POI poi){
+    title = poi.name!;
+    var _typeImportant = _searchImportantGoogleType(poi.types!);
+    subtitle = _textConverter(_typeImportant);
+    icon = _iconProvider.mapGoogleIcon(_typeImportant);
+    source = DataSource.Google;
+    details = poi.details;
+    var placeId = poi.placeId;
+    resultId = "Google>$placeId";
   }
 
   SearchResult.from360ImageDataset(Map<String, dynamic> jsondata) {

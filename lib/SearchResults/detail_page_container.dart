@@ -1,8 +1,10 @@
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/event_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/SearchResults/precincts_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/tour_details.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
@@ -10,7 +12,8 @@ import '../Models/search_result_model.dart';
 
 class DetailPageContainer extends StatefulWidget {
   final searchResult;
-  const DetailPageContainer({required this.searchResult});
+  var modelPreloaded;
+  DetailPageContainer({required this.searchResult, this.modelPreloaded});
 
   @override
   State<DetailPageContainer> createState() => _DetailPageContainerState();
@@ -150,6 +153,14 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
   }
 
   subpageContent(SearchResult item) {
+
+    List<String> selectedDatasetTIH =  ["event", "tour", "walking_trail", "precincts"];
+    
+    if (item.source == DataSource.TIH && StringUtils.isNotNullOrEmpty(this.widget.modelPreloaded) && !selectedDatasetTIH.contains(item.details!["dataset"])){
+      print(this.widget.modelPreloaded);
+      return POISubPage(placeName: item.title, placeId: this.widget.modelPreloaded, isCid: true,);
+    }
+
     print(item.source);
     switch (item.source) {
       //TODO: uncomment this when need to form google page
@@ -174,6 +185,8 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
             return EventDetailsSubpage(details: item.details);
           case "TOUR":
             return TourDetailsSubpage(details: item.details);
+          case "PRECINCTS":
+            return PrecinctDetailsSubpage(details: item.details);
           default:
             return Container(child: Text(item.toJSON().toString()));
         }

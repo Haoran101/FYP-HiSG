@@ -449,7 +449,8 @@ class SearchResultsListView extends StatelessWidget {
 
 class SearchResultCard extends StatelessWidget {
   final item;
-  const SearchResultCard({Key? key, @required this.item}) : super(key: key);
+  var preloadedPage;
+  SearchResultCard({Key? key, @required this.item, this.preloadedPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -468,7 +469,7 @@ class SearchResultCard extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              DetailPageContainer(searchResult: this.item)),
+                              DetailPageContainer(searchResult: this.item, modelPreloaded: preloadedPage,)),
                     );
                   },
                 )

@@ -85,7 +85,8 @@ class _HomeState extends State<Home> {
     //WebScraperApp(),
     ExpansionTileExample(),
     //Favorites(),
-    AuthScreenPlaceHolder(),
+    Test()
+    //AuthScreenPlaceHolder(),
   ];
 
   void _onItemTapped(int index) {

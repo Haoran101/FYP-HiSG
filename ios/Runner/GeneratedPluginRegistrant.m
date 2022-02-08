@@ -60,12 +60,6 @@
 @import location;
 #endif
 
-#if __has_include(<mapbox_gl/MapboxMapsPlugin.h>)
-#import <mapbox_gl/MapboxMapsPlugin.h>
-#else
-@import mapbox_gl;
-#endif
-
 #if __has_include(<money_converter/MoneyConverterPlugin.h>)
 #import <money_converter/MoneyConverterPlugin.h>
 #else
@@ -132,7 +126,6 @@
   [FLTGoogleMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleMapsPlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
-  [MapboxMapsPlugin registerWithRegistrar:[registry registrarForPlugin:@"MapboxMapsPlugin"]];
   [MoneyConverterPlugin registerWithRegistrar:[registry registrarForPlugin:@"MoneyConverterPlugin"]];
   [MotionSensorsPlugin registerWithRegistrar:[registry registrarForPlugin:@"MotionSensorsPlugin"]];
   [FLTPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlusPlugin"]];

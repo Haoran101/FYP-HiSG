@@ -97,6 +97,26 @@ class PlaceApiProvider {
     }
   }
 
+  Future<POI?> getPlaceDetailFromCID(String cid) async {
+    final Uri request = Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/details/json?cid=$cid&key=$API_KEY');
+    print(request.toString());
+    final response = await httpClient.get(request);
+
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status'] == 'OK') {
+        final json = result['result'] as Map<String, dynamic>;
+        // build result
+        final poi = POI.fromJSON(json);
+        return poi;
+      } else {
+        print("Error fetching place from google places details API!");
+        return null;
+      }
+    }
+  }
+
   Future<NetworkImage> getPlaceImageFromReference(String photoReference) async {
     final String imageRequest = 
         'https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photo_reference=$photoReference&key=$API_KEY';

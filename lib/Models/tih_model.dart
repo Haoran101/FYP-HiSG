@@ -90,6 +90,15 @@ class TIHDetails {
     //TODO: map tour types and icons
     rawdata = jsondata;
   }
+  
+  TIHDetails.fromPrecinctsJSON(Map<String, dynamic> jsondata){
+    uuid = jsondata["uuid"];
+    name = jsondata["name"];
+    description = jsondata["description"];
+    imageURL = jsondata["images"][0]["url"];
+    imageUUID = jsondata["images"][0]["uuid"];
+    rawdata = jsondata;
+  }
 
   Map<String, dynamic> toJSON(){
     Map<String, dynamic> map = Map<String, dynamic>();
@@ -117,6 +126,8 @@ class TIHDetails {
     return map;
 
   }
+
+  
 
   ImageProvider<Object> getImage() {
     //try fetch from "url"

@@ -13,8 +13,9 @@ import 'review_details.dart';
 class POISubPage extends StatefulWidget {
   final placeName;
   final placeId;
+  bool isCid;
 
-  POISubPage({required this.placeName, required this.placeId});
+  POISubPage({required this.placeName, required this.placeId, this.isCid = false});
 
   @override
   _POISubPageState createState() => _POISubPageState();
@@ -44,6 +45,13 @@ class _POISubPageState extends State<POISubPage> {
 }
 
   Future fetchPOIDetails() async {
+    if (this.widget.isCid){
+      print("cid: " + widget.placeId);
+    this.place =
+        (await PlaceApiProvider().getPlaceDetailFromCID(widget.placeId))!;
+      return;
+    }
+
     print("place_id: " + widget.placeId);
     this.place =
         (await PlaceApiProvider().getPlaceDetailFromId(widget.placeId))!;

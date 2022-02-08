@@ -58,6 +58,17 @@ class IconProvider {
 
   final GOOGLE_DEFAULT_ICON = Icon(Icons.place, color: Colors.red);
 
+  final SPORT_ICON = Icon(
+    Icons.directions_run_outlined,
+  );
+
+  final ARTS_ICON = Icon(
+    Icons.palette_outlined,
+  );
+  final HISTORY_ICON = Icon(
+    Icons.history_edu_outlined,
+  );
+
   Icon stringToIcon(String iconString) {
     Map<String, Icon> map = {
       "GOOGLE_DEFAULT_ICON": GOOGLE_DEFAULT_ICON,
@@ -208,9 +219,7 @@ class IconProvider {
   mapTIHEventIcon(eventType) {
     switch (eventType) {
       case "Arts":
-        return Icon(
-          Icons.palette_outlined,
-        );
+        return ARTS_ICON;
       case "Attractions":
         return ATTRACTION_ICON;
       case "Entertainment":
@@ -221,9 +230,7 @@ class IconProvider {
       case "Food & Beverages":
         return FOOD_ICON;
       case "History & Culture":
-        return Icon(
-          Icons.history_edu_outlined,
-        );
+        return HISTORY_ICON;
       case "MICE":
         return Icon(
           Icons.groups_outlined,
@@ -233,13 +240,28 @@ class IconProvider {
       case "Shopping":
         return STORE_iCON;
       case "Sports":
-        return Icon(
-          Icons.directions_run_outlined,
-        );
+        return SPORT_ICON;
       default:
         return EVENT_ICON;
     }
   }
 
-  
+  mapTIHTourIcon(tourType) {
+    switch (tourType) {
+      case "Adventure & Sports":
+        return SPORT_ICON;
+      case "Arts":
+        return ARTS_ICON;
+      case "Food & Beverages":
+        return FOOD_ICON;
+      case "History & Culture":
+        return HISTORY_ICON;
+      case "Nature & Wildlife":
+        return TREE_ICON;
+      case "Sightseeing":
+        return ATTRACTION_ICON;
+      default:
+        return TOUR_ICON;
+    }
+  }
 }

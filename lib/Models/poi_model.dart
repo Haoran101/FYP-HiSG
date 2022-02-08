@@ -17,6 +17,7 @@ class POI {
   List<String>? openingHour;
   List<Review>? reviews;
   List<String>? photoReferences;
+  Map<String, dynamic>? details;
 
   toString() {
     return """POI(placeId: $placeId, name: $name, location: $location, types: $types,
@@ -29,6 +30,7 @@ class POI {
   }
 
   POI.fromJSON(json) {
+    details = json;
     placeId = json["place_id"];
     name = json["name"];
     location = Map<String, double>();
