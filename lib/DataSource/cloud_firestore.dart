@@ -103,6 +103,15 @@ class MRTProvider {
       return null;
     }
   }
+
+  Future<List<Map<String, dynamic>>?> queryMRTLine(String lineCode) async{
+    var returnedResult =
+              await _mrtCollection.doc("Line").get();
+    var allLines = returnedResult.data() as Map<String, dynamic>;
+    List<Map<String, dynamic>> lineList = List.castFrom(allLines[lineCode]);
+    print(lineList);
+    return lineList;
+  }
 }
 
 class HotelProvider {
