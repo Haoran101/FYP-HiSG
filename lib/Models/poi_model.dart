@@ -43,7 +43,7 @@ class POI {
     formattedAddress = json["formatted_address"];
     phoneNumber = json["international_phone_number"];
     vicinity = json["vicinity"];
-    rating = json["rating"]!.toDouble();
+    rating = json["rating"] == null? -1 : json["rating"]!.toDouble();
     numberOfUsersRated = json["user_ratings_total"];
     businessStatus = json["business_status"];
     if (json.containsKey("opening_hours")) {

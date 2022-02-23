@@ -95,8 +95,8 @@ class TIHDetails {
     uuid = jsondata["uuid"];
     name = jsondata["name"];
     description = jsondata["description"];
-    imageURL = jsondata["images"][0]["url"];
-    imageUUID = jsondata["images"][0]["uuid"];
+    imageURL = jsondata["images"].length > 0? jsondata["images"][0]["url"]: null;
+    imageUUID = jsondata["images"].length > 0? jsondata["images"][0]["uuid"]: null;
     rawdata = jsondata;
   }
 

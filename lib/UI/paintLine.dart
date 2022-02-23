@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+
 class PositionIndicator {
   int horizontalPosition;
   int verticalPosition;
@@ -58,70 +60,127 @@ class LinePainter extends CustomPainter {
   }
 }
 
-class MRTGraphicsGenerator extends StatelessWidget {
-  final double rowHeight = 45;
-  final double codeBlockWidth = 70;
-  final double graphFirstBlockWidth = 45;
-  final double graphNextBlockWidth = 40;
-  final double stationNameBlockWidth = 100;
-  List<Map<String, dynamic>>? data;
-
-  MRTGraphicsGenerator({required List<Map<String, dynamic>> this.data});
+class MRTGraphicsGenerator extends StatefulWidget {
+  String? lineAbbv;
+  MRTGraphicsGenerator({required String this.lineAbbv});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10.0),
-            child: Column(children: List.generate(data!.length, (index) {
-              return _renderRow(data![index]);
-            }),),
-          ),
-        ),
-      ),
-    );
-  }
+  State<MRTGraphicsGenerator> createState() => _MRTGraphicsGeneratorState();
 
-  Color _colorMap(String color) {
+  static Color mrtColorMap(String color) {
     switch (color) {
       case "red":
-        return Color.fromRGBO(225,37,27, 1);
+        return Color.fromRGBO(225, 37, 27, 1);
       case "green":
         return Color.fromRGBO(0, 149, 59, 1);
       case "blue":
-        return Color.fromRGBO(0,93,166, 1);//rgb(0,93,166)
+        return Color.fromRGBO(0, 93, 166, 1); //rgb(0,93,166)
       case "brown":
-        return Color.fromRGBO(157,89,24, 1);//rgb(157,89,24)
+        return Color.fromRGBO(157, 89, 24, 1); //rgb(157,89,24)
       case "yellow":
-        return Color.fromRGBO(255,158,24, 1);//rgb(255,158,24)
+        return Color.fromRGBO(255, 158, 24, 1); //rgb(255,158,24)
       case "grey":
-        return Color.fromRGBO(113,132,114, 1);//rgb(113,132,114)
+        return Color.fromRGBO(113, 132, 114, 1); //rgb(113,132,114)
       case "purple":
-        return Color.fromRGBO(158,40,181,1);//rgb(158,40,181)
+        return Color.fromRGBO(158, 40, 181, 1); //rgb(158,40,181)
       default:
         return Colors.black;
     }
   }
+}
 
-  Widget _renderRow(rowJSON){
+class _MRTGraphicsGeneratorState extends State<MRTGraphicsGenerator> {
+  final double rowHeight = 45;
+
+  final double codeBlockWidth = 70;
+
+  final double graphFirstBlockWidth = 45;
+
+  final double graphNextBlockWidth = 40;
+
+  final double stationNameBlockWidth = 150;
+
+  List<Map<String, dynamic>>? data;
+
+  fetchMRTData() async {
+    this.data = await MRTProvider().queryMRTLine(this.widget.lineAbbv!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String title = MRTProvider().getLineNameFromAbbv(this.widget.lineAbbv!);
+    print(this.widget.lineAbbv);
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        body: FutureBuilder(
+            future: fetchMRTData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                print(snapshot.stackTrace);
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                //Show circular progress indicator if loading
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Container(
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    //Title
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Center(
+                          child: Text(
+                        title + " (" + this.widget.lineAbbv! + ")",
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: MRTProvider()
+                                .getColorFromLineAbbv(this.widget.lineAbbv!)),
+                      )),
+                    ),
+                    //Main Block
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: List.generate(this.data!.length, (index) {
+                          return _renderRow(this.data![index]);
+                        }),
+                      ),
+                    ),
+                  ]),
+                ),
+              );
+            }));
+  }
+
+  Widget _renderRow(rowJSON) {
     return Container(
       height: rowHeight,
-      child: Row(children: [
-        _stationCodeBlock(rowJSON),
-        _graphicsBlock(rowJSON["Nodes"][0], graphFirstBlockWidth),
-        rowJSON["Nodes"].length > 1?
-        _graphicsBlock(rowJSON["Nodes"][1], graphNextBlockWidth): 
-        _graphicsBlock(null, graphNextBlockWidth),
-        rowJSON["Nodes"].length > 2?
-        _graphicsBlock(rowJSON["Nodes"][2], graphNextBlockWidth): 
-        _graphicsBlock(null, graphNextBlockWidth),
-        _nameBlock(rowJSON)
-      ],),
+      child: Row(
+        children: [
+          Spacer(),
+          _stationCodeBlock(rowJSON),
+          _graphicsBlock(rowJSON["Nodes"][0], graphFirstBlockWidth),
+          rowJSON["Nodes"].length > 1
+              ? _graphicsBlock(rowJSON["Nodes"][1], graphNextBlockWidth)
+              : _graphicsBlock(null, graphNextBlockWidth),
+          rowJSON["Nodes"].length > 2
+              ? _graphicsBlock(rowJSON["Nodes"][2], graphNextBlockWidth)
+              : _graphicsBlock(null, graphNextBlockWidth),
+          _nameBlock(rowJSON),
+          Spacer(),
+        ],
+      ),
     );
   }
-  
+
   Widget _stationCodeBlock(rowJSON) {
     return Container(
       height: rowHeight,
@@ -131,10 +190,8 @@ class MRTGraphicsGenerator extends StatelessWidget {
   }
 
   Widget _graphicsBlock(nodeJSON, width) {
-    if (nodeJSON == null){
-      return Container(
-        height: rowHeight, width: width
-      );
+    if (nodeJSON == null) {
+      return Container(height: rowHeight, width: width);
     }
     List<Widget> _childrenList =
         List.generate(nodeJSON["lines"].length, (index) {
@@ -145,35 +202,42 @@ class MRTGraphicsGenerator extends StatelessWidget {
     _childrenList.add(Center(
         child: Icon(
       Icons.circle,
-      color:  _colorMap(nodeJSON["color"]),
+      color: MRTGraphicsGenerator.mrtColorMap(nodeJSON["color"]),
     )));
 
-    _childrenList.add(Center(
-        child: Icon(
-      Icons.circle,
-      color: Colors.white,
-      size: 20
-    )));
+    _childrenList
+        .add(Center(child: Icon(Icons.circle, color: Colors.white, size: 20)));
 
     return Container(
         height: rowHeight, width: width, child: Stack(children: _childrenList));
   }
 
-  Widget _nameBlock(rowJSON){
-    return Container(
-      height: rowHeight,
-      width: stationNameBlockWidth,
-      child: Row(children: [Text(rowJSON["Station Name"]),
-      Spacer(),
-      Icon(Icons.keyboard_arrow_right_outlined)]),
+  Widget _nameBlock(rowJSON) {
+    return InkWell(
+      onTap: null,
+      //TODO: link to station page
+      child: Container(
+        height: rowHeight,
+        width: stationNameBlockWidth,
+        child: Row(children: [
+          Text(rowJSON["Station Name"]),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Icon(Icons.arrow_forward_ios, size: 12),
+          ),
+        ]),
+      ),
     );
   }
 
-  Widget _renderLine(List<dynamic> pos1Tuple, List<dynamic> pos2Tuple, Size size) {
+  Widget _renderLine(
+      List<dynamic> pos1Tuple, List<dynamic> pos2Tuple, Size size) {
     PositionIndicator pos1 = PositionIndicator(
-        horizontalPosition: int.parse(pos1Tuple[0].toString()), verticalPosition: int.parse(pos1Tuple[1].toString()));
+        horizontalPosition: int.parse(pos1Tuple[0].toString()),
+        verticalPosition: int.parse(pos1Tuple[1].toString()));
     PositionIndicator pos2 = PositionIndicator(
-        horizontalPosition: int.parse(pos2Tuple[0].toString()), verticalPosition: int.parse(pos2Tuple[1].toString()));
+        horizontalPosition: int.parse(pos2Tuple[0].toString()),
+        verticalPosition: int.parse(pos2Tuple[1].toString()));
     return Center(
       child: CustomPaint(
         //                       <-- CustomPaint widget

@@ -97,7 +97,8 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
 
   @override
   Widget build(BuildContext context) {
-    print(tour.rawdata!["location"]);
+    
+    print(tour.rawdata);
     return SingleChildScrollView(
       child: Container(
         child: Column(children: [
@@ -171,6 +172,7 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                   ),
 
                   SizedBox(height: 20),
+                  //Text(tour.rawdata.toString()),
 
                   ///Info section
                   ///startpoint

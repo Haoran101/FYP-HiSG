@@ -124,8 +124,8 @@ class SearchResult {
     icon = _iconProvider.MRT_ICON;
     source = DataSource.MRT;
     details = jsondata;
-    subtitle = "MRT STATION";
-    var docref = jsondata["Name English Malay"].replace(" ", "_").toLowerCase();
+    subtitle = "MRT/LRT STATION";
+    var docref = title.replaceAll(" ", "_").toLowerCase();
     resultId = "cloud>MRT>$docref";
   }
 

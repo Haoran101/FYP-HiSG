@@ -29,9 +29,7 @@ class TIHDataProvider {
         final list = result['data']['results'];
         print(list);
         final jsonPlaceList = List.generate(
-          list.length,
-          (index) => list[index] as  Map<String, dynamic>
-        );
+            list.length, (index) => list[index] as Map<String, dynamic>);
         return jsonPlaceList;
       } else {
         print("Error fetching data from TIH API!");
@@ -41,13 +39,15 @@ class TIHDataProvider {
   }
 
   static String getImageURLByImageUUID(String uuid) {
-    String imageURL = 
-      "https://tih-api.stb.gov.sg/media/v1/download/uuid/$uuid/?apikey=$API_KEY";
+    String imageURL =
+        "https://tih-api.stb.gov.sg/media/v1/download/uuid/$uuid/?apikey=$API_KEY";
     return imageURL;
   }
 
-  Future<List<Map<String, dynamic>>?> getPrecinctItemsByUUID(String uuid, int pageNumber) async {
-    String requestURL = "https://tih-api.stb.gov.sg/content/v1/search/precinct?uuid=$uuid&language=en&apikey=$API_KEY&page=$pageNumber&pageSize=10";
+  Future<List<Map<String, dynamic>>?> getPrecinctItemsByUUID(
+      String uuid, int pageNumber) async {
+    String requestURL =
+        "https://tih-api.stb.gov.sg/content/v1/search/precinct?uuid=$uuid&language=en&apikey=$API_KEY&page=$pageNumber&pageSize=10";
     List<String> selectedDataSet = ["event", "tour", "walking_trail"];
     List<Map<String, dynamic>> searchResultList = [];
     final Uri request = Uri.parse(requestURL);
@@ -59,41 +59,42 @@ class TIHDataProvider {
       if (result['status']['message'] == 'OK') {
         final list = result['data'];
         final pageMax = result['totalPages'];
-        for (final jsonItem in list){
-          if(selectedDataSet.contains(jsonItem["dataset"])){
+        for (final jsonItem in list) {
+          if (selectedDataSet.contains(jsonItem["dataset"])) {
             //data is fetched from TIH dataset
-            var tihData = await getJSONDetailsByUUID(jsonItem["uuid"], jsonItem["dataset"]);
-            if (tihData == null){
-              print("Failed to fetch TIH data details: uuid: ${jsonItem["uuid"]}, dataset: ${jsonItem["dataset"]}");
+            var tihData = await getJSONDetailsByUUID(
+                jsonItem["uuid"], jsonItem["dataset"]);
+            if (tihData == null) {
+              print(
+                  "Failed to fetch TIH data details: uuid: ${jsonItem["uuid"]}, dataset: ${jsonItem["dataset"]}");
               continue;
             } else {
               Map<String, dynamic> innerMap = Map();
               SearchResult tihSearchResult = SearchResult.fromTIH(tihData);
               innerMap["searchResult"] = tihSearchResult;
-              if (jsonItem["dataset"] == "event"){
+              if (jsonItem["dataset"] == "event") {
                 innerMap["resultModel"] = TIHDetails.fromEventJSON(jsonItem);
-              } else if (jsonItem["tour"] == "tour"){
+              } else if (jsonItem["tour"] == "tour") {
                 innerMap["resultModel"] = TIHDetails.fromTourJSON(jsonItem);
               } else {
                 //TODO: walking trail
               }
               searchResultList.add(innerMap);
-              
             }
-            
           } else {
             //Get Google Details From CID
-            String? cid = await getGoogleCIDForTIHSearchResult(jsonItem["uuid"]);
-            if (StringUtils.isNullOrEmpty(cid)){
+            String? cid =
+                await getGoogleCIDForTIHSearchResult(jsonItem["uuid"]);
+            if (StringUtils.isNullOrEmpty(cid)) {
               print("Failed to fetch CID from uuid: ${jsonItem["uuid"]}");
               continue;
             } else {
-                SearchResult googleSearchResult = SearchResult.fromTIH(jsonItem);
-                Map<String, dynamic> innerMap = Map();
-                innerMap["searchResult"] = googleSearchResult;
-                innerMap["resultModel"] = cid;
-                searchResultList.add(innerMap);
-              }
+              SearchResult googleSearchResult = SearchResult.fromTIH(jsonItem);
+              Map<String, dynamic> innerMap = Map();
+              innerMap["searchResult"] = googleSearchResult;
+              innerMap["resultModel"] = cid;
+              searchResultList.add(innerMap);
+            }
           }
         }
         searchResultList[0]["maximumPages"] = pageMax;
@@ -105,9 +106,11 @@ class TIHDataProvider {
     }
   }
 
-  Future<Map<String, dynamic>?> getJSONDetailsByUUID(String uuid, String datasetName) async {
+  Future<Map<String, dynamic>?> getJSONDetailsByUUID(
+      String uuid, String datasetName) async {
     String datasetParse = datasetName.replaceAll("_", "-");
-    String requestURL = "https://tih-api.stb.gov.sg/content/v1/$datasetParse?uuid=$uuid&language=en&apikey=$API_KEY";
+    String requestURL =
+        "https://tih-api.stb.gov.sg/content/v1/$datasetParse?uuid=$uuid&language=en&apikey=$API_KEY";
 
     final Uri request = Uri.parse(requestURL);
 
@@ -126,7 +129,8 @@ class TIHDataProvider {
   }
 
   Future<String?> getGoogleCIDForTIHSearchResult(String uuid) async {
-    String requestURL = "https://tih-api.stb.gov.sg/map/v1/place/$uuid?apikey=$API_KEY";
+    String requestURL =
+        "https://tih-api.stb.gov.sg/map/v1/place/$uuid?apikey=$API_KEY";
     final Uri request = Uri.parse(requestURL);
     final response = await httpClient.get(request);
     if (response.statusCode == 200) {
@@ -140,6 +144,30 @@ class TIHDataProvider {
         return null;
       }
     }
-
   }
+
+  Future<String?> getAccessToken() async {
+    var headers = {
+      'authorization':
+          'Basic M2lnWUJFOUJJV0FIZjhPSEJrakFSeU5WNm1NZ0c2aU46SWN3YzZjYmkyNHYwS0lDZQ==',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    var params = {
+      'apikey': '3igYBE9BIWAHf8OHBkjARyNV6mMgG6iN',
+    };
+    var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
+
+    var data = 'grant_type=client_credentials';
+    var uri = Uri.parse('https://api-test.stb.gov.sg/oauth/accesstoken?$query');
+
+    var res = await httpClient.post(uri, headers: headers, body: data);
+    if (res.statusCode != 200)
+      throw Exception('http.post error: statusCode= ${res.statusCode}');
+    final result = json.decode(res.body) as Map<String, dynamic>;
+    print(result.toString());
+    return result["access_token"];
+  }
+
+  
 }

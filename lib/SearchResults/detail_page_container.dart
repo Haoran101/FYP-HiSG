@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/event_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
+import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/precincts_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/tour_details.dart';
@@ -158,7 +159,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
     
     if (item.source == DataSource.TIH && StringUtils.isNotNullOrEmpty(this.widget.modelPreloaded) && !selectedDatasetTIH.contains(item.details!["dataset"])){
       print(this.widget.modelPreloaded);
-      return POISubPage(placeName: item.title, placeId: this.widget.modelPreloaded, isCid: true,);
+      return POISubPage(placeId: this.widget.modelPreloaded, category: item.subtitle, isCid: true,);
     }
 
     print(item.source);
@@ -167,7 +168,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
       case DataSource.Google:
         return POISubPage(
           placeId: item.details?["place_id"],
-          placeName: item.title,
+          category: item.subtitle,
       );
       case DataSource.Photo360:
         return Experiences360Pages.container360Photo(item.details);
@@ -190,6 +191,9 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
           default:
             return Container(child: Text(item.toJSON().toString()));
         }
+
+        case DataSource.MRT:
+          return MRTStationPage(mrtData: item.details!);
 
       default:
         return Container(child: Text(item.toJSON().toString()));

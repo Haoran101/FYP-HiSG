@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/UI/paintLine.dart';
 import 'cloud_firestore_look_up.dart' as lookuptables;
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -82,6 +84,72 @@ class Video360Provider {
 
 class MRTProvider {
   final CollectionReference _mrtCollection = firestore.collection('MRT');
+  final Map<String, String> lineAbbvToLineName = {
+    "EWL": "East West Line",
+    "NSL": "North South Line",
+    "NEL": "North East Line",
+    "CCL": "Circle Line",
+    "DTL": "Downtown Line",
+    "TEL": "Thomson-East Coast Line",
+    "BP": "Bukit Panjang LRT",
+    "PG": "Punggol LRT line",
+    "SK": "Sengkang LRT line"
+  };
+
+  final Map<String, String> codePrefixToLineAbbv = {
+    "NS": "NSL",
+    "EW": "EWL",
+    "CG": "EWL",
+    "NE": "NEL",
+    "CC": "CCL",
+    "CE": "CCL",
+    "DT": "DTL",
+    "BP": "BP",
+    "STC": "SK",
+    "SE": "SK",
+    "SW": "SK",
+    "PTC": "PG",
+    "PE": "PG",
+    "PW": "PG",
+    "TE": "TEL",
+  };
+
+  final Map<String, String> lineAbbvToColorString = {
+    "NSL": "red",
+    "EWL": "green",
+    "NEL": "purple",
+    "CCL": "yellow",
+    "DTL": "blue",
+    "BP": "grey",
+    "SK": "grey",
+    "PG": "grey",
+    "TEL": "brown",
+  };
+
+  String getLineNameFromAbbv(String lineAbbv) {
+    return lineAbbvToLineName[lineAbbv]!;
+  }
+
+  String getLineAbbvFromLineCode(String code) {
+    return codePrefixToLineAbbv[code]!;
+  }
+
+  String getLineNameFromLineCode(String code) {
+    String lineAbbv = getLineAbbvFromLineCode(code);
+    return lineAbbvToLineName[lineAbbv]!;
+  }
+
+  Color getColorFromLineAbbv(String lineAbbv) {
+    String colorString = lineAbbvToColorString[lineAbbv]!;
+    return MRTGraphicsGenerator.mrtColorMap(colorString);
+  }
+
+  Future<Map<String, dynamic>?> fetchMRTDetailsByPlaceId(placeId) async {
+    QuerySnapshot mrtSnapList =
+        await _mrtCollection.where("place_id", isEqualTo: placeId).get();
+    QueryDocumentSnapshot mrtSnap = mrtSnapList.docs[0];
+    return mrtSnap.data() as Map<String, dynamic>;
+  }
 
   Future<List<Map<String, dynamic>>?> queryMRT(text) async {
     try {
@@ -104,9 +172,8 @@ class MRTProvider {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> queryMRTLine(String lineCode) async{
-    var returnedResult =
-              await _mrtCollection.doc("Line").get();
+  Future<List<Map<String, dynamic>>?> queryMRTLine(String lineCode) async {
+    var returnedResult = await _mrtCollection.doc("Line").get();
     var allLines = returnedResult.data() as Map<String, dynamic>;
     List<Map<String, dynamic>> lineList = List.castFrom(allLines[lineCode]);
     print(lineList);

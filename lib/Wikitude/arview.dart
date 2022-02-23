@@ -126,7 +126,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
             context,
             MaterialPageRoute(builder: (context) => POISubPage(
               placeId: jsonObject["id"],
-              placeName: jsonObject["title"],
+              category: jsonObject["description"]
             )),
           );
           break;

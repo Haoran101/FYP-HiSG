@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
 
 import '../DataSource/google_maps_platform.dart';
 import '../Models/poi_model.dart';
@@ -11,11 +12,11 @@ import 'review_details.dart';
 
 // ignore: must_be_immutable
 class POISubPage extends StatefulWidget {
-  final placeName;
   final placeId;
+  final category;
   bool isCid;
 
-  POISubPage({required this.placeName, required this.placeId, this.isCid = false});
+  POISubPage({required this.placeId, required this.category, this.isCid = false});
 
   @override
   _POISubPageState createState() => _POISubPageState();
@@ -26,6 +27,7 @@ class _POISubPageState extends State<POISubPage> {
   List imageList = [];
   bool _expanded = false;
   Map<String, dynamic>? hotelData;
+  Map<String, dynamic>? mrtData;
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _POISubPageState extends State<POISubPage> {
 
   String _searchImportantGoogleType(List<dynamic> types) {
   List<String> typePriority = ["lodging", "university", "school", 
-  "subway_station", "bank", "health", "shopping_mall", "health"];
+  "subway_station", "bank", "health", "shopping_mall", "health", "store"];
   for (final x in typePriority){
     if (types.contains(x)) {
       if (x == "lodging") return "accommodation";
@@ -45,27 +47,37 @@ class _POISubPageState extends State<POISubPage> {
 }
 
   Future fetchPOIDetails() async {
+    print(this.widget.isCid);
     if (this.widget.isCid){
-      print("cid: " + widget.placeId);
-    this.place =
-        (await PlaceApiProvider().getPlaceDetailFromCID(widget.placeId))!;
-      return;
+      print("cid: " + this.widget.placeId);
+      this.place = (await PlaceApiProvider().getPlaceDetailFromCID(widget.placeId))!;
+      print("POI details fetched!");
+    } else {
+      print("place_id: " + this.widget.placeId);
+      this.place = (await PlaceApiProvider().getPlaceDetailFromId(widget.placeId))!;
+      print("POI details fetched!");
     }
-
-    print("place_id: " + widget.placeId);
-    this.place =
-        (await PlaceApiProvider().getPlaceDetailFromId(widget.placeId))!;
   }
 
   Future fetchHotelDetails() async {
-    this.hotelData =
+    if (this.widget.category == "ACCOMMODATION"){
+      this.hotelData =
         (await HotelProvider().queryHotelURLByPlaceId(widget.placeId));
-    print(this.hotelData);
+      print(this.hotelData);
+    }
+  }
+
+  Future fetchMRTDetails() async {
+    if (this.widget.category == "SUBWAY STATION"){
+      this.mrtData =
+        (await MRTProvider().fetchMRTDetailsByPlaceId(widget.placeId));
+      print(this.mrtData);
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
+    super.dispose();EdgeInsets.all(20.0);
   }
 
   @override
@@ -103,8 +115,7 @@ class _POISubPageState extends State<POISubPage> {
                 child: CircularProgressIndicator(),
               );
             }
-            print("Number of photos: " +
-                place.photoReferences!.length.toString());
+
             return Container(
               color: Colors.white,
               child: SingleChildScrollView(
@@ -141,9 +152,9 @@ class _POISubPageState extends State<POISubPage> {
                       child: Row(
                         children: [
                           //rating bar
-                          place.rating == null
+                          (place.rating == null|| place.rating == -1)
                               ? SizedBox(
-                                  width: 0,
+                                  width: 10,
                                 )
                               : RatingBarIndicator(
                                   rating: place.rating!,
@@ -155,7 +166,10 @@ class _POISubPageState extends State<POISubPage> {
                                   itemSize: 30.0,
                                   direction: Axis.horizontal,
                                 ),
-                          Padding(
+                          (place.rating == null|| place.rating == -1)
+                              ? 
+                            SizedBox(width: 0,) :
+                            Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               place.rating.toString(),
