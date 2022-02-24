@@ -33,18 +33,17 @@ class _ListTileExample extends State<ExpansionTileExample> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: InkWell(child: Icon(Icons.emoji_objects_outlined),
-            onTap: null //TODO: get recommendations
-            ),
+            child: InkWell(
+                child: Icon(Icons.emoji_objects_outlined),
+                onTap: null //TODO: get recommendations
+                ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
             child: InkWell(
-              child: Icon(Icons.add),
-              onTap: null //TODO: Add a new day
-            ),
+                child: Icon(Icons.add), onTap: null //TODO: Add a new day
+                ),
           ),
-          
         ],
       ),
       backgroundColor: Colors.white,
@@ -131,41 +130,40 @@ class _ListTileExample extends State<ExpansionTileExample> {
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: BouncingScrollPhysics(),
-            child: 
-              //Main Plan View
-              Container(
-                height: 900,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: DragAndDropLists(
-                      children: List.generate(
-                          _plan.dayList.length, (index) => _buildList(index)),
-                      onItemReorder: _onItemReorder,
-                      onListReorder: _onListReorder,
-                      itemDragOnLongPress: true,
-                      listDragOnLongPress: true,
-                      itemDivider: Divider(
-                          thickness: 2, height: 2, color: Colors.grey[100]),
-                      listDecorationWhileDragging: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 4)
-                        ],
-                      ),
-                      listDivider: Divider(
-                          thickness: 2, height: 2, color: Colors.grey[100]),
-                      itemDecorationWhileDragging: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black45, blurRadius: 5)
-                        ],
-                      ),
-                      // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
-                      listGhost:
-                          Container(height: 70, color: Colors.grey[800])),
-                ),
+            child:
+                //Main Plan View
+                Container(
+              height: 900,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: DragAndDropLists(
+                    children: List.generate(
+                        _plan.dayList.length, (index) => _buildList(index)),
+                    onItemReorder: _onItemReorder,
+                    onListReorder: _onListReorder,
+                    itemDragOnLongPress: true,
+                    listDragOnLongPress: true,
+                    itemDivider: Divider(
+                        thickness: 2, height: 2, color: Colors.grey[100]),
+                    listDecorationWhileDragging: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black12, blurRadius: 4)
+                      ],
+                    ),
+                    listDivider: Divider(
+                        thickness: 2, height: 2, color: Colors.grey[100]),
+                    itemDecorationWhileDragging: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black45, blurRadius: 5)
+                      ],
+                    ),
+                    // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+                    listGhost: Container(height: 70, color: Colors.grey[800])),
               ),
-            );
+            ),
+          );
         },
       ),
     );
@@ -252,7 +250,6 @@ class _ListTileExample extends State<ExpansionTileExample> {
         confirmDismiss: (DismissDirection direction) async {
           String alertText;
           String buttonText;
-          bool _isInArchieve = outerIndex == this._plan.dayList.length - 1;
           if (_isInArchieve) {
             //Dismiss in activity in archieve => both delete
             alertText = "Delete this item from plan?";
@@ -306,25 +303,38 @@ class _ListTileExample extends State<ExpansionTileExample> {
         onDismissed: (direction) {
           //left to right
           if (direction == DismissDirection.startToEnd) {
-            //add to archieve
-            var totalDays = this._plan.dayList.length;
-            setState(() {
-              this._plan.dayList[totalDays - 1].activities.add(item);
-              this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
-            });
-            this._plan.updateMain();
-            _user.updatePlanMainInDatabase(_plan.toMainJSON());
+            if (_isInArchieve) {
+              //delete item
+              _deleteItem(item, outerIndex, innerIndex);
+            } else {
+              //add to archieve
+              _addToArchieve(item, outerIndex, innerIndex);
+            }
           } else if (direction == DismissDirection.endToStart) {
             //delete item
-            setState(() {
-              this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
-            });
-            this._plan.updateMain();
-            _user.updatePlanMainInDatabase(_plan.toMainJSON());
+            _deleteItem(item, outerIndex, innerIndex);
           }
         },
       ),
     );
+  }
+
+  _deleteItem(item, outerIndex, innerIndex) {
+    setState(() {
+      this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+    });
+    this._plan.updateMain();
+    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+  }
+
+  _addToArchieve(item, outerIndex, innerIndex) {
+    var totalDays = this._plan.dayList.length;
+    setState(() {
+      this._plan.dayList[totalDays - 1].activities.add(item);
+      this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+    });
+    this._plan.updateMain();
+    _user.updatePlanMainInDatabase(_plan.toMainJSON());
   }
 
   _onItemReorder(

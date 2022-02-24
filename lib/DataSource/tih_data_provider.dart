@@ -149,12 +149,12 @@ class TIHDataProvider {
   Future<String?> getAccessToken() async {
     var headers = {
       'authorization':
-          'Basic M2lnWUJFOUJJV0FIZjhPSEJrakFSeU5WNm1NZ0c2aU46SWN3YzZjYmkyNHYwS0lDZQ==',
+          'Basic ${tih_api.tih_test_base64}',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
     var params = {
-      'apikey': '3igYBE9BIWAHf8OHBkjARyNV6mMgG6iN',
+      'apikey': tih_api.tih_test_api_key,
     };
     var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
 
