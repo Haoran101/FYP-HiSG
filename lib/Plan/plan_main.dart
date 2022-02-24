@@ -4,6 +4,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
@@ -29,6 +30,22 @@ class _ListTileExample extends State<ExpansionTileExample> {
       appBar: AppBar(
         title: Text('Plan'),
         backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: InkWell(child: Icon(Icons.emoji_objects_outlined),
+            onTap: null //TODO: get recommendations
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35.0),
+            child: InkWell(
+              child: Icon(Icons.add),
+              onTap: null //TODO: Add a new day
+            ),
+          ),
+          
+        ],
       ),
       backgroundColor: Colors.white,
       body: FutureBuilder(
@@ -46,6 +63,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
             return Center(child: CircularProgressIndicator());
           }
 
+          //not Logged in
           if (snapshot.data == null) {
             //Not logged in page
             return Container(
@@ -75,7 +93,9 @@ class _ListTileExample extends State<ExpansionTileExample> {
                   ),
                 ),
               ),
-              SizedBox(height: 70,),
+              SizedBox(
+                height: 70,
+              ),
               Container(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50.0),
@@ -95,7 +115,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
                         onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AuthScreenPlaceHolder()),
+                                  builder: (context) =>
+                                      AuthScreenPlaceHolder()),
                             )),
                   ),
                 ),
@@ -107,38 +128,44 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
           //Logged in plan page
           this._plan = snapshot.data!;
-          return Container(
-            height: 900,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: DragAndDropLists(
-                  children: List.generate(
-                      _plan.dayList.length, (index) => _buildList(index)),
-                  onItemReorder: _onItemReorder,
-                  onListReorder: _onListReorder,
-                  itemDragOnLongPress: true,
-                  listDragOnLongPress: true,
-                  listDecorationWhileDragging: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.black12, blurRadius: 4)
-                    ],
-                  ),
-                  listDivider:
-                      Divider(thickness: 2, height: 2, color: Colors.grey),
-                  itemDecorationWhileDragging: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.black45, blurRadius: 5)
-                    ],
-                  ),
-                  // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
-                  listGhost: Container(
-                    height: 70,
-                    color: Colors.grey[800]
-                  )),
-            ),
-          );
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: BouncingScrollPhysics(),
+            child: 
+              //Main Plan View
+              Container(
+                height: 900,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: DragAndDropLists(
+                      children: List.generate(
+                          _plan.dayList.length, (index) => _buildList(index)),
+                      onItemReorder: _onItemReorder,
+                      onListReorder: _onListReorder,
+                      itemDragOnLongPress: true,
+                      listDragOnLongPress: true,
+                      itemDivider: Divider(
+                          thickness: 2, height: 2, color: Colors.grey[100]),
+                      listDecorationWhileDragging: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black12, blurRadius: 4)
+                        ],
+                      ),
+                      listDivider: Divider(
+                          thickness: 2, height: 2, color: Colors.grey[100]),
+                      itemDecorationWhileDragging: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.black45, blurRadius: 5)
+                        ],
+                      ),
+                      // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+                      listGhost:
+                          Container(height: 70, color: Colors.grey[800])),
+                ),
+              ),
+            );
         },
       ),
     );
@@ -148,9 +175,9 @@ class _ListTileExample extends State<ExpansionTileExample> {
     Day day = _plan.dayList[outerIndex];
     return DragAndDropListExpansion(
       canDrag: false,
-      initiallyExpanded: outerIndex == 0 ? true : false,
+      initiallyExpanded: true,
       title: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0),
         child: Text(
           '${day.name}',
           style: TextStyle(
@@ -164,52 +191,82 @@ class _ListTileExample extends State<ExpansionTileExample> {
   }
 
   _buildItem(SearchResult item, int innerIndex, int outerIndex) {
+    bool _isInArchieve = outerIndex == this._plan.dayList.length - 1;
+    Widget moveToTrashBanner = Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+            Text('Move to trash', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
+    Widget moveToTrashBannerLeft = Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+            Text('Move to trash', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
+    Widget archieveBanner = Container(
+      color: Theme.of(context).primaryColor,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.archive_outlined, color: Colors.white),
+            ),
+            Text('Move to archieve', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
     return DragAndDropItem(
       child: Dismissible(
         key: Key(item.resultId),
-        background: Container(
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Icon(Icons.archive_outlined, color: Colors.white),
-                ),
-                Text('Move to archieve', style: TextStyle(color: Colors.white)),
-              ],
-            ),
-          ),
-        ),
-        secondaryBackground: Container(
-          color: Colors.red,
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Icon(Icons.delete, color: Colors.white),
-                ),
-                Text('Move to trash', style: TextStyle(color: Colors.white)),
-              ],
-            ),
-          ),
-        ),
+        background: _isInArchieve ? moveToTrashBannerLeft : archieveBanner,
+        secondaryBackground: moveToTrashBanner,
         child: ListTile(
           leading: item.icon,
           title: Text(item.title),
           subtitle: Text(item.subtitle!),
         ),
         confirmDismiss: (DismissDirection direction) async {
-          final String alertText = (direction == DismissDirection.startToEnd)
-              ? "Move item to archieve?"
-              : "Delete this item from plan?";
-          final String buttonText = (direction == DismissDirection.startToEnd)
-              ? "Archieve"
-              : "Delete";
+          String alertText;
+          String buttonText;
+          bool _isInArchieve = outerIndex == this._plan.dayList.length - 1;
+          if (_isInArchieve) {
+            //Dismiss in activity in archieve => both delete
+            alertText = "Delete this item from plan?";
+            buttonText = "Delete";
+          } else {
+            //Dismiss activity not in archieve => move to archieve / delete
+            alertText = (direction == DismissDirection.startToEnd)
+                ? "Move item to archieve?"
+                : "Delete this item from plan?";
+            buttonText = (direction == DismissDirection.startToEnd)
+                ? "Archieve"
+                : "Delete";
+          }
+
           return await showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -217,6 +274,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
                 content: Text(alertText),
                 contentPadding: EdgeInsets.all(30),
                 actions: <Widget>[
+                  //Confirm button
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         primary: (direction == DismissDirection.startToEnd)
@@ -225,6 +283,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
                       ),
                       onPressed: () => Navigator.of(context).pop(true),
                       child: Text(buttonText)),
+                  //Cancel button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: TextButton(
@@ -249,13 +308,17 @@ class _ListTileExample extends State<ExpansionTileExample> {
           if (direction == DismissDirection.startToEnd) {
             //add to archieve
             var totalDays = this._plan.dayList.length;
-            this._plan.dayList[totalDays - 1].activities.add(item);
-            this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+            setState(() {
+              this._plan.dayList[totalDays - 1].activities.add(item);
+              this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+            });
             this._plan.updateMain();
             _user.updatePlanMainInDatabase(_plan.toMainJSON());
           } else if (direction == DismissDirection.endToStart) {
             //delete item
-            this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+            setState(() {
+              this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
+            });
             this._plan.updateMain();
             _user.updatePlanMainInDatabase(_plan.toMainJSON());
           }
