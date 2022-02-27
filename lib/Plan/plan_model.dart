@@ -52,7 +52,7 @@ class Plan {
 
 class Day {
   String name = " ";
-  late List<SearchResult> activities;
+  List<SearchResult> activities = [];
   Day({required this.name});
 
   String toString() {

@@ -42,6 +42,7 @@ dependencies:
   geolocator: ^8.0.5
   basic_utils: ^3.9.0
   google_maps_flutter: ^2.1.1
+  dropdown_button2: ^1.1.1
   
 
 dev_dependencies:
