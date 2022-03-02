@@ -10,7 +10,7 @@ import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';
 import 'detail_page_container.dart';
-import 'emptySearch.dart';
+import '../UI/emptySearch.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -274,15 +274,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     _searchHistory = _user.getSearchHistory();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search"),
+        title: Text("Discover"),
         backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: InkWell(child: Icon(Icons.search_rounded, color: Colors.white,),
-            onTap: _scrollToTop),
-          )
-        ]
+        
       ),
       body: Container(
         child: Padding(

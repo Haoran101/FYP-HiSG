@@ -234,38 +234,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
   _buildItem(SearchResult item, int innerIndex, int outerIndex) {
     bool _isInArchieve = outerIndex == this._plan.dayList.length - 1;
-    Widget moveToTrashBanner = Container(
-      color: Colors.red,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(Icons.delete, color: Colors.white),
-            ),
-            Text('Move to trash', style: TextStyle(color: Colors.white)),
-          ],
-        ),
-      ),
-    );
-    Widget moveToTrashBannerLeft = Container(
-      color: Colors.red,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Icon(Icons.delete, color: Colors.white),
-            ),
-            Text('Move to trash', style: TextStyle(color: Colors.white)),
-          ],
-        ),
-      ),
-    );
+    Widget moveToTrashBanner = MoveToTrashBanner(MainAxisAlignment.end);
+    Widget moveToTrashBannerLeft = MoveToTrashBanner(MainAxisAlignment.start);
     Widget archieveBanner = Container(
       color: Theme.of(context).primaryColor,
       child: Padding(
@@ -407,6 +377,32 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
   _onListReorder(int oldListIndex, int newListIndex) {
     return;
+  }
+}
+
+class MoveToTrashBanner extends StatelessWidget {
+  MoveToTrashBanner(this.mainAlignment);
+
+  final mainAlignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: mainAlignment,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+            Text('Move to trash', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
   }
 }
 

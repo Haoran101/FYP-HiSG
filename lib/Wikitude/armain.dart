@@ -151,7 +151,7 @@ class CategoryExpansionTileState extends State<CategoryExpansionTile> {
             headerBackgroundColor: Colors.white,
             headerBackgroundColorAccent: Colors.white,
             headerContentPadding: EdgeInsets.fromLTRB(15, 2, 15, 2),
-            borderColor: Theme.of(context).dividerColor,
+            borderColor: Colors.white,
             iconColor: Colors.white,
             children: createSamplesTileList(widget.categories[index].samples),
           );

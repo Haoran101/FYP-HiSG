@@ -59,11 +59,17 @@ flutter:
     - family: Jomhuria
       fonts:
         - asset: assets/fonts/Jomhuria-Regular.ttf
+    - family: MontSerrat
+      fonts:
+        - asset: assets/fonts/MontSerrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/MontSerrat/Montserrat-BoldItalic.ttf
+          style: italic
 
   assets:
     - assets/icons/AR.svg
     - assets/img/avatar.png
     - assets/img/AR.png
+    - assets/img/explore/
     - assets/img/placeholder.png
     - assets/img/login/change.jpg
     - assets/img/login/dashboard.png

@@ -8,7 +8,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import 'Wikitude/armain.dart';
-import 'UI/discover.dart';
 import 'SearchResults/search.dart';
 import 'Authentication/accountScreen.dart';
 
@@ -53,6 +52,7 @@ class MyApp extends StatelessWidget {
                     TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
                 bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
               ),
+              
             ),
             home: Home(), //Home Page of the App
           );
@@ -79,7 +79,6 @@ class _HomeState extends State<Home> {
   }
 
   List<Widget> _widgetOptions = <Widget>[
-    DiscoverPage(),
     SearchPage(),
     MainMenu(),
     //WebScraperApp(),
@@ -109,10 +108,10 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.travel_explore_rounded),
             label: 'Discover',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.saved_search_rounded),
-            label: 'Search',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.saved_search_rounded),
+          //   label: 'Search',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.view_in_ar_rounded),
             label: 'AR',
