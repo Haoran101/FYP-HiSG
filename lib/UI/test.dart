@@ -26,7 +26,7 @@ class _TestState extends State<Test>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return FutureBuilder(
-      future: TIHDataProvider().getAccessToken(),
+      future: RecommendationEngine().getAccessToken(),
       builder: (context, snapshot) {
         if (snapshot.hasError){
           print("error capture accesstoken");

@@ -55,15 +55,6 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
-  fonts:
-    - family: Jomhuria
-      fonts:
-        - asset: assets/fonts/Jomhuria-Regular.ttf
-    - family: MontSerrat
-      fonts:
-        - asset: assets/fonts/MontSerrat/Montserrat-Regular.ttf
-        - asset: assets/fonts/MontSerrat/Montserrat-BoldItalic.ttf
-          style: italic
 
   assets:
     - assets/icons/AR.svg

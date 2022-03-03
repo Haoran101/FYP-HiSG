@@ -54,10 +54,12 @@ class PlaceApiProvider {
   final httpClient = Client();
   final API_KEY = maps_api.google_maps_api_key;
 
-  Future<List<Map<String, dynamic>>?> getGooglePlaceListByTextSearch(text) async{
+  Future<List<Map<String, dynamic>>?> getGooglePlaceListByTextSearch(text, {location}) async{
     text = text.replaceAll(" ", "%20");
+    var loc = location?? "1.290270,103.851959";
+    var radius = location!= null? 1000 : 30000;
     final Uri request = Uri.parse(
-      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=$text&location=1.290270,103.851959&radius=30000&key=$API_KEY"
+      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=$text&location=$loc&radius=$radius&key=$API_KEY"
     );
     print(request.toString());
     final response = await httpClient.get(request);

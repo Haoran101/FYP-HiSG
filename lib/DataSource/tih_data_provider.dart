@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
@@ -128,7 +129,8 @@ class TIHDataProvider {
     }
   }
 
-  Future<String?> getGoogleCIDForTIHSearchResult(String uuid) async {
+  Future<String?> getGoogleCIDForTIHSearchResult(String uuid,
+      {bool test = false}) async {
     String requestURL =
         "https://tih-api.stb.gov.sg/map/v1/place/$uuid?apikey=$API_KEY";
     final Uri request = Uri.parse(requestURL);
@@ -145,11 +147,14 @@ class TIHDataProvider {
       }
     }
   }
+}
+
+class RecommendationEngine {
+  final httpClient = Client();
 
   Future<String?> getAccessToken() async {
     var headers = {
-      'authorization':
-          'Basic ${tih_api.tih_test_base64}',
+      'authorization': 'Basic ${tih_api.tih_test_base64}',
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
@@ -162,12 +167,89 @@ class TIHDataProvider {
     var uri = Uri.parse('https://api-test.stb.gov.sg/oauth/accesstoken?$query');
 
     var res = await httpClient.post(uri, headers: headers, body: data);
-    if (res.statusCode != 200)
-      throw Exception('http.post error: statusCode= ${res.statusCode}');
+    if (res.statusCode != 200) {
+      print('http.post error - accessToken: statusCode= ${res.statusCode}');
+      return null;
+    }
     final result = json.decode(res.body) as Map<String, dynamic>;
     print(result.toString());
     return result["access_token"];
   }
 
-  
+  Future<List?> getRecommendationInitaryDataTIH(
+    List<String> interests,
+    String startDate,
+  ) async {
+    var accessToken = await getAccessToken();
+
+    if (accessToken == null) {
+      print("Access Token failed to retrieve. Use Backup Dataset instead.");
+      return null;
+    }
+
+    String url =
+        "https://api-test.stb.gov.sg/service/v1/itineraries/recommendations?startDate=$startDate&endDate=$startDate&interest=${interests.join(',')}";
+
+    var headers = {
+      'authorization': 'BearerToken $accessToken',
+    };
+
+    var uri = Uri.parse(url);
+    var res = await httpClient.get(uri, headers: headers);
+    if (res.statusCode != 200) {
+      print('http.get error - TIH Initary: statusCode= ${res.statusCode}');
+      return null;
+    }
+    final result = json.decode(res.body) as Map<String, dynamic>;
+    var schedule = result["data"]["schedule"][0]["items"];
+
+    return schedule;
+  }
+
+  int _compareScores(String a, String b, name) {
+    if (_getScore(a, name) < _getScore(b, name)) {
+      return -1;
+    }
+    if (_getScore(a, name) > _getScore(b, name)) {
+      return 1;
+    }
+    return 0;
+  }
+
+  int _getScore(term, name) {
+    return -tokenSetPartialRatio(name.toString().toLowerCase(),
+            term.toString().toLowerCase())
+        .toInt();
+  }
+
+  Future<List<SearchResult>> getRecommendResult(
+    List<String> interests,
+    String startDate,
+  ) async {
+    var schedule = await getRecommendationInitaryDataTIH(interests, startDate);
+    var searchResultList = <SearchResult>[];
+    if (schedule != null){
+      //process schedule data
+      for (var item in schedule){
+        
+        try {
+          item = item["data"];
+          var loc = item["location"]["latitude"].toString() + "," + item["location"]["longitude"].toString();
+          var googleJSONList = await PlaceApiProvider().getGooglePlaceListByTextSearch(item["name"], location: loc);
+          //fuzzywuzzy sort
+          googleJSONList?.sort((a, b) => _compareScores(a["name"], b["name"], item["name"]));
+          searchResultList.add(SearchResult.fromGoogle(googleJSONList![0]));
+        } catch (e, stackTrace) {
+          print(e);
+          print(stackTrace);
+          continue;
+        }
+      }
+
+    } else {
+      //TODO: get recommendation result from backup database
+    }
+
+    return searchResultList;
+  }
 }

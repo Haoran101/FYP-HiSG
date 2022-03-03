@@ -6,6 +6,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
@@ -19,6 +20,7 @@ class ExpansionTileExample extends StatefulWidget {
 class _ListTileExample extends State<ExpansionTileExample> {
   final UserService _user = UserService();
   late Plan _plan;
+  bool _loggedIn = false;
 
   _showNewDayDialog() async {
     return await showDialog(
@@ -27,7 +29,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
         return AlertDialog(
           content: Text("Create a new day: Day ${this._plan.dayList.length} ?"),
           contentPadding: EdgeInsets.all(30),
-          actions: <Widget>[
+          actions: 
+          <Widget>[
             //Confirm button
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -72,17 +75,31 @@ class _ListTileExample extends State<ExpansionTileExample> {
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: InkWell(
                 child: Icon(Icons.emoji_objects_outlined),
-                onTap: () => Navigator.push(
+                onTap: () {
+                  try{ 
+                    print(this._plan);
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => RecommendOptionsUI()),
-                    ) //TODO: get recommendations
+                    );}
+                    catch (error){
+                      print(error);
+                      //TODO: snackbar notification
+                    }} //TODO: get recommendations
                 ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
             child: InkWell(
-                child: Icon(Icons.add), onTap: _showNewDayDialog //Add a new day
+                child: Icon(Icons.add), onTap: () {
+                  try{
+                    print(this._plan); 
+                    _showNewDayDialog();}
+                    catch (error){
+                      print(error);
+                      //TODO: snackbar notification
+                    }} //Add a new day
                 ),
           ),
         ],
@@ -164,8 +181,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
               Spacer(),
               Image.asset("assets/img/plan.jpg"),
             ]));
-          }
-
+          } else {
           //Logged in plan page
           this._plan = snapshot.data!;
           return SingleChildScrollView(
@@ -207,7 +223,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
                 ),
               ),
             ]),
-          );
+            );
+          }
         },
       ),
     );
@@ -218,13 +235,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
     return DragAndDropListExpansion(
       canDrag: false,
       initiallyExpanded: day.activities.length == 0 ? false : true,
-      title: Padding(
-        padding: const EdgeInsets.all(0),
-        child: Text(
-          '${day.name}',
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
-        ),
+      title: Text(
+        '${day.name}',
+        style: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
       ),
       children: List.generate(day.activities.length,
           (index) => _buildItem(day.activities[index], index, outerIndex)),
@@ -415,20 +429,56 @@ class RecommendOptionsUI extends StatefulWidget {
 
 class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
   late DateTime currentDate;
+  bool isLoading = true;
+  final Map<String, String> interestMap = {
+    "Arts & Culture" : "arts_culture",
+    "Entertainment & Nightlife": "entertainment_nightlife",
+    "Food" : "food",
+    "History & Heritage": "history_heritage",
+    "Sport & Outdoors" : "sport_outdoors",
+    "Shopping": "shopping"
+  };
   //TODO: replace with interest texts
   Map<String, bool> isCheckedMap = {
-    "1": false,
-    "2": false,
-    "3": false,
-    "4": false,
-    "5": false,
-    "6": false,
+    "arts_culture": false,
+    "entertainment_nightlife": false,
+    "food": false,
+    "history_heritage": false,
+    "sport_outdoors": false,
+    "shopping": false,
   };
-  String selectedNationality = "Others";
   @override
   void initState() {
     currentDate = DateTime.now();
     super.initState();
+  }
+
+   _showLoadingDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            height: 100,
+            width: double.infinity -100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text("Loading"),
+              ),
+              SizedBox(
+                height: 40,
+                width: 40,
+                child: CircularProgressIndicator()),
+              ]
+            ),
+          ),
+          contentPadding: EdgeInsets.all(30),
+        );
+      },
+    );
   }
 
   String _dateFormatter(DateTime date) {
@@ -452,34 +502,49 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
   }
 
   Widget _checkBoxTile(String text) {
-    bool ischecked = isCheckedMap[text] ?? false;
+    bool ischecked = isCheckedMap[interestMap[text]] ?? false;
     return CheckboxListTile(
       title: Text(text),
       value: ischecked,
       onChanged: (bool? value) {
         setState(() {
-          ischecked = !ischecked;
-          isCheckedMap[text] = ischecked;
+          isCheckedMap[interestMap[text]!] = !ischecked;
         });
         print(isCheckedMap);
       },
-      secondary: const Icon(Icons.hourglass_empty),
+      //TODO: customize icons
+      secondary: const Icon(Icons.favorite_outline_rounded),
     );
   }
+
+  getRecommendation() async{
+    setState(() {
+      isLoading = true;
+    });
+    String date = _dateFormatter(currentDate);
+    List<String> confirmedInterest = List.from(isCheckedMap.keys.where((x) => isCheckedMap[x] == true));
+    
+    var recResult = await RecommendationEngine().getRecommendResult(confirmedInterest, date);
+    setState(() {
+      isLoading = false;
+      Navigator.of(context).pop();
+    });
+    return recResult;
+  } 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recommendations'),
+        title: Text('Recommend a day'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(30.0),
         child: Column(
             //Date
             children: [
-              Text("Date"),
+              RecommendTitle("Date"),
               Row(children: [
                 Expanded(
                   child: TextField(
@@ -494,35 +559,55 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                     child: Icon(Icons.event_available_outlined),
                     onTap: () => _selectDate(context))
               ]),
-              //TODO: interests
-              Text("Interests"),
-              _checkBoxTile("1"),
-              _checkBoxTile("2"),
-              _checkBoxTile("3"),
-              //TODO: nationality
-              Text("Nationality"),
-              DropdownButton2(
-                alignment: Alignment.bottomCenter,
-                value: selectedNationality,
-                items: <String>['Others','A', 'B', 'C', 'D'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    alignment: AlignmentDirectional.centerStart,
-                    value: value,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top:0),
-                      child: Text(value),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedNationality = value.toString();
-                    });
-                  }
-                },
-              )
+              //interests
+              SizedBox(height: 30,),
+              RecommendTitle("Interests"),
+              Column(
+                children: List.generate(interestMap.length, (index) => _checkBoxTile(List.from(interestMap.keys)[index])),
+              ),
+              //TODO: get recommendation
+              SizedBox(height: 80,),
+              Container(
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).primaryColor),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white)),
+                      child: Text(
+                        "Get Recommendation",
+                        style: TextStyle(fontSize: 17),
+                      ),
+                      onPressed: () {
+                        getRecommendation();
+                        if (isLoading){
+                          _showLoadingDialog();
+                        }
+                      }))
+                ),
             ]),
+      ),
+    );
+  }
+}
+
+class RecommendTitle extends StatelessWidget {
+  RecommendTitle(this.text);
+  final text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        this.text,
+        style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20),
       ),
     );
   }

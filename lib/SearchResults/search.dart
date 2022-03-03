@@ -408,7 +408,7 @@ class SearchResultsListView extends StatelessWidget {
   }
 
   int getScore(term) {
-    return -ratio(term.toString().toLowerCase(),
+    return -tokenSetPartialRatio(term.toString().toLowerCase(),
             this.searchTerm.toString().toLowerCase())
         .toInt();
   }
