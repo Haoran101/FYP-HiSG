@@ -7,7 +7,7 @@ import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 enum DataSource {
   Google,
   TIH,
-  TIH_Test,
+  TIH_Test_Backup,
   MRT,
   Video360,
   Article,
@@ -65,14 +65,25 @@ class SearchResult {
     resultId = "Google>$placeId";
   }
 
-  SearchResult.fromTIH(Map<String, dynamic> jsondata, {bool isTest = false}) {
+  SearchResult.fromTIH(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
     icon = _iconProvider.mapTIHIcon(jsondata["dataset"]);
     subtitle = _textConverter(jsondata["dataset"]);
-    source = isTest? DataSource.TIH_Test: DataSource.TIH;
+    source =  DataSource.TIH;
     details = jsondata;
     var dataset = jsondata["dataset"];
     var uuid = jsondata["uuid"];
+    resultId = "TIH>$dataset>$uuid";
+  }
+
+  SearchResult.fromTIHBackUp(Map<String, dynamic> jsondata){
+    title = jsondata["name"].toString();
+    icon = _iconProvider.mapTIHIcon(jsondata["dataset"]);
+    subtitle = _textConverter(jsondata["dataset"]);
+    source =  DataSource.TIH_Test_Backup;
+    details = jsondata;
+    var dataset = jsondata["dataset"];
+    var uuid = jsondata["test_uuid"];
     resultId = "TIH>$dataset>$uuid";
   }
 

@@ -53,7 +53,7 @@ class Plan {
 class Day {
   String name = " ";
   List<SearchResult> activities = [];
-  Day({required this.name});
+  Day({required this.name, this.activities = const <SearchResult>[]});
 
   String toString() {
     return this.toMainJSON().toString();

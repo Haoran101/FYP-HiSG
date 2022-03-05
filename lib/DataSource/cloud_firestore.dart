@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/UI/paintLine.dart';
 import 'cloud_firestore_look_up.dart' as lookuptables;
 
@@ -216,5 +219,64 @@ class HotelProvider {
       print("Failed to fetch hotels from database");
       return null;
     }
+  }
+}
+
+class TIHBackupProvider {
+  final CollectionReference _backupCollection = firestore.collection('backupRecommendation');
+
+  Future<List<Map<String, dynamic>>> _fetchBackUpListByInterest(interest) async {
+    QuerySnapshot interestSnapList =
+        await _backupCollection.where("interest", isEqualTo: interest).get();
+    
+    List<QueryDocumentSnapshot> interestSnap = interestSnapList.docs;
+
+    List<Map<String, dynamic>> items = [];
+    for (final QueryDocumentSnapshot item in interestSnap){
+      Map<String, dynamic> interestItem =  item.data() as Map<String, dynamic>;
+      items.add(interestItem);
+    }
+    return items;
+  }
+
+  Future<List<SearchResult>> getBackupSearchResultList(List<String> interests) async{
+    Map<String, int> disMap = _distributionMap(interests);
+    List<SearchResult> finalItems = [];
+    for (final interest in interests){
+      List<Map<String, dynamic>> interestItems = await _fetchBackUpListByInterest(interest);
+      List<SearchResult> interestSr = _randomSelector(interestItems, disMap[interest]!);
+      finalItems.addAll(interestSr);
+    }
+    return finalItems;
+  }
+
+  Map<String, int> _distributionMap(List<String> interests){
+
+    Map<String, int> map = {};
+    Random rand = new Random();
+    int total = rand.nextInt(2) + 6;
+    int each = (total / interests.length).floor();
+    int last = total - each*(interests.length - 1);
+    int lastIndex = rand.nextInt(interests.length);
+
+    int i = 0;
+    while (i < interests.length){
+      String interest = interests[i];
+      map[interest] = (i == lastIndex)? last: each;
+      i++;
+    }
+
+    return map;
+  }
+
+  List<SearchResult> _randomSelector(List<Map<String, dynamic>> interestItemList, int number) {
+    Set<SearchResult> selectedItems = Set();
+    while (selectedItems.length < number){
+      Random rand = new Random();
+      Map<String, dynamic> item = interestItemList[rand.nextInt(interestItemList.length)];
+      SearchResult sr = SearchResult.fromTIHBackUp(item);
+      selectedItems.add(sr);
+    }
+    return List.from(selectedItems);
   }
 }

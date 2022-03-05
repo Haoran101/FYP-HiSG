@@ -9,8 +9,8 @@ import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/search.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 
 class ExpansionTileExample extends StatefulWidget {
   @override
@@ -20,7 +20,6 @@ class ExpansionTileExample extends StatefulWidget {
 class _ListTileExample extends State<ExpansionTileExample> {
   final UserService _user = UserService();
   late Plan _plan;
-  bool _loggedIn = false;
 
   _showNewDayDialog() async {
     return await showDialog(
@@ -29,8 +28,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
         return AlertDialog(
           content: Text("Create a new day: Day ${this._plan.dayList.length} ?"),
           contentPadding: EdgeInsets.all(30),
-          actions: 
-          <Widget>[
+          actions: <Widget>[
             //Confirm button
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -76,30 +74,37 @@ class _ListTileExample extends State<ExpansionTileExample> {
             child: InkWell(
                 child: Icon(Icons.emoji_objects_outlined),
                 onTap: () {
-                  try{ 
-                    print(this._plan);
+                  try {
+                    int nextDay = this._plan.dayList.length;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => RecommendOptionsUI()),
-                    );}
-                    catch (error){
-                      print(error);
-                      //TODO: snackbar notification
-                    }} //TODO: get recommendations
-                ),
+                          builder: (context) => RecommendOptionsUI(
+                                nextday: nextDay,
+                                addRecommendDay: (recommended) {
+                                  _addNewDay(recommendedList: recommended);
+                                },
+                              )),
+                    );
+                  } catch (error) {
+                    print(error);
+                    //TODO: snackbar notification
+                  }
+                }),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
             child: InkWell(
-                child: Icon(Icons.add), onTap: () {
-                  try{
-                    print(this._plan); 
-                    _showNewDayDialog();}
-                    catch (error){
-                      print(error);
-                      //TODO: snackbar notification
-                    }} //Add a new day
+                child: Icon(Icons.add),
+                onTap: () {
+                  try {
+                    print(this._plan);
+                    _showNewDayDialog();
+                  } catch (error) {
+                    print(error);
+                    //TODO: snackbar notification
+                  }
+                } //Add a new day
                 ),
           ),
         ],
@@ -182,47 +187,47 @@ class _ListTileExample extends State<ExpansionTileExample> {
               Image.asset("assets/img/plan.jpg"),
             ]));
           } else {
-          //Logged in plan page
-          this._plan = snapshot.data!;
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: ClampingScrollPhysics(),
-            child:
-                //Main Plan View
-                Column(children: [
-              Container(
-                height: 900,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: DragAndDropLists(
-                      children: List.generate(
-                          _plan.dayList.length, (index) => _buildList(index)),
-                      onItemReorder: _onItemReorder,
-                      onListReorder: _onListReorder,
-                      itemDragOnLongPress: true,
-                      listDragOnLongPress: true,
-                      itemDivider: Divider(
-                          thickness: 2, height: 2, color: Colors.grey[100]),
-                      listDecorationWhileDragging: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 4)
-                        ],
-                      ),
-                      listDivider: Divider(
-                          thickness: 2, height: 2, color: Colors.grey[100]),
-                      itemDecorationWhileDragging: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black45, blurRadius: 5)
-                        ],
-                      ),
-                      // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
-                      listGhost:
-                          Container(height: 70, color: Colors.grey[800])),
+            //Logged in plan page
+            this._plan = snapshot.data!;
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: ClampingScrollPhysics(),
+              child:
+                  //Main Plan View
+                  Column(children: [
+                Container(
+                  height: 900,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: DragAndDropLists(
+                        children: List.generate(
+                            _plan.dayList.length, (index) => _buildList(index)),
+                        onItemReorder: _onItemReorder,
+                        onListReorder: _onListReorder,
+                        itemDragOnLongPress: true,
+                        listDragOnLongPress: true,
+                        itemDivider: Divider(
+                            thickness: 2, height: 2, color: Colors.grey[100]),
+                        listDecorationWhileDragging: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12, blurRadius: 4)
+                          ],
+                        ),
+                        listDivider: Divider(
+                            thickness: 2, height: 2, color: Colors.grey[100]),
+                        itemDecorationWhileDragging: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black45, blurRadius: 5)
+                          ],
+                        ),
+                        // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+                        listGhost:
+                            Container(height: 70, color: Colors.grey[800])),
+                  ),
                 ),
-              ),
-            ]),
+              ]),
             );
           }
         },
@@ -347,10 +352,11 @@ class _ListTileExample extends State<ExpansionTileExample> {
     );
   }
 
-  _addNewDay() {
+  _addNewDay({recommendedList = const <SearchResult>[]}) {
     int nextDay = this._plan.dayList.length;
     Day newDay = Day(
       name: 'Day $nextDay',
+      activities: recommendedList,
     );
     setState(() {
       this._plan.dayList.insert(nextDay - 1, newDay);
@@ -421,7 +427,9 @@ class MoveToTrashBanner extends StatelessWidget {
 }
 
 class RecommendOptionsUI extends StatefulWidget {
-  const RecommendOptionsUI({Key? key}) : super(key: key);
+  RecommendOptionsUI({required this.nextday, required this.addRecommendDay});
+  final nextday;
+  final Function(List<SearchResult>) addRecommendDay;
 
   @override
   State<RecommendOptionsUI> createState() => _RecommendOptionsUIState();
@@ -431,14 +439,13 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
   late DateTime currentDate;
   bool isLoading = true;
   final Map<String, String> interestMap = {
-    "Arts & Culture" : "arts_culture",
+    "Arts & Culture": "arts_culture",
     "Entertainment & Nightlife": "entertainment_nightlife",
-    "Food" : "food",
+    "Food": "food",
     "History & Heritage": "history_heritage",
-    "Sport & Outdoors" : "sport_outdoors",
+    "Sport & Outdoors": "sport_outdoors",
     "Shopping": "shopping"
   };
-  //TODO: replace with interest texts
   Map<String, bool> isCheckedMap = {
     "arts_culture": false,
     "entertainment_nightlife": false,
@@ -453,27 +460,23 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
     super.initState();
   }
 
-   _showLoadingDialog() async {
+  _showLoadingDialog() async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             height: 100,
-            width: double.infinity -100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            width: double.infinity - 100,
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text("Loading"),
               ),
               SizedBox(
-                height: 40,
-                width: 40,
-                child: CircularProgressIndicator()),
-              ]
-            ),
+                  height: 40, width: 40, child: CircularProgressIndicator()),
+            ]),
           ),
           contentPadding: EdgeInsets.all(30),
         );
@@ -517,20 +520,65 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
     );
   }
 
-  getRecommendation() async{
+  getRecommendation() async {
     setState(() {
       isLoading = true;
     });
     String date = _dateFormatter(currentDate);
-    List<String> confirmedInterest = List.from(isCheckedMap.keys.where((x) => isCheckedMap[x] == true));
-    
-    var recResult = await RecommendationEngine().getRecommendResult(confirmedInterest, date);
+    List<String> confirmedInterest =
+        List.from(isCheckedMap.keys.where((x) => isCheckedMap[x] == true));
+
+    var recResult = await RecommendationEngine()
+        .getRecommendResult(confirmedInterest, date);
     setState(() {
       isLoading = false;
       Navigator.of(context).pop();
     });
+
+    if (recResult.length == 0)
+    _showConfirmationDialog(recResult);
     return recResult;
-  } 
+  }
+
+  _showConfirmationDialog(searchResultList) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            content: Container(
+              height: 100,
+              width: double.infinity - 100,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child:
+                          Text("A new day: Day ${this.widget.nextday} has been generated! "),
+                    ),
+                    Column(
+                        children: List.generate(
+                            searchResultList.length,
+                            (index) => SearchResultCard(
+                                item: searchResultList[index])))
+                  ]),
+            ),
+            contentPadding: EdgeInsets.all(30),
+            actions: [
+              //Confirm button
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    this.widget.addRecommendDay(searchResultList);
+                    Navigator.of(context).pop(true);
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("OK")),
+            ]);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -560,34 +608,40 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                     onTap: () => _selectDate(context))
               ]),
               //interests
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               RecommendTitle("Interests"),
               Column(
-                children: List.generate(interestMap.length, (index) => _checkBoxTile(List.from(interestMap.keys)[index])),
+                children: List.generate(
+                    interestMap.length,
+                    (index) =>
+                        _checkBoxTile(List.from(interestMap.keys)[index])),
               ),
               //TODO: get recommendation
-              SizedBox(height: 80,),
+              SizedBox(
+                height: 80,
+              ),
               Container(
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).primaryColor),
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white)),
-                      child: Text(
-                        "Get Recommendation",
-                        style: TextStyle(fontSize: 17),
-                      ),
-                      onPressed: () {
-                        getRecommendation();
-                        if (isLoading){
-                          _showLoadingDialog();
-                        }
-                      }))
-                ),
+                  child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white)),
+                          child: Text(
+                            "Get Recommendation",
+                            style: TextStyle(fontSize: 17),
+                          ),
+                          onPressed: () {
+                            getRecommendation();
+                            if (isLoading) {
+                              _showLoadingDialog();
+                            }
+                          }))),
             ]),
       ),
     );
@@ -605,9 +659,7 @@ class RecommendTitle extends StatelessWidget {
       child: Text(
         this.text,
         style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20),
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
       ),
     );
   }

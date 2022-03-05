@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
@@ -206,6 +207,11 @@ class RecommendationEngine {
     return schedule;
   }
 
+  Future<List<SearchResult>> getRecommendationFromBackUpDatabase(List<String> interests) async{
+    List<SearchResult> items = await TIHBackupProvider().getBackupSearchResultList(interests);
+    return items;
+  }
+
   int _compareScores(String a, String b, name) {
     if (_getScore(a, name) < _getScore(b, name)) {
       return -1;
@@ -247,7 +253,7 @@ class RecommendationEngine {
       }
 
     } else {
-      //TODO: get recommendation result from backup database
+      searchResultList = await getRecommendationFromBackUpDatabase(interests);
     }
 
     return searchResultList;
