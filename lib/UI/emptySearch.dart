@@ -20,80 +20,85 @@ class EmptySearchScreen extends StatelessWidget {
   const EmptySearchScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBox(
-            height: 80,
-          ),
-          Banner(
-              text: "360 GALLERY",
-              image: "assets/img/explore/singapore.jpg",
-              call: () => null),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              HalfBanner(
-                  text: "PRECINCT",
-                  image: "assets/img/explore/chinatown.jpg",
-                  color: Colors.red[900]!,
+              SizedBox(
+                height: 80,
+              ),
+              Banner(
+                  text: "360 GALLERY",
+                  image: "assets/img/explore/singapore.jpg",
                   call: () => null),
-              Spacer(),
-              HalfBanner(
-                  text: "WALKING\n  TRAIL",
-                  image: "assets/img/explore/walking.jpg",
-                  color: Colors.green,
-                  call: () => null),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  HalfBanner(
+                      text: "PRECINCT",
+                      image: "assets/img/explore/chinatown.jpg",
+                      color: Colors.red[900]!,
+                      call: () => null),
+                  Spacer(),
+                  HalfBanner(
+                      text: "WALKING\n  TRAIL",
+                      image: "assets/img/explore/walking.jpg",
+                      color: Colors.green,
+                      call: () => null),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  HalfBanner(
+                      text: "TRANSPORT",
+                      image: "assets/img/explore/mrt.jpg",
+                      color: Colors.blueAccent,
+                      call: () => null),
+                  Spacer(),
+                  HalfBanner(
+                      text: "CURRENCY",
+                      image: "assets/img/explore/money.jpg",
+                      color: Colors.deepOrangeAccent,
+                      call: () => null),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  "Nearby Spots",
+                  style: TextStyle(fontSize: 20, color: Colors.black54),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: SizedBox(
+                  height: 150,
+                  child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(5, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                            width: 120,
+                            color: Colors.amber,
+                          ),
+                        );
+                      })),
+                ),
+              ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              HalfBanner(
-                  text: "TRANSPORT",
-                  image: "assets/img/explore/mrt.jpg",
-                  color: Colors.blueAccent,
-                  call: () => null),
-              Spacer(),
-              HalfBanner(
-                  text: "CURRENCY",
-                  image: "assets/img/explore/money.jpg",
-                  color: Colors.deepOrangeAccent,
-                  call: () => null),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              "Nearby Spots",
-              style: TextStyle(fontSize: 20, color: Colors.black54),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: SizedBox(
-              height: 150,
-              child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(5, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        width: 120,
-                        color: Colors.amber,
-                      ),
-                    );
-                  })),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

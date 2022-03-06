@@ -9,6 +9,7 @@ import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/search.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
@@ -64,175 +65,179 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
   @override
   Widget build(BuildContext context) {
+    _calculateHeight() {
+      print(this._plan.dayList);
+      double height = (this._plan.dayList.length) * 80;
+      for (Day d in this._plan.dayList) {
+        height += d.activities.length * 80;
+      }
+      print("Height: $height");
+      return height;
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Plan'),
-        backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: InkWell(
-                child: Icon(Icons.emoji_objects_outlined),
-                onTap: () {
-                  try {
-                    int nextDay = this._plan.dayList.length;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RecommendOptionsUI(
-                                nextday: nextDay,
-                                addRecommendDay: (recommended) {
-                                  _addNewDay(recommendedList: recommended);
-                                },
-                              )),
-                    );
-                  } catch (error) {
-                    print(error);
-                    //TODO: snackbar notification
-                  }
-                }),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35.0),
-            child: InkWell(
-                child: Icon(Icons.add),
-                onTap: () {
-                  try {
-                    print(this._plan);
-                    _showNewDayDialog();
-                  } catch (error) {
-                    print(error);
-                    //TODO: snackbar notification
-                  }
-                } //Add a new day
+        appBar: AppBar(
+          title: Text('Plan'),
+          backgroundColor: Theme.of(context).primaryColor,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: InkWell(
+                  child: Icon(Icons.emoji_objects_outlined),
+                  onTap: () {
+                    try {
+                      int nextDay = this._plan.dayList.length;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RecommendOptionsUI(
+                                  nextday: nextDay,
+                                  addRecommendDay: (recommended) {
+                                    _addNewDay(recommendedList: recommended);
+                                  },
+                                )),
+                      );
+                    } catch (error) {
+                      print(error);
+                      //TODO: snackbar notification
+                    }
+                  }),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              child: InkWell(
+                  child: Icon(Icons.add),
+                  onTap: () {
+                    try {
+                      print(this._plan);
+                      _showNewDayDialog();
+                    } catch (error) {
+                      print(error);
+                      //TODO: snackbar notification
+                    }
+                  } //Add a new day
+                  ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.white,
+        body: FutureBuilder(
+          future: _user.getPlan(),
+          builder: (context, AsyncSnapshot<Plan?> snapshot) {
+            if (snapshot.hasError) {
+              print("Error loading plan");
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Error loading plan"),
+              );
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            //not Logged in
+            if (snapshot.data == null) {
+              //Not logged in page
+              return Container(
+                  child: Column(children: [
+                SizedBox(
+                  height: 100,
                 ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: _user.getPlan(),
-        builder: (context, AsyncSnapshot<Plan?> snapshot) {
-          if (snapshot.hasError) {
-            print("Error loading plan");
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Error loading plan"),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          //not Logged in
-          if (snapshot.data == null) {
-            //Not logged in page
-            return Container(
-                child: Column(children: [
-              SizedBox(
-                height: 100,
-              ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Login to ',
-                      style: TextStyle(
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'start a plan',
-                            style: TextStyle(
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor)),
-                      ],
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Login to ',
+                        style: TextStyle(
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'start a plan',
+                              style: TextStyle(
+                                  fontSize: 32.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 70,
-              ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).primaryColor),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white)),
-                        child: Text(
-                          "Sign in",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      AuthScreenPlaceHolder()),
-                            )),
-                  ),
+                SizedBox(
+                  height: 70,
                 ),
-              ),
-              Spacer(),
-              Image.asset("assets/img/plan.jpg"),
-            ]));
-          } else {
-            //Logged in plan page
-            this._plan = snapshot.data!;
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: ClampingScrollPhysics(),
-              child:
-                  //Main Plan View
-                  Column(children: [
                 Container(
-                  height: 900,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: DragAndDropLists(
-                        children: List.generate(
-                            _plan.dayList.length, (index) => _buildList(index)),
-                        onItemReorder: _onItemReorder,
-                        onListReorder: _onListReorder,
-                        itemDragOnLongPress: true,
-                        listDragOnLongPress: true,
-                        itemDivider: Divider(
-                            thickness: 2, height: 2, color: Colors.grey[100]),
-                        listDecorationWhileDragging: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black12, blurRadius: 4)
-                          ],
-                        ),
-                        listDivider: Divider(
-                            thickness: 2, height: 2, color: Colors.grey[100]),
-                        itemDecorationWhileDragging: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.black45, blurRadius: 5)
-                          ],
-                        ),
-                        // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
-                        listGhost:
-                            Container(height: 70, color: Colors.grey[800])),
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).primaryColor),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white)),
+                          child: Text(
+                            "Sign in",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AuthScreenPlaceHolder()),
+                              )),
+                    ),
                   ),
                 ),
-              ]),
-            );
-          }
-        },
-      ),
-    );
+                Spacer(),
+                Image.asset("assets/img/plan.jpg"),
+              ]));
+            } else {
+              //Logged in plan page
+              this._plan = snapshot.data!;
+
+              return
+                  //Main Plan View
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0, left: 5, right: 5),
+                    child: Container(
+                      height: _calculateHeight(),
+                      child: DragAndDropLists(
+                          children: List.generate(
+                              _plan.dayList.length, (index) => _buildList(index)),
+                          onItemReorder: _onItemReorder,
+                          onListReorder: (a, b) => null,
+                          itemDragOnLongPress: true,
+                          listDragOnLongPress: true,
+                          itemDivider: Divider(
+                              thickness: 2, height: 2, color: Colors.grey[100]),
+                          listDecorationWhileDragging: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(color: Colors.black12, blurRadius: 4)
+                            ],
+                          ),
+                          listDivider: Divider(
+                              thickness: 2, height: 2, color: Colors.grey[100]),
+                          itemDecorationWhileDragging: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(color: Colors.black45, blurRadius: 5)
+                            ],
+                          ),
+                          // listGhost is mandatory when using expansion tiles to prevent multiple widgets using the same globalkey
+                          listGhost:
+                              Container(height: 70, color: Colors.grey[800])),
+                    ),
+                  );
+            }
+          },
+        ));
   }
 
   _buildList(int outerIndex) {
@@ -240,10 +245,21 @@ class _ListTileExample extends State<ExpansionTileExample> {
     return DragAndDropListExpansion(
       canDrag: false,
       initiallyExpanded: day.activities.length == 0 ? false : true,
-      title: Text(
-        '${day.name}',
-        style: TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+      title: Container(
+        height: 50,
+        padding: EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+          children: [Text(
+            '${day.name}',
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          Spacer(),
+          outerIndex != _plan.dayList.length - 1?
+          InkWell(child: Icon(Icons.delete_rounded, color: Colors.grey,),
+          onTap: () => _showDeleteDayDialog(outerIndex)): SizedBox.shrink()
+          ]
+        ),
       ),
       children: List.generate(day.activities.length,
           (index) => _buildItem(day.activities[index], index, outerIndex)),
@@ -275,10 +291,20 @@ class _ListTileExample extends State<ExpansionTileExample> {
         key: Key(item.resultId),
         background: _isInArchieve ? moveToTrashBannerLeft : archieveBanner,
         secondaryBackground: moveToTrashBanner,
-        child: ListTile(
-          leading: item.icon,
-          title: Text(item.title),
-          subtitle: Text(item.subtitle!),
+        child: Container(
+          height: 70,
+          child: ListTile(
+            leading: item.icon,
+            title: Text(item.title),
+            subtitle: Text(item.subtitle!),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailPageContainer(
+                        searchResult: item,
+                      )),
+            ),
+          ),
         ),
         confirmDismiss: (DismissDirection direction) async {
           String alertText;
@@ -395,8 +421,50 @@ class _ListTileExample extends State<ExpansionTileExample> {
     _user.updatePlanMainInDatabase(_plan.toMainJSON());
   }
 
-  _onListReorder(int oldListIndex, int newListIndex) {
-    return;
+  _showDeleteDayDialog(int outerIndex) {
+    Day _day = this._plan.dayList[outerIndex];
+    String _moveToArchieveString = _day.activities.length > 0?
+    " and all ${_day.activities.length} activities will be moved to archieve": "";
+    
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete ${_day.name}? '),
+            content: Text("Days in the plan will be re-indexed" + _moveToArchieveString + "."),
+            actions: [
+              //Confirm button
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    _deleteDay(outerIndex);
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("OK")),
+              //Cancel Button
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("Cancel")),
+            ],
+          );}
+        );
+    
+
+  }
+
+  _deleteDay(int outerIndex) {
+    setState(() {
+      this._plan.dayList.removeAt(outerIndex);
+      for (int i=0; i<_plan.dayList.length - 1; i++){
+        _plan.dayList[i].name = "Day ${i+1}";
+      }
+    });
+    _plan.updateMain();
+    _user.updatePlanMainInDatabase(_plan.toMainJSON());
   }
 }
 
@@ -460,28 +528,27 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
     super.initState();
   }
 
-  _showLoadingDialog() async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            height: 100,
-            width: double.infinity - 100,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text("Loading"),
+  _showLoadingDialog() {
+    if (isLoading) {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              height: 100,
+              width: 100,
+              child: Center(
+                child: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor)),
               ),
-              SizedBox(
-                  height: 40, width: 40, child: CircularProgressIndicator()),
-            ]),
-          ),
-          contentPadding: EdgeInsets.all(30),
-        );
-      },
-    );
+            ),
+          );
+        },
+      );
+    }
   }
 
   String _dateFormatter(DateTime date) {
@@ -521,22 +588,12 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
   }
 
   getRecommendation() async {
-    setState(() {
-      isLoading = true;
-    });
     String date = _dateFormatter(currentDate);
     List<String> confirmedInterest =
         List.from(isCheckedMap.keys.where((x) => isCheckedMap[x] == true));
 
     var recResult = await RecommendationEngine()
         .getRecommendResult(confirmedInterest, date);
-    setState(() {
-      isLoading = false;
-      Navigator.of(context).pop();
-    });
-
-    if (recResult.length == 0)
-    _showConfirmationDialog(recResult);
     return recResult;
   }
 
@@ -545,23 +602,22 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+            title: Text(
+                "A new day: Day ${this.widget.nextday} has been generated! "),
             content: Container(
-              height: 100,
+              height: double.infinity - 300,
               width: double.infinity - 100,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child:
-                          Text("A new day: Day ${this.widget.nextday} has been generated! "),
-                    ),
-                    Column(
-                        children: List.generate(
-                            searchResultList.length,
-                            (index) => SearchResultCard(
-                                item: searchResultList[index])))
-                  ]),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: List.generate(
+                          searchResultList.length,
+                          (index) =>
+                              SearchResultCard(item: searchResultList[index]))),
+                ),
+              ),
             ),
             contentPadding: EdgeInsets.all(30),
             actions: [
@@ -572,9 +628,15 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                   onPressed: () {
                     this.widget.addRecommendDay(searchResultList);
                     Navigator.of(context).pop(true);
-                    Navigator.of(context).pop(true);
                   },
                   child: Text("OK")),
+              //Cancel Button
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("Cancel")),
             ]);
       },
     );
@@ -618,7 +680,6 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                     (index) =>
                         _checkBoxTile(List.from(interestMap.keys)[index])),
               ),
-              //TODO: get recommendation
               SizedBox(
                 height: 80,
               ),
@@ -637,10 +698,11 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                             style: TextStyle(fontSize: 17),
                           ),
                           onPressed: () {
-                            getRecommendation();
-                            if (isLoading) {
-                              _showLoadingDialog();
-                            }
+                            _showLoadingDialog();
+                            getRecommendation().then((recList) {
+                              Navigator.of(context).pop(true);
+                              _showConfirmationDialog(recList);
+                            });
                           }))),
             ]),
       ),

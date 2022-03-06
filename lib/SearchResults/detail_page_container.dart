@@ -164,7 +164,6 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
 
     print(item.source);
     switch (item.source) {
-      //TODO: uncomment this when need to form google page
       case DataSource.Google:
         return POISubPage(
           placeId: item.details?["place_id"],
