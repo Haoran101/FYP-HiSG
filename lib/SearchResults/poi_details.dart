@@ -85,6 +85,12 @@ class _POISubPageState extends State<POISubPage> {
     var _pageElementPadding = EdgeInsets.all(20.0);
 
     getPhotoView() {
+      if (this.place.photoReferences == null){
+        return Container(
+          height: 200,
+          child: Image.asset("assets/img/placeholder.png", height: 200, width: double.infinity, fit: BoxFit.fitWidth),
+        );
+      }
       if (this.place.photoReferences!.length < 3) {
         return GoogleImage(photoRef: place.photoReferences![0], cover: true);
       } else {

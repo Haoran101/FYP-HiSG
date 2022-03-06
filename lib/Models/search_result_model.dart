@@ -6,6 +6,7 @@ import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 
 enum DataSource {
   Google,
+  Google_Wikitude,
   TIH,
   TIH_Test_Backup,
   MRT,

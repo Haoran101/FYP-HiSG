@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:wikitude_flutter_app/Models/poi_model.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 
 import 'sample.dart';
@@ -122,12 +125,11 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
           captureScreen();
           break;
         case "present_poi_details":
+          print(jsonObject);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => POISubPage(
-              placeId: jsonObject["id"],
-              category: jsonObject["description"]
-            )),
+            MaterialPageRoute(builder: (context) => DetailPageContainer(searchResult: SearchResult.fromGoogle(jsonObject),)
+            ),
           );
           break;
         case "save_current_instant_target":

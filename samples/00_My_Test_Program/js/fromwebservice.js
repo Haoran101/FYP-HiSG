@@ -113,6 +113,7 @@ var World = {
 
         /* Loop through POI-information and create an AR.GeoObject (=Marker) per POI. */
         for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
+            console.log(poiData[currentPlaceNr]);
             var singlePoi = {
                 "id": poiData[currentPlaceNr].place_id,
                 "latitude": parseFloat(poiData[currentPlaceNr].geometry.location.lat),
@@ -120,6 +121,7 @@ var World = {
                 "altitude": 100.0 + (Math.random() * 10),
                 "title": poiData[currentPlaceNr].name,
                 "description": poiData[currentPlaceNr].types[0].replace("_", " ").toUpperCase(),
+                "details": poiData[currentPlaceNr]
             };
 
             World.markerList.push(new Marker(singlePoi));
@@ -139,9 +141,9 @@ var World = {
         var currentMarker = World.currentMarker;
         var markerSelectedJSON = {
             action: "present_poi_details",
-            id: currentMarker.poiData.id,
-            title: currentMarker.poiData.title,
-            description: currentMarker.poiData.description
+            place_id: currentMarker.poiData.id,
+            name: currentMarker.poiData.title,
+            types: [currentMarker.poiData.description,],
         };
         /*
             The sendJSONObject method can be used to send data from javascript to the native code.
