@@ -7,6 +7,7 @@ import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/Wikitude/DestinationPage.dart';
 
 import 'sample.dart';
 
@@ -21,8 +22,9 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   Sample sample;
   String loadPath = "";
   bool loadFailed = false;
+  Map<String, dynamic>? destinationJSON;
 
-  ArViewState({required this.sample}) {
+  ArViewState({required this.sample, this.destinationJSON}) {
     if(this.sample.path.contains("http://") || this.sample.path.contains("https://")) {
       loadPath = this.sample.path;
     } else {
@@ -71,6 +73,10 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    if (this.destinationJSON == null && this.sample.name == "AR Walking Navigation"){
+      //TODO: push view to request for destination
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: this.sample)));
+    }
     return Scaffold(
       appBar: AppBar(title: Text(sample.name),
       backgroundColor: Theme.of(context).primaryColor,
@@ -179,15 +185,18 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   }
 }
 
+// ignore: must_be_immutable
 class ArViewWidget extends StatefulWidget {
 
   final Sample sample;
+  Map<String, dynamic>? destinationJSON;
 
   ArViewWidget({
     Key? key,
     required this.sample,
+    this.destinationJSON,
   });
 
   @override
-  ArViewState createState() => new ArViewState(sample: sample);
+  ArViewState createState() => new ArViewState(sample: sample, destinationJSON: destinationJSON);
 }
