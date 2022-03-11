@@ -21,9 +21,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '9.9.0'
 }
 
-def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+def GOOGLE_API_KEY = apikeyProperties.getProperty("GOOGLE_API_KEY")
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -44,7 +45,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        buildConfigField("String", "GOOGLE_API_KEY", apikeyProperties['GOOGLE_API_KEY'])
+        manifestPlaceholders = [GOOGLE_API_KEY: GOOGLE_API_KEY]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

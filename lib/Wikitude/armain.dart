@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
 
+import 'DestinationPage.dart';
 import 'arview.dart';
 import 'category.dart';
 import 'custom_expansion_tile.dart';
@@ -189,10 +190,18 @@ class CategoryExpansionTileState extends State<CategoryExpansionTile> {
                             sample.name,
                             style: TextStyle(fontSize: 20),
                           ),
-                          onPressed: () => snapshot.data!.success
-                              ? _pushArView(sample)
-                              : _showDialog("Device missing features",
-                                  snapshot.data!.message),
+                          onPressed: () {
+                            if (snapshot.data!.success)
+                            {
+                              sample.name == "AR Walking Navigation"?
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: sample))):
+                              _pushArView(sample);
+                            }
+                            else {
+                              _showDialog("Device missing features",
+                                  snapshot.data!.message);
+                            }
+                          },
                         ),
                       )));
             } else {

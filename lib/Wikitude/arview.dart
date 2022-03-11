@@ -73,10 +73,6 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (this.destinationJSON == null && this.sample.name == "AR Walking Navigation"){
-      //TODO: push view to request for destination
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: this.sample)));
-    }
     return Scaffold(
       appBar: AppBar(title: Text(sample.name),
       backgroundColor: Theme.of(context).primaryColor,
