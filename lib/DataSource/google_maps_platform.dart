@@ -8,48 +8,6 @@ import 'package:http/http.dart';
 import '../Models/poi_model.dart';
 import 'api_key.dart' as maps_api;
 
-class TestPOI extends StatefulWidget {
-  const TestPOI({Key? key}) : super(key: key);
-
-  @override
-  State<TestPOI> createState() => _TestPOIState();
-}
-
-class _TestPOIState extends State<TestPOI> {
-
-  getPOI() async{
-    var test = await PlaceApiProvider().getPlaceDetailFromId("ChIJrTLr-GyuEmsRBfy61i59si0");
-    var image = await PlaceApiProvider().getPlaceImageFromReference(test!.photoReferences![0]);
-    print(image);
-    return image;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Container(
-      child: FutureBuilder(
-        future: getPOI(), 
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
-          if (snapshot.hasError) {
-            print("Something went wrong");
-            return (Image.asset("assets/img/placeholder.png"));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            //Show circular progress indicator if loading
-            return Align(
-              alignment: Alignment.topCenter,
-              child: CircularProgressIndicator());
-          }
-          return Image(image: snapshot.data);
-        },
-        
-      ),
-    );
-  }
-}
-
 class PlaceApiProvider {
   final httpClient = Client();
   final API_KEY = maps_api.google_maps_api_key;

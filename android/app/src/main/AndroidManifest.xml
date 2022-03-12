@@ -33,6 +33,8 @@
         android:label="HiSG"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_API_KEY}" />
         <activity
             android:name="com.wikitude.fluttersamples.MainActivity"
             android:launchMode="singleTop"
@@ -53,8 +55,7 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
-            <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="${GOOGLE_API_KEY}" />
+            
             <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />

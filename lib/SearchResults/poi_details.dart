@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
 
 import '../DataSource/google_maps_platform.dart';
 import '../Models/poi_model.dart';
@@ -33,18 +32,6 @@ class _POISubPageState extends State<POISubPage> {
   void initState() {
     super.initState();
   }
-
-  String _searchImportantGoogleType(List<dynamic> types) {
-  List<String> typePriority = ["lodging", "university", "school", 
-  "subway_station", "bank", "health", "shopping_mall", "health", "store"];
-  for (final x in typePriority){
-    if (types.contains(x)) {
-      if (x == "lodging") return "accommodation";
-      return x;
-    }
-  }
-  return types.first;
-}
 
   Future fetchPOIDetails() async {
     print(this.widget.isCid);
@@ -146,7 +133,7 @@ class _POISubPageState extends State<POISubPage> {
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              _searchImportantGoogleType(place.types!).toUpperCase().replaceAll("_", " "),
+                              searchImportantGoogleType(place.types!).toUpperCase().replaceAll("_", " "),
                               style: TextStyle(
                                   fontSize: 15,
                                   color: Theme.of(context).primaryColor))),
@@ -470,4 +457,16 @@ class _GoogleImageState extends State<GoogleImage> {
       ),
     );
   }
+}
+
+String searchImportantGoogleType(List<dynamic> types) {
+  List<String> typePriority = ["lodging", "university", "school", 
+  "subway_station", "bank", "health", "shopping_mall", "health", "store"];
+  for (final x in typePriority){
+    if (types.contains(x)) {
+      if (x == "lodging") return "accommodation";
+      return x;
+    }
+  }
+  return types.first;
 }

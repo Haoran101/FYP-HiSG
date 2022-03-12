@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wikitude_flutter_app/Wikitude/customUrl.dart';
 
 import 'DestinationPage.dart';
 import 'arview.dart';
@@ -56,7 +55,7 @@ class MyAppState extends State<MainMenu> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                  top: 100, left: 20, right: 20, bottom: 30),
+                  top: 80, left: 20, right: 20, bottom: 30),
               child: Text(
                 "Meet Singapore, now with AR",
                 style: TextStyle(fontSize: 22, color: Colors.black54),
@@ -67,7 +66,7 @@ class MyAppState extends State<MainMenu> {
                 child: Image.asset("assets/img/AR.png")),
             Container(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: FutureBuilder(
                   future: _loadSamples(),
                   builder: (context, AsyncSnapshot<List<Category>> snapshot) {
@@ -88,45 +87,6 @@ class MyAppState extends State<MainMenu> {
         ));
   }
 
-  void popupMenuSelectedItem(String item) {
-    switch (item) {
-      case PopupMenuItems.customUrlLauncher:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CustomUrl()),
-        );
-        break;
-      case PopupMenuItems.sdkBuildInformation:
-        _getSDKInfo();
-        break;
-    }
-  }
-
-  Future<void> _getSDKInfo() async {
-    String sdkVersion = await WikitudePlugin.getSDKVersion();
-    WikitudeSDKBuildInformation sdkBuildInformation =
-        await WikitudePlugin.getSDKBuildInformation();
-    String flutterVersion = "2.2.0";
-
-    String message =
-        "Build configuration: ${sdkBuildInformation.buildConfiguration}\nBuild date: ${sdkBuildInformation.buildDate}\nBuild number: ${sdkBuildInformation.buildNumber}\nBuild version: $sdkVersion\nFlutter version: $flutterVersion";
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("SDK information"),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
 }
 
 class CategoryExpansionTile extends StatefulWidget {
@@ -143,20 +103,24 @@ class CategoryExpansionTile extends StatefulWidget {
 class CategoryExpansionTileState extends State<CategoryExpansionTile> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.categories.length,
-        itemBuilder: (context, index) {
-          return CustomExpansionTile(
-            key: PageStorageKey("$index"),
-            headerBackgroundColor: Colors.white,
-            headerBackgroundColorAccent: Colors.white,
-            headerContentPadding: EdgeInsets.fromLTRB(15, 2, 15, 2),
-            borderColor: Colors.white,
-            iconColor: Colors.white,
-            children: createSamplesTileList(widget.categories[index].samples),
-          );
-        });
+    return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.categories.length,
+          itemBuilder: (context, index) {
+            return CustomExpansionTile(
+              key: PageStorageKey("$index"),
+              headerBackgroundColor: Colors.white,
+              headerBackgroundColorAccent: Colors.white,
+              headerContentPadding: EdgeInsets.fromLTRB(15, 2, 15, 2),
+              borderHeight: 0.6,
+              borderColor: Colors.white,
+              iconColor: Colors.white,
+              children: createSamplesTileList(widget.categories[index].samples),
+            );
+          }),
+    );
   }
 
   List<Widget> createSamplesTileList(List<Sample> samples) {
@@ -194,7 +158,7 @@ class CategoryExpansionTileState extends State<CategoryExpansionTile> {
                             if (snapshot.data!.success)
                             {
                               sample.name == "AR Walking Navigation"?
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: sample))):
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: sample))):
                               _pushArView(sample);
                             }
                             else {
@@ -278,14 +242,4 @@ class CategoryExpansionTileState extends State<CategoryExpansionTile> {
           );
         });
   }
-}
-
-class PopupMenuItems {
-  static const String customUrlLauncher = "Custom URL Launcher";
-  static const String sdkBuildInformation = "SDK Build Information";
-
-  static const List<String> items = <String>[
-    customUrlLauncher,
-    sdkBuildInformation
-  ];
 }
