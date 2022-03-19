@@ -10,16 +10,30 @@ import 'package:provider/provider.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:wikitude_flutter_app/UI/navDialog.dart';
 import 'package:wikitude_flutter_app/Wikitude/arview.dart';
 import 'package:wikitude_flutter_app/Wikitude/sample.dart';
 import '../DataSource/api_key.dart' as api;
+import '../Models/nav_info_model.dart';
 import '../SearchResults/poi_details.dart';
 
 final MAPBOX_ACCESS_TOKEN = api.mapbox_access_token;
 
 class DestinationPage extends StatefulWidget {
-  Sample sample;
-  DestinationPage({required this.sample});
+  Sample sample = Sample.fromJson(
+    {
+      "name": "AR Walking Navigation",
+      "path": "01_AR_Navigation_Program/index.html",
+      "requiredFeatures": ["geo"],
+      "required_extensions": ["native_detail", "application_model_pois"],
+      "startupConfiguration": {
+        "camera_position": "back",
+        "camera_resolution": "auto"
+      }
+    },
+  );
+  NavInfo? destination;
+  DestinationPage({this.destination});
 
   @override
   State<DestinationPage> createState() => _DestinationPageState();
@@ -45,49 +59,6 @@ class _DestinationPageState extends State<DestinationPage> {
   void dispose() {
     destinController.dispose();
     super.dispose();
-  }
-
-  Future<WikitudeResponse> _requestARPermissions(List<String> features) async {
-    return await WikitudePlugin.requestARPermissions(features);
-  }
-
-  void _showPermissionError(String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Permissions required"),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Open settings'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  WikitudePlugin.openAppSettings();
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  Future<void> _pushArView(Sample sample) async {
-    WikitudeResponse permissionsResponse =
-        await _requestARPermissions(sample.requiredFeatures);
-    if (permissionsResponse.success) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ArViewWidget(sample: sample)),
-      );
-    } else {
-      _showPermissionError(permissionsResponse.message);
-    }
   }
 
   updateLocation(pos) async {
@@ -240,11 +211,11 @@ class _MapAndPageViewState extends State<MapAndPageView> {
   CustomPageView? pageView;
   int? pageNumber;
 
-  
-
   @override
   void initState() {
-    _center = this.widget._resultList.length > 0? this.widget._resultList[0].location: this.widget.pos;
+    _center = this.widget._resultList.length > 0
+        ? this.widget._resultList[0].location
+        : this.widget.pos;
     pos = this.widget.pos;
     pageView = CustomPageView(
       callback: updateCenter,
@@ -264,9 +235,8 @@ class _MapAndPageViewState extends State<MapAndPageView> {
 
   @override
   Widget build(BuildContext context) {
-
     bool emptyList = this.widget._resultList.length == 0;
-    
+
     print("Center: $_center");
 
     return Stack(children: [
@@ -280,9 +250,6 @@ class _MapAndPageViewState extends State<MapAndPageView> {
             zoom: 14.0,
             minZoom: 5.0,
             maxZoom: 20.0,
-            plugins: [
-              const LocationMarkerPlugin(),
-            ],
           ),
           layers: [
             TileLayerOptions(
@@ -294,16 +261,16 @@ class _MapAndPageViewState extends State<MapAndPageView> {
             ),
             MarkerLayerOptions(
               markers: [
-              Marker(
-                point: this._center!,
-                builder: (ctx) => Container(
-                  child: Center(
-                      child: InkWell(
-                          onTap: () => print("taped marker"),
-                          child:
-                              Icon(Icons.place, color: Colors.red, size: 0))),
+                Marker(
+                  point: this._center!,
+                  builder: (ctx) => Container(
+                    child: Center(
+                        child: InkWell(
+                            onTap: () => print("taped marker"),
+                            child:
+                                Icon(Icons.place, color: Colors.red, size: 50))),
+                  ),
                 ),
-              ),
               ],
             ),
           ],
@@ -438,7 +405,14 @@ class LocationCard extends StatelessWidget {
                       icon: Icon(Icons.info, size: 35, color: Colors.blue)),
                   Spacer(),
                   IconButton(
-                    onPressed: null,
+                    onPressed: () {
+                      NavInfo dest = NavInfo(
+                          name: this.loc!.name,
+                          lat: this.loc!.location!.latitude,
+                          lon: this.loc!.location!.longitude,
+                          place_id: this.loc!.placeId);
+                      showNavigationDialog(context, dest);
+                    },
                     icon: Icon(Icons.near_me, size: 35, color: Colors.red[400]),
                   ),
                 ],

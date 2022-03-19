@@ -25,8 +25,6 @@ var World = {
     currentMarker: null,
     currentDistance: null,
     currentDuration: null,
-    totalDistance: null,
-    totalDuration: null,
 
     /* Called to inject new POI data. */
     loadMarkersFromRoute: function loadMarkersFromRouteFn() {
@@ -40,8 +38,9 @@ var World = {
         World.markerDrawableIdle = new AR.ImageResource("assets/empty.png", {
             onError: World.onError
         });
-        World.markerDrawableSelected = new AR.ImageResource("assets/empty.png", {
-            onError: World.onError
+        World.markerDrawableSelected = new AR.ImageResource("assets/poi.png", {
+            onError: World.onError,
+            innerHeight: 5
         });
         World.markerDrawableDirectionIndicator = new AR.ImageResource("assets/indi.png", {
             onError: World.onError
@@ -63,11 +62,30 @@ var World = {
                 "details": routeData[currentPlaceNr]
             };
             World.markerList.push(new Marker(singlePoi));
-
         }
 
         World.switchInstructions();
         World.updateStatusMessage('Route loaded from Google Maps.');
+    },
+
+    /*on received destination info from Architect Widget*/
+    initializeDestination: function initializeDestinationFn(destinationJSON){
+        print(destinationJSON);
+    },
+
+    /* updates status message as total duration remaining */
+    updateTotalStatusMessage: function updateTotalStatusFn(){
+        if (World.markerList.length == 0) return;
+        var startId = World.currentMarker.poiData.id + 1;
+        var sumDistance = World.currentDistance;
+        var sumDuration = World.currentDuration;
+        while (startId < World.markerList.length){
+            sumDistance += World.markerList[startId].poiData.distance;
+            sumDuration += World.markerList[startId].poiData.duration;
+        }
+        var distanceDisplay = sumDistance < 1000? Math.round(sumDistance) + " m" : (sumDistance/1000).toFixed(2) + " km";
+        var durationDisplay = Math.ceil(sumDuration / 60) + " min";
+        World.updateStatusMessage("Remaining Distance: " + distanceDisplay + ", Remaining Time: " + durationDisplay);
     },
 
     /* Updates status message shown in small "i"-button aligned bottom center. */
@@ -85,8 +103,6 @@ var World = {
     updateDistanceAndDurationDisplay: function updateDistanceAndDurationDisplayFn(distance, duration) {
         var distanceDisplay = distance < 1000? Math.round(distance) + " m" : (distance/1000).toFixed(2) + " km";
         var durationDisplay = Math.ceil(duration / 60) + " min";
-        console.log(distanceDisplay);
-        console.log(durationDisplay);
         document.getElementById("distance").innerHTML = distanceDisplay;
         document.getElementById("duration").innerHTML = durationDisplay;
     },
@@ -158,6 +174,7 @@ var World = {
             //TODO: if location is near next turing point
             World.fetchUpdatedDistanceAndDuration(lat, lon);
             World.updateDistanceAndDurationDisplay(World.currentDistance, World.currentDuration);
+            World.updateTotalStatusMessage();
         }
 
 },

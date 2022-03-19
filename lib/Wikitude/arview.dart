@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
 import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
@@ -22,7 +23,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   Sample sample;
   String loadPath = "";
   bool loadFailed = false;
-  Map<String, dynamic>? destinationJSON;
+  NavInfo? destinationJSON;
 
   ArViewState({required this.sample, this.destinationJSON}) {
     if(this.sample.path.contains("http://") || this.sample.path.contains("https://")) {
@@ -75,20 +76,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(sample.name),
-      backgroundColor: Theme.of(context).primaryColor,
-      actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: null,
-            itemBuilder: (BuildContext context) {
-              return {'Logout', 'Settings'}.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ],),
+      backgroundColor: Theme.of(context).primaryColor,),
       body: WillPopScope(
         onWillPop: () async {
           if(defaultTargetPlatform == TargetPlatform.android && !loadFailed) {
@@ -110,6 +98,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   }
 
   Future<void> onArchitectWidgetCreated() async {
+    print("Load Path" + this.loadPath);
     this.architectWidget.load(loadPath, onLoadSuccess, onLoadFailed);
     this.architectWidget.resume();
     
@@ -185,14 +174,14 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
 class ArViewWidget extends StatefulWidget {
 
   final Sample sample;
-  Map<String, dynamic>? destinationJSON;
+  NavInfo? destinationNavInfo;
 
   ArViewWidget({
     Key? key,
     required this.sample,
-    this.destinationJSON,
+    this.destinationNavInfo,
   });
 
   @override
-  ArViewState createState() => new ArViewState(sample: sample, destinationJSON: destinationJSON);
+  ArViewState createState() => new ArViewState(sample: sample, destinationJSON: destinationNavInfo);
 }

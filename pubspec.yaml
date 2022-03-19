@@ -79,6 +79,10 @@ flutter:
     - samples/00_My_Test_Program/js/
     - samples/00_My_Test_Program/css/
     - samples/00_My_Test_Program/assets/
+    - samples/01_AR_navigation/
+    - samples/01_AR_navigation/js/
+    - samples/01_AR_navigation/css/
+    - samples/01_AR_navigation/assets/
     - samples/10_BrowsingPois_6_Bonus-CaptureScreen/
     - samples/10_BrowsingPois_6_Bonus-CaptureScreen/js/
     - samples/10_BrowsingPois_6_Bonus-CaptureScreen/css/

@@ -17,12 +17,13 @@
         },
         {
             "name": "AR Walking Navigation",
-            "path": "01_AR_Navigation_Program/index.html",
+            "path": "01_AR_navigation/index.html",
             "requiredFeatures": [
                 "geo"
             ],
             "required_extensions": [
-                "native_detail"
+                "native_detail",
+                "application_model_pois"
             ],
             "startupConfiguration": {
                 "camera_position": "back",

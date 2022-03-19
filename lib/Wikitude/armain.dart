@@ -158,7 +158,7 @@ class CategoryExpansionTileState extends State<CategoryExpansionTile> {
                             if (snapshot.data!.success)
                             {
                               sample.name == "AR Walking Navigation"?
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationPage(sample: sample))):
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationPage())):
                               _pushArView(sample);
                             }
                             else {

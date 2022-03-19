@@ -32,16 +32,37 @@
     <script type="text/javascript" src="js/fromwebservice.js"></script>
 
     <link rel="stylesheet" href="css/default.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 
 <body>
-    <div id="instruction_banner">
-        <p id="instruction">Instruction Place Holder</p>
+    <div id="instruction_banner" class="header">
+        <p id="instruction">Loading Route</p>
     </div>
 
-    <div id="distance_and_duration">
-        <p id="distance"></p>
-        <p id="duration"></p>
+    <div id="panelPoiDetail">
+        <div style="padding: 0; margin: 0;">
+            <p style="font-size: 20px; padding-left: 40px; margin-bottom: 0;">Next Turn</p>
+        </div>
+        <div id="distanceAndDuration">
+            <div>
+                <p style="padding-top: 0;">
+                    <span>
+                        <img src="assets/walk.png">
+                    </span>
+                    <span id = "distance" style="padding-top: 0;"></span>
+                </p>
+            </div>
+            <div>
+                <p style="padding-top: 0;">
+                    <span>
+                        <img src="assets/time.png">
+                    </span>
+                    <span id = "duration" style="padding-top: 0;"></span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <div id="footer" width="100%">
