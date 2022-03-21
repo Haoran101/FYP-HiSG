@@ -165,30 +165,60 @@ class _UserMainState extends State<UserMain> {
                 child: Container(
                     width: double.infinity,
                     height: 50,
-                    
                     decoration: BoxDecoration(
-                      border: Border.all(color:Theme.of(context).primaryColor),
-                      color: Colors.white
-                    ),
+                        border: Border.all(color: Colors.black38),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.white),
                     child: ElevatedButton(
                         style: ButtonStyle(
-                            
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
                             foregroundColor:
-                                MaterialStateProperty.all<Color>(
-                                  Theme.of(context).primaryColor
-                                )),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
+                                MaterialStateProperty.all<Color>(Colors.black)),
+                        child: Row(children: [
+                          Text(
                             "Favorites",
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 18),
                           ),
-                        ),
+                          Spacer(),
+                          Icon(Icons.chevron_right_outlined)
+                        ]),
                         onPressed: null))),
+            Container(
+                margin: EdgeInsets.only(
+                    top: 0.0, bottom: 20.0, left: 30, right: 30),
+                child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black38),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.white),
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black)),
+                        child: Row(children: [
+                          Text(
+                            "About",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          Spacer(),
+                        ]),
+                        onPressed: () => showAboutDialog(
+                              context: context,
+                              applicationName: "HiSG",
+                              applicationVersion: "1.0.0",
+                              applicationIcon: Image.asset("assets/img/app_logo.png",
+                              width: 50, height: 50,)
+
+                            )))),
             //Container(child: Text(user!.uid!)),
             Container(
                 margin: EdgeInsets.only(
-                    top: 340.0, bottom: 20.0, left: 30, right: 30),
+                    top: 260.0, bottom: 20.0, left: 30, right: 30),
                 child: SizedBox(
                     width: double.infinity,
                     height: 50,

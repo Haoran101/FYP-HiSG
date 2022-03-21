@@ -9,7 +9,8 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> jsonMap){
     List<dynamic> samplesFromJson = jsonMap["samples"];
     List<Sample> samples = [];
-    for(int i = 0; i < samplesFromJson.length; i++) {
+    //TODO: remove -1 to show badges
+    for(int i = 0; i < samplesFromJson.length -1; i++) {
       samples.add(new Sample.fromJson(samplesFromJson[i]));
     }
 

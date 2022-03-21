@@ -8,7 +8,6 @@ import '../DataSource/google_maps_platform.dart';
 
 class MRTStationPage extends StatefulWidget {
   late Map<String, dynamic> mrtData;
-
   MRTStationPage({required this.mrtData});
 
   @override
@@ -17,9 +16,17 @@ class MRTStationPage extends StatefulWidget {
 
 class _MRTStationPageState extends State<MRTStationPage> {
   MRTProvider _mrt = MRTProvider();
+  var mrtData;
   POI? place;
 
+  @override
+  void initState() {
+    this.mrtData = this.widget.mrtData;
+    super.initState();
+  }
+
   getPhotoView() {
+    print(this.place.toString());
     if (this.place!.photoReferences!.length < 3) {
       return GoogleImage(photoRef: place!.photoReferences![0], cover: true);
     } else {
@@ -62,7 +69,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
       ))
     ]);
     rows.add(tableHeader);
-    for (final row in this.widget.mrtData["exit_info"]) {
+    for (final row in this.mrtData["exit_info"]) {
       TableRow infoRow = TableRow(children: [
         Center(
             child: Padding(
@@ -104,7 +111,12 @@ class _MRTStationPageState extends State<MRTStationPage> {
   }
 
   Future fetchPOIDetails() async {
-    String placeId = this.widget.mrtData["place_id"];
+    if (this.mrtData.containsKey("docRef")){
+      //accessed from line, need doc info
+      Map<String, dynamic>? mrtDoc = await MRTProvider().fetchMRTDetailsByDocRef(this.mrtData["docRef"]);
+      this.mrtData.addAll(mrtDoc);
+    }
+    String placeId = this.mrtData["place_id"];
     print("place_id: " + placeId);
     this.place = (await PlaceApiProvider().getPlaceDetailFromId(placeId))!;
   }
@@ -193,7 +205,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                           left: 20, right: 20, top: 20, bottom: 10),
                       child: Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(this.widget.mrtData["Name Engish Malay"],
+                          child: Text(this.mrtData["Name Engish Malay"],
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold))),
                     ),
@@ -249,7 +261,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                           Center(
                             //English
                             child: Text(
-                                this.widget.mrtData["Name Engish Malay"],
+                                this.mrtData["Name Engish Malay"],
                                 style: TextStyle(
                                     fontSize: 20,
                                     height: 1.5,
@@ -257,14 +269,14 @@ class _MRTStationPageState extends State<MRTStationPage> {
                           ),
                           Center(
                             //Chinese
-                            child: Text(this.widget.mrtData["Name Chinese"],
+                            child: Text(this.mrtData["Name Chinese"],
                                 style: TextStyle(
                                   fontSize: 20,
                                   height: 1.5,
                                 )),
                           ),
                           Center(
-                            child: Text(this.widget.mrtData["Name Tamil"],
+                            child: Text(this.mrtData["Name Tamil"],
                                 style: TextStyle(
                                   fontSize: 20,
                                   height: 1.5,
@@ -276,7 +288,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                   ),
                 ),
                 //station code block
-                stationCodeBlock(this.widget.mrtData["name codes"]),
+                stationCodeBlock(this.mrtData["name codes"]),
                 //Lines
                 Padding(
                   padding: EdgeInsets.all(20.0),
@@ -289,9 +301,9 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: List.generate(
-                      this.widget.mrtData["name codes"].length, (index) {
+                      this.mrtData["name codes"].length, (index) {
                     String codePrefix =
-                        getCodePrefix(this.widget.mrtData["name codes"][index]);
+                        getCodePrefix(this.mrtData["name codes"][index]);
                     print(_mrt.getLineAbbvFromLineCode(codePrefix));
                     return InkWell(
                       onTap: () => Navigator.push(
@@ -340,7 +352,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 ),
 
                 //Exits
-                if (widget.mrtData["exit_info"][0]["Exit"] != "")
+                if (this.mrtData["exit_info"][0]["Exit"] != "")
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Align(
@@ -349,7 +361,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold))),
                   ),
-                if (widget.mrtData["exit_info"][0]["Exit"] != "") exitSection(),
+                if (this.mrtData["exit_info"][0]["Exit"] != "") exitSection(),
               ])));
         });
   }

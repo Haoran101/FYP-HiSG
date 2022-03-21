@@ -154,6 +154,20 @@ class MRTProvider {
     return mrtSnap.data() as Map<String, dynamic>;
   }
 
+  Future<Map<String, dynamic>?> fetchMRTDetailsByDocRef(docref) async {
+    DocumentReference<Object?> mrtSnap =
+       _mrtCollection.doc(docref);
+    DocumentSnapshot snapshot = await mrtSnap.get();
+    if (snapshot.exists) {
+      var data = snapshot.data() as Map<String, dynamic>;
+      print(data["place_id"]);
+      return data;
+    } else {
+      print("No MRT station found in database : $docref.");
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>?> queryMRT(text) async {
     try {
       final _lookup = lookuptables.mrtLookUp;

@@ -142,6 +142,16 @@ class SearchResult {
     resultId = "cloud>MRT>$docref";
   }
 
+  SearchResult.fromMRTLines(Map<String, dynamic> jsondata) {
+    title = jsondata["Station Name"].toString();
+    icon = _iconProvider.MRT_ICON;
+    source = DataSource.MRT;
+    details = jsondata;
+    subtitle = "MRT/LRT STATION";
+    var docref = jsondata["docRef"];
+    resultId = "cloud>MRT>$docref";
+  }
+
   SearchResult.fromHotelsDataset(Map<String, dynamic> jsondata) {
     title = jsondata["name"].toString();
 

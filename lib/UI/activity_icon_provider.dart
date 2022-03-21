@@ -201,6 +201,16 @@ class IconProvider {
 
   mapTIHIcon(dataset) {
     switch (dataset) {
+      case "attractions":
+        return ATTRACTION_ICON;
+      case "shops":
+        return STORE_iCON;
+      case "accommodation":
+        return HOTEL_ICON;
+      case "food beverages":
+        return FOOD_ICON;
+      case "bars clubs":
+        return WINE_ICON;
       case "event":
         return EVENT_ICON;
       case "precincts":

@@ -8,6 +8,7 @@ import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/search.dart';
+import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 
 class PrecinctDetailsSubpage extends StatefulWidget {
   final details;
@@ -81,6 +82,7 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
         children: (this.precinctList != null)
             ? List.generate(this.precinctList.length, (index) {
                 var resultItem = List.from(this.precinctList.values)[index]["searchResult"];
+                resultItem.icon = IconProvider().mapTIHIcon(resultItem.subtitle.toString().toLowerCase());
                 return SearchResultCard(
                   item: resultItem,
                   preloadedPage: List.from(this.precinctList.values)[index]["resultModel"],

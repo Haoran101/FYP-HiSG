@@ -64,6 +64,7 @@ flutter:
     - assets/icons/AR.svg
     - assets/img/avatar.png
     - assets/img/AR.png
+    - assets/img/app_logo.png
     - assets/img/explore/
     - assets/img/placeholder.png
     - assets/img/login/change.jpg
