@@ -142,6 +142,25 @@ class UserDatabase {
     }
   }
 
+  addRecommendedPlanItem(String uid, SearchResult item) async {
+    //add item result id into uid > plan > 'archieve'
+    CollectionReference<Map<String, dynamic>> _planCollection =
+        _userCollection.doc(uid).collection("plan");
+
+    //add into plan collection uid> plan> resultId > itemJSON
+    DocumentReference<Map<String, dynamic>> planItem =
+        _planCollection.doc(item.resultId);
+    try {
+      await planItem.set(item.toJSON()).whenComplete(() {
+        print("SUCCESS: add item JSON to plan collection");
+      });
+    } catch (error, stacktrace) {
+      print(error);
+      print(stacktrace);
+      print("FAILED to add item JSON to plan collection");
+    }
+  }
+
   addPlanItem(String uid, SearchResult item) async {
     //add item result id into uid > plan > 'archieve'
     CollectionReference<Map<String, dynamic>> _planCollection =

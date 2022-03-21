@@ -389,7 +389,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
     });
     print("New Day Created: ${newDay.name}");
     this._plan.updateMain();
-    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+    _user.updatePlanMainInDatabase(this._plan);
+    for (var item in recommendedList){
+      _user.addRecommendedPlanItem(item);
+    }
   }
 
   _deleteItem(item, outerIndex, innerIndex) {
@@ -397,7 +400,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
       this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
     });
     this._plan.updateMain();
-    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+    _user.updatePlanMainInDatabase(this._plan);
   }
 
   _addToArchieve(item, outerIndex, innerIndex) {
@@ -407,7 +410,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
       this._plan.dayList[outerIndex].activities.removeAt(innerIndex);
     });
     this._plan.updateMain();
-    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+    _user.updatePlanMainInDatabase(this._plan);
   }
 
   _onItemReorder(
@@ -418,7 +421,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
       _plan.dayList[newListIndex].activities.insert(newItemIndex, movedItem);
     });
     _plan.updateMain();
-    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+    _user.updatePlanMainInDatabase(this._plan);
   }
 
   _showDeleteDayDialog(int outerIndex) {
@@ -464,7 +467,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
       }
     });
     _plan.updateMain();
-    _user.updatePlanMainInDatabase(_plan.toMainJSON());
+    _user.updatePlanMainInDatabase(this._plan);
   }
 }
 
@@ -603,7 +606,7 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
       builder: (BuildContext context) {
         return AlertDialog(
             title: Text(
-                "A new day: Day ${this.widget.nextday} has been generated! "),
+                "A new day: Day ${this.widget.nextday} \n has been generated! "),
             content: Container(
               height: double.infinity - 300,
               width: double.infinity - 100,
@@ -626,6 +629,7 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                   style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor),
                   onPressed: () {
+                    
                     this.widget.addRecommendDay(searchResultList);
                     Navigator.of(context).pop(true);
                   },

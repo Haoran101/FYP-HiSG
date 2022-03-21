@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/User/user_database.dart';
@@ -7,7 +8,7 @@ class UserService {
   static final UserService _instance = UserService._internal();
   final _cloudstore = UserDatabase();
 
-  factory UserService() => _instance;
+  factory UserService({Key? key}) => _instance;
 
   UserService._internal() {
     _currentUser = null;
@@ -77,9 +78,9 @@ class UserService {
   }
 
   logout() {
-    _currentUser = null;
-    favoriteItems = <SearchResult>[];
-    plan = null;
+    this._currentUser = null;
+    this.favoriteItems = <SearchResult>[];
+    this.plan = null;
   }
 
   List<String> getSearchHistory() {
@@ -218,6 +219,16 @@ class UserService {
     }
   }
 
+  void addRecommendedPlanItem(SearchResult item) {
+    try {
+        _cloudstore.addRecommendedPlanItem(_currentUser!.uid!, item);
+        print("SUCCESS: item added to plan collection: ${item.resultId}");
+      } catch (error, stacktrace) {
+        print(error);
+        print(stacktrace);
+      }
+  }
+
   Future<bool> checkItemInPlan(SearchResult item) async {
     if (_currentUser == null) {
       print("WARNING: unable to get plan due to not logged in");
@@ -236,7 +247,9 @@ class UserService {
     return false;
   }
 
-  updatePlanMainInDatabase(Map<String, dynamic> planMain){
+  updatePlanMainInDatabase(Plan inputPlan){
+    this.plan = inputPlan;
+    var planMain = inputPlan.toMainJSON();
     _cloudstore.updatePlannMainJSON(_currentUser!.uid!, planMain).whenComplete(
       () => print("SUCCESS: updated plan main in collection.")
     );

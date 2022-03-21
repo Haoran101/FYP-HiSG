@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final UserService _user = UserService();
+  final UserService _user = UserService(key: UniqueKey());
   final _formkey = GlobalKey<FormState>();
 
   var email = " ";
