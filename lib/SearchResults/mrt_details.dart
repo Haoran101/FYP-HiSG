@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
-import 'package:wikitude_flutter_app/UI/paintLine.dart';
+import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
 
 import '../DataSource/google_maps_platform.dart';
 

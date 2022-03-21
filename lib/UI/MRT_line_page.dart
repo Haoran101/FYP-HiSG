@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
 
 class PositionIndicator {
   int horizontalPosition;
@@ -212,10 +213,12 @@ class _MRTGraphicsGeneratorState extends State<MRTGraphicsGenerator> {
         height: rowHeight, width: width, child: Stack(children: _childrenList));
   }
 
-  Widget _nameBlock(rowJSON) {
+  Widget _nameBlock(rowJSON,) {
     return InkWell(
-      onTap: null,
-      //TODO: link to station page
+      onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MRTStationPage(mrtData: rowJSON))),
       child: Container(
         height: rowHeight,
         width: stationNameBlockWidth,

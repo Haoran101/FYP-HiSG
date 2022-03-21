@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/UI/paintLine.dart';
+import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 import '../DataSource/cloud_firestore.dart';
