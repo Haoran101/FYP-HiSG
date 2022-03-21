@@ -420,6 +420,14 @@ class GoogleImage extends StatefulWidget {
 class _GoogleImageState extends State<GoogleImage> {
   @override
   Widget build(BuildContext context) {
+    if (this.widget.photoRef == null){
+      return Image.asset(
+              "assets/img/placeholder.png",
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.fitHeight
+            );
+    }
     return Container(
       child: FutureBuilder(
         future: PlaceApiProvider().getPlaceImageFromReference(widget.photoRef),

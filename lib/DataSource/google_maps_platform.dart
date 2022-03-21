@@ -12,6 +12,30 @@ class PlaceApiProvider {
   final httpClient = Client();
   final API_KEY = maps_api.google_maps_api_key;
 
+  Future<List<Map<String, dynamic>>?> getGoogleNearbyResult(lat, lon) async{
+    var loc  = lat.toString() + "," + lon.toString();
+    final Uri request = Uri.parse(
+      "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$loc&radius=1600&key=$API_KEY"
+    );
+    print(request.toString());
+    final response = await httpClient.get(request);
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status'] == 'OK') {
+        final list = result['results'];
+        print(list);
+        final jsonPlaceList = List.generate(
+          list.length,
+          (index) => list[index] as  Map<String, dynamic>
+        );
+        return jsonPlaceList;
+      } else {
+        print("Error fetching place from google places nearby search API!");
+        return null;
+      }
+    }
+  } 
+
   Future<List<Map<String, dynamic>>?> getGooglePlaceListByTextSearch(text, {location}) async{
     text = text.replaceAll(" ", "%20");
     var loc = location?? "1.290270,103.851959";

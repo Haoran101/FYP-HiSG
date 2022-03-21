@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
@@ -45,6 +46,7 @@ class _DestinationPageState extends State<DestinationPage> {
   String? _currentSearchTerm;
   LatLngBounds? _mapBounds;
   List<Location> _resultList = [];
+  LocationService locationService = LocationService();
 
   final destinController = TextEditingController();
 
@@ -59,6 +61,12 @@ class _DestinationPageState extends State<DestinationPage> {
   void dispose() {
     destinController.dispose();
     super.dispose();
+  }
+
+  ensureLocationFetched() async {
+    await locationService.fetchUserPosition();
+    
+    return locationService.position;
   }
 
   updateLocation(pos) async {
@@ -107,7 +115,7 @@ class _DestinationPageState extends State<DestinationPage> {
         ),
       ),
       body: FutureBuilder(
-          future: determinePosition(),
+          future: ensureLocationFetched(),
           builder: (context, AsyncSnapshot<Position?> snapshot) {
             if (snapshot.hasError) {
               return Container(child: Text("Error loading map."));

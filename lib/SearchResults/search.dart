@@ -77,33 +77,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     filteredSearchHistory = filterSearchTerms(filter: null);
   }
 
-  periodFetchLocation(int timeIntervalSeconds) {
-    if (lastFetchLocationTime == null) {
-      print(
-          "Fetching user location, last time: null, next time in $timeIntervalSeconds Seconds");
-      fetchUserPosition();
-      return;
-    }
-    DateTime now = DateTime.now();
-    if (now.difference(lastFetchLocationTime!).inSeconds >
-        timeIntervalSeconds) {
-      print(
-          "Fetching user location, last time ${lastFetchLocationTime!.toIso8601String()}, next time in $timeIntervalSeconds Seconds");
-      fetchUserPosition();
-    }
-  }
-
-  fetchUserPosition() async {
-    var pos = await determinePosition();
-    print(pos.toString());
-    if (mounted) {
-      setState(() {
-        userposition = pos;
-        lastFetchLocationTime = DateTime.now();
-      });
-    }
-  }
-
   search() {
     _user.syncSearchHistory(_searchHistory);
     fetchGooglePlacesResultsList(); //Google places search
@@ -270,7 +243,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    periodFetchLocation(20);
+    
     _searchHistory = _user.getSearchHistory();
     return Scaffold(
       appBar: AppBar(

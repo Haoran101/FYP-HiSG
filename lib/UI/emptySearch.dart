@@ -1,4 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
+import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+
+import '../DataSource/location_provider.dart';
 
 var _floatStyle = TextStyle(
     letterSpacing: 2.2,
@@ -16,8 +24,43 @@ var _floatStyle = TextStyle(
 
 var _imageFilterOpacity = 0.7;
 
-class EmptySearchScreen extends StatelessWidget {
+class EmptySearchScreen extends StatefulWidget {
   const EmptySearchScreen({Key? key}) : super(key: key);
+
+  @override
+  State<EmptySearchScreen> createState() => _EmptySearchScreenState();
+}
+
+class _EmptySearchScreenState extends State<EmptySearchScreen> {
+  List<SearchResult>? nearbyList;
+  final locationService = LocationService();
+
+  @override
+  void initState() {
+    this.nearbyList = locationService.nearbyList;
+    super.initState();
+  }
+
+  fetchGoogleNearbyResult() async {
+    if (this.nearbyList != null) {
+      print("nearby List fetched from cache.");
+      return this.nearbyList;
+    }
+    var pos = await LocationService().fetchUserPosition();
+    print("Position returned: " + pos.toString());
+    var resultListRaw = await PlaceApiProvider().getGoogleNearbyResult(
+        LocationService().latitute, LocationService().longitude);
+    this.nearbyList = [];
+    for (var map in resultListRaw!) {
+      if (map["types"].contains("point_of_interest") &&
+          map.containsKey("photos")) {
+        this.nearbyList!.add(SearchResult.fromGoogle(map));
+      }
+    }
+    locationService.setNearbyList = this.nearbyList;
+    return this.nearbyList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -76,30 +119,108 @@ class EmptySearchScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   "Nearby Spots",
-                  style: TextStyle(fontSize: 20, color: Colors.black54),
+                  style: TextStyle(fontSize: 20, color: Colors.black87),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: SizedBox(
                   height: 150,
-                  child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(5, (index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                            width: 120,
-                            color: Colors.amber,
-                          ),
-                        );
-                      })),
+                  child: FutureBuilder(
+                      future: fetchGoogleNearbyResult(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          print(snapshot.error);
+                          print(snapshot.stackTrace);
+                          return Text("Error loading nearby results");
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return ListView(
+                            scrollDirection: Axis.horizontal,
+                            children:
+                                List.generate(this.nearbyList!.length, (index) {
+                              SearchResult curr = this.nearbyList![index];
+                              String? photoReference =
+                                  curr.details!["photos"] == null
+                                      ? null
+                                      : curr.details!["photos"][0]
+                                          ["photo_reference"];
+                              return InkWell(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailPageContainer(
+                                                  searchResult: curr))),
+                                  child: NearbySpotBlock(
+                                      photoReference: photoReference,
+                                      curr: curr));
+                            }));
+                      }),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class NearbySpotBlock extends StatelessWidget {
+  const NearbySpotBlock({
+    Key? key,
+    required this.photoReference,
+    required this.curr,
+  }) : super(key: key);
+
+  final String? photoReference;
+  final SearchResult curr;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10.0),
+      child: Container(
+          width: 180,
+          color: Colors.black54,
+          child: Stack(children: [
+            Opacity(
+              opacity: 0.5,
+              child: GoogleImage(
+                photoRef: photoReference,
+                cover: true,
+              ),
+            ),
+            Column(children: [
+              Spacer(),
+              Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Align(
+                    alignment: AlignmentDirectional.bottomStart,
+                    child: Text(
+                      curr.subtitle ?? "",
+                      style: TextStyle(color: Colors.yellow, fontSize: 12),
+                    ),
+                  )),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: AlignmentDirectional.bottomStart,
+                  child: Text(
+                    curr.title,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              )
+            ]),
+          ])),
     );
   }
 }
@@ -126,7 +247,8 @@ class Banner extends StatelessWidget {
                   image: new DecorationImage(
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(_imageFilterOpacity), BlendMode.dstATop),
+                          Colors.black.withOpacity(_imageFilterOpacity),
+                          BlendMode.dstATop),
                       image: new AssetImage(
                         this.image,
                       )),
@@ -143,7 +265,11 @@ class Banner extends StatelessWidget {
 }
 
 class HalfBanner extends StatelessWidget {
-  HalfBanner({required this.text, required this.image, required this.color, required this.call});
+  HalfBanner(
+      {required this.text,
+      required this.image,
+      required this.color,
+      required this.call});
   final String text;
   final String image;
   final Color color;
@@ -165,7 +291,8 @@ class HalfBanner extends StatelessWidget {
                   image: new DecorationImage(
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(_imageFilterOpacity), BlendMode.dstATop),
+                          Colors.black.withOpacity(_imageFilterOpacity),
+                          BlendMode.dstATop),
                       image: new AssetImage(
                         this.image,
                       )),
