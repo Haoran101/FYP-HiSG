@@ -51,69 +51,39 @@ class _MRTStationPageState extends State<MRTStationPage> {
     String _exit = "Exit";
     String _poi = "Place of Interest/Road";
     TextStyle normal = TextStyle(fontSize: 16);
-    List<TableRow> rows = [];
-    TableRow tableHeader = TableRow(children: [
-      Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(_exit, style: normal),
-        ),
-      ),
-      Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          _poi,
-          style: normal,
-        ),
-      ))
-    ]);
-    rows.add(tableHeader);
+    List<Widget> rows = [];
     for (final row in this.mrtData["exit_info"]) {
-      TableRow infoRow = TableRow(children: [
-        Center(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              row[_exit],
-              style: normal,
-            ),
+      String joinedPOI = row[_poi].join("\n");
+      Widget infoRow = 
+      Padding(
+        padding: EdgeInsets.all(15),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            margin: EdgeInsets.only(right: 30),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Theme.of(context).primaryColor),
+            child: Center(child: Text(row[_exit], style: TextStyle(color: Colors.white, fontSize: 25,),
+            )),
           ),
-        )),
-        Center(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: List.generate(
-                row[_poi].length,
-                (index) => Text(
-                      row[_poi][index],
-                      style: normal,
-                    )),
-          ),
-        ))
-      ]);
+          Flexible(child: Text(joinedPOI, style: TextStyle(fontSize: 18,  height: 1.5, letterSpacing: 1.2),))
+        ],
+      ));
       rows.add(infoRow);
     }
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-      child: Table(
-        children: rows,
-        columnWidths: {
-          0: FractionColumnWidth(0.3),
-          1: FractionColumnWidth(0.7)
-        },
-        border: TableBorder.all(color: Colors.grey[600]!),
-      ),
-    );
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+        child: Column(children: rows,));
   }
 
   Future fetchPOIDetails() async {
-    if (this.mrtData.containsKey("docRef")){
+    if (this.mrtData.containsKey("docRef")) {
       //accessed from line, need doc info
-      Map<String, dynamic>? mrtDoc = await MRTProvider().fetchMRTDetailsByDocRef(this.mrtData["docRef"]);
+      Map<String, dynamic>? mrtDoc =
+          await MRTProvider().fetchMRTDetailsByDocRef(this.mrtData["docRef"]);
       this.mrtData.addAll(mrtDoc);
     }
     String placeId = this.mrtData["place_id"];
@@ -200,48 +170,45 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 getPhotoView(),
 
                 //Title
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 20, right: 20, top: 20, bottom: 10),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(this.mrtData["Name Engish Malay"],
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold))),
-                    ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(this.mrtData["Name Engish Malay"],
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold))),
+                ),
 
-                    //Type
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                              "MRT/LRT Station",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Theme.of(context).primaryColor))),
-                    ),
-
+                //Type
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("MRT/LRT Station",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Theme.of(context).primaryColor))),
+                ),
 
                 //direction Button
                 Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            
-                            Spacer(),
-                            //direction button
-                            InkWell(
-                              child: Icon(Icons.near_me,
-                                  size: 40, color: Colors.red[400]),
-                              onTap: () => print("Tapped direction arrow"),
-                              //TODO: navigate to directions page
-                            )
-                          ],
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      //direction button
+                      InkWell(
+                        child: Icon(Icons.near_me,
+                            size: 40, color: Colors.red[400]),
+                        onTap: () => print("Tapped direction arrow"),
+                        //TODO: navigate to directions page
+                      )
+                    ],
+                  ),
                 ),
-                
+
                 //Station Names
                 Padding(
                   padding: EdgeInsets.all(20.0),
@@ -253,38 +220,35 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: 
-                    Container(
-                      child: Column(
-                        children: [
-                          //Station Names
-                          Center(
-                            //English
-                            child: Text(
-                                this.mrtData["Name Engish Malay"],
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    height: 1.5,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                          Center(
-                            //Chinese
-                            child: Text(this.mrtData["Name Chinese"],
-                                style: TextStyle(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        //Station Names
+                        Center(
+                          //English
+                          child: Text(this.mrtData["Name Engish Malay"],
+                              style: TextStyle(
                                   fontSize: 20,
                                   height: 1.5,
-                                )),
-                          ),
-                          Center(
-                            child: Text(this.mrtData["Name Tamil"],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  height: 1.5,
-                                )),
-                          ),
-                        ],
-                      ),
-                    
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        Center(
+                          //Chinese
+                          child: Text(this.mrtData["Name Chinese"],
+                              style: TextStyle(
+                                fontSize: 20,
+                                height: 1.5,
+                              )),
+                        ),
+                        Center(
+                          child: Text(this.mrtData["Name Tamil"],
+                              style: TextStyle(
+                                fontSize: 20,
+                                height: 1.5,
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 //station code block
@@ -300,8 +264,8 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: List.generate(
-                      this.mrtData["name codes"].length, (index) {
+                  children:
+                      List.generate(this.mrtData["name codes"].length, (index) {
                     String codePrefix =
                         getCodePrefix(this.mrtData["name codes"][index]);
                     print(_mrt.getLineAbbvFromLineCode(codePrefix));
@@ -328,7 +292,6 @@ class _MRTStationPageState extends State<MRTStationPage> {
                                         color: Colors.white))),
                             Container(
                                 child: Row(children: [
-                              
                               Spacer(),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
