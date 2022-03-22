@@ -19,8 +19,9 @@ class TIHDataProvider {
   final httpClient = Client();
 
   Future<List<Map<String, dynamic>>?> getTIHSearchResult(text) async {
+    //%2C%20walking_trail
     String requestURL =
-        "https://tih-api.stb.gov.sg/content/v1/search/all?dataset=event%2C%20precincts%2C%20tour%2C%20walking_trail&keyword=$text&language=en&distinct=Yes&apikey=$API_KEY";
+        "https://tih-api.stb.gov.sg/content/v1/search/all?dataset=event%2C%20precincts%2C%20tour&keyword=$text&language=en&distinct=Yes&apikey=$API_KEY";
     final Uri request = Uri.parse(requestURL);
 
     print(request.toString());
@@ -50,7 +51,7 @@ class TIHDataProvider {
       String uuid, int pageNumber) async {
     String requestURL =
         "https://tih-api.stb.gov.sg/content/v1/search/precinct?uuid=$uuid&language=en&apikey=$API_KEY&page=$pageNumber&pageSize=10";
-    List<String> selectedDataSet = ["event", "tour", "walking_trail"];
+    List<String> selectedDataSet = ["event", "tour", ]; //"walking_trail"
     List<Map<String, dynamic>> searchResultList = [];
     final Uri request = Uri.parse(requestURL);
 
