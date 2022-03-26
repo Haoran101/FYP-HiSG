@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 class TourDetailsSubpage extends StatefulWidget {
   final details;
@@ -97,22 +98,15 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
 
   @override
   Widget build(BuildContext context) {
-    
     print(tour.rawdata);
     return SingleChildScrollView(
       child: Container(
         child: Column(children: [
           //image
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fitWidth,
-                image: tour.getImage(),
-              ),
-            ),
-          ),
+          UI.tihImageBanner(
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              tihDetails: tour),
 
           Stack(
             children: [
@@ -376,33 +370,31 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
 
                         //Wheelchair Friendly
                         Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                    "Wheelchair Friendly: " +
-                                        _getFriendlyText(
-                                        tour.wheelChairFriendly),
-                                    style:
-                                        TextStyle(fontSize: 16.0, height: 2))),
-                        
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                                "Wheelchair Friendly: " +
+                                    _getFriendlyText(tour.wheelChairFriendly),
+                                style: TextStyle(fontSize: 16.0, height: 2))),
+
                         //children friendly
                         Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                    "Child Friendly: " +
-                                        _getFriendlyText(
-                                        tour.childFriendly),
-                                    style:
-                                        TextStyle(fontSize: 16.0, height: 2))),
-                       
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                                "Child Friendly: " +
+                                    _getFriendlyText(tour.childFriendly),
+                                style: TextStyle(fontSize: 16.0, height: 2))),
 
                         //Minimum Age
                         (StringUtils.isNotNullOrEmpty(tour.minimumAge))
                             ? Align(
-                                alignment: Alignment.centerLeft, 
-                            child: Text("Minimum Age: " + tour.minimumAge!, style:
+                                alignment: Alignment.centerLeft,
+                                child: Text("Minimum Age: " + tour.minimumAge!,
+                                    style:
                                         TextStyle(fontSize: 16.0, height: 2)))
                             : SizedBox.shrink(),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ],
                     ),
                   ),

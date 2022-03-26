@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
@@ -11,7 +12,7 @@ class TIHDetails {
   String? price;
   double? latitude;
   double? longitude;
-  List<String>? businessHour; 
+  List<String>? businessHour;
   String? organiser;
   String? notes;
   String? imageUUID;
@@ -32,8 +33,7 @@ class TIHDetails {
   String? language;
   String? nearstMRTStation;
   Icon? icon;
-  Map<String,dynamic>? rawdata;
-
+  Map<String, dynamic>? rawdata;
 
   TIHDetails.fromEventJSON(Map<String, dynamic> jsondata) {
     uuid = jsondata["uuid"];
@@ -41,10 +41,14 @@ class TIHDetails {
     description = jsondata["description"];
     body = jsondata["body"];
     price = jsondata["price"];
-    
-    latitude = jsondata["location"]["latitude"] == null? 0: jsondata["location"]["latitude"].toDouble();
-    longitude = jsondata["location"]["longitude"]== null? 0: jsondata["location"]["longitude"].toDouble();
-    organiser = jsondata["eventOrganizer"]?? jsondata["companyDisplayName"];
+
+    latitude = jsondata["location"]["latitude"] == null
+        ? 0
+        : jsondata["location"]["latitude"].toDouble();
+    longitude = jsondata["location"]["longitude"] == null
+        ? 0
+        : jsondata["location"]["longitude"].toDouble();
+    organiser = jsondata["eventOrganizer"] ?? jsondata["companyDisplayName"];
     imageURL = jsondata["images"][0]["url"];
     imageUUID = jsondata["images"][0]["uuid"];
     type = jsondata["type"];
@@ -66,20 +70,30 @@ class TIHDetails {
     description = jsondata["description"];
     body = jsondata["body"];
     price = jsondata["price"];
-    wheelChairFriendly = jsondata["wheelChairFriendly"] == "Y"? true: false;
-    childFriendly = jsondata["childFriendly"] == "Y"? true: false;
+    wheelChairFriendly = jsondata["wheelChairFriendly"] == "Y" ? true : false;
+    childFriendly = jsondata["childFriendly"] == "Y" ? true : false;
     minimumAge = jsondata["minimumAge"];
-    latitude = jsondata["location"]["latitude"] == null? 0: jsondata["location"]["latitude"].toDouble();
-    longitude = jsondata["location"]["longitude"]== null? 0: jsondata["location"]["longitude"].toDouble();
+    latitude = jsondata["location"]["latitude"] == null
+        ? 0
+        : jsondata["location"]["latitude"].toDouble();
+    longitude = jsondata["location"]["longitude"] == null
+        ? 0
+        : jsondata["location"]["longitude"].toDouble();
     organiser = jsondata["companyDisplayName"];
-    imageURL = jsondata["images"].length > 0? jsondata["images"][0]["url"] : null;
-    imageUUID = jsondata["images"].length > 0? jsondata["images"][0]["uuid"] : null;
+    imageURL =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["url"] : null;
+    imageUUID =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["uuid"] : null;
     type = jsondata["type"];
     tourStartPoint = jsondata["startingPoint"];
     tourEndPoint = jsondata["endingPoint"];
     duration = jsondata["tourDuration"];
-    startDate = jsondata["startDate"] != null? DateTime.parse(jsondata["startDate"]) : null;
-    endDate = jsondata["endDate"] != null? DateTime.parse(jsondata["endDate"]) : null;
+    startDate = jsondata["startDate"] != null
+        ? DateTime.parse(jsondata["startDate"])
+        : null;
+    endDate = jsondata["endDate"] != null
+        ? DateTime.parse(jsondata["endDate"])
+        : null;
     contactNumber = jsondata["contact"]["primaryContactNo"];
     email = jsondata["officialEmail"];
     website = jsondata["officialWebsite"];
@@ -90,17 +104,19 @@ class TIHDetails {
     //TODO: map tour types and icons
     rawdata = jsondata;
   }
-  
-  TIHDetails.fromPrecinctsJSON(Map<String, dynamic> jsondata){
+
+  TIHDetails.fromPrecinctsJSON(Map<String, dynamic> jsondata) {
     uuid = jsondata["uuid"];
     name = jsondata["name"];
     description = jsondata["description"];
-    imageURL = jsondata["images"].length > 0? jsondata["images"][0]["url"]: null;
-    imageUUID = jsondata["images"].length > 0? jsondata["images"][0]["uuid"]: null;
+    imageURL =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["url"] : null;
+    imageUUID =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["uuid"] : null;
     rawdata = jsondata;
   }
 
-  Map<String, dynamic> toJSON(){
+  Map<String, dynamic> toJSON() {
     Map<String, dynamic> map = Map<String, dynamic>();
     map["uuid"] = uuid;
     map["name"] = name;
@@ -124,32 +140,57 @@ class TIHDetails {
     map["rawdata"] = rawdata;
 
     return map;
-
   }
 
-  
-
-  ImageProvider<Object> getImage() {
+  Widget getImage() {
     //try fetch from "url"
     if (this.imageURL != null && this.imageURL != "") {
       print(imageURL);
-      return NetworkImage(this.imageURL!);
-    
-    } else if (this.imageUUID != null && this.imageUUID != ""){
+      return CachedNetworkImage(
+        fit: BoxFit.fitWidth,
+        imageUrl: imageURL!,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        placeholder: (context, url) => new CircularProgressIndicator(),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      );
+    } else if (this.imageUUID != null && this.imageUUID != "") {
       //try fetch from uuid
       var downloadURL = TIHDataProvider.getImageURLByImageUUID(this.imageUUID!);
       print(downloadURL);
-      return NetworkImage(downloadURL);
+      return CachedNetworkImage(
+        imageUrl: downloadURL,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        placeholder: (context, url) =>
+            Center(child: new CircularProgressIndicator()),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      );
     } else {
       //no available image, return place holder
       print("WARNING: no image found for event");
-      return AssetImage("assets/img/placeholder.png");
+      return Image.asset(
+        "assets/img/placeholder.png",
+        fit: BoxFit.fitWidth,
+      );
     }
   }
 
   List<String> _getBusinessHour(jsonList) {
     List<String> result = <String>[];
-    for (final day in jsonList){
+    for (final day in jsonList) {
       String dayName = StringUtils.capitalize(day["day"].toString());
       String startTime = day["openTime"];
       String endTime = day["closeTime"];

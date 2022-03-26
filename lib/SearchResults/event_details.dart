@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 class EventDetailsSubpage extends StatefulWidget {
   final details;
@@ -70,7 +71,8 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
         alignment: Alignment.centerRight,
         child: InkWell(
           child: Icon(Icons.near_me, size: 40, color: Colors.red[400]),
-          onTap: () => print(event.latitude.toString() + "," + event.longitude.toString()),
+          onTap: () => print(
+              event.latitude.toString() + "," + event.longitude.toString()),
           //TODO: navigate to directions page
         ),
       );
@@ -92,16 +94,10 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
       child: Container(
         child: Column(children: [
           //image
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fitWidth,
-                image: event.getImage(),
-              ),
-            ),
-          ),
+          UI.tihImageBanner(
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              tihDetails: event),
 
           Stack(
             children: [
@@ -123,8 +119,8 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                   //event and event type
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [Align(
+                    child: Row(children: [
+                      Align(
                           alignment: Alignment.centerLeft,
                           child: RichText(
                             text: TextSpan(
@@ -136,13 +132,16 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                                   WidgetSpan(
                                     child: Container(
                                         decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20))),
-                                        padding: EdgeInsets.fromLTRB(6, 2, 6, 2),
+                                        padding:
+                                            EdgeInsets.fromLTRB(6, 2, 6, 2),
                                         margin: EdgeInsets.only(left: 10),
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 3.0),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 3.0),
                                           child: Text(event.type!,
                                               style: TextStyle(
                                                   fontSize: 15,
@@ -151,14 +150,12 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                                   )
                                 ]),
                           )),
-                          Spacer(),
-                          //direction arrow
-                          getDirectionArrow(),
-                          ]
-                    ),
+                      Spacer(),
+                      //direction arrow
+                      getDirectionArrow(),
+                    ]),
                   ),
 
-                  
                   SizedBox(height: 20),
 
                   ///Info section
@@ -272,7 +269,8 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                               Icons.train_sharp,
                               color: Theme.of(context).primaryColor,
                             ),
-                            title: Text("Nearest MRT Station: " + event.nearstMRTStation!),
+                            title: Text("Nearest MRT Station: " +
+                                event.nearstMRTStation!),
                           ),
                           //TODO: link to mrt page
                           onTap: null,
@@ -309,7 +307,9 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                                 ),
                         )
                       : SizedBox.shrink(),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
 
                   ///body
                   ///body Title

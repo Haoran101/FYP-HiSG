@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Currency/currency_home.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
+import 'package:wikitude_flutter_app/Discover_Components/Precincts_List.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
@@ -89,7 +88,7 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
                       text: "PRECINCT",
                       image: "assets/img/explore/chinatown.jpg",
                       color: Colors.red[900]!,
-                      nextPage: null),
+                      nextPage: PrecinctPage()),
                   Spacer(),
                   HalfBanner(
                       text: "WALKING\n  TRAIL",

@@ -8,6 +8,7 @@ import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/search.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 
 class PrecinctDetailsSubpage extends StatefulWidget {
@@ -37,13 +38,10 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
       var listFetched = (await TIHDataProvider()
           .getPrecinctItemsByUUID(this.precinct.uuid!, pageNumber))!;
 
-      
-
       setState(() {
-        
-        for (final mapItem in listFetched){
+        for (final mapItem in listFetched) {
           var key = mapItem["searchResult"].resultId;
-          if (!this.precinctList.containsKey(key)){
+          if (!this.precinctList.containsKey(key)) {
             this.precinctList[key] = mapItem;
           }
         }
@@ -81,11 +79,14 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         children: (this.precinctList != null)
             ? List.generate(this.precinctList.length, (index) {
-                var resultItem = List.from(this.precinctList.values)[index]["searchResult"];
-                resultItem.icon = IconProvider().mapTIHIcon(resultItem.subtitle.toString().toLowerCase());
+                var resultItem =
+                    List.from(this.precinctList.values)[index]["searchResult"];
+                resultItem.icon = IconProvider()
+                    .mapTIHIcon(resultItem.subtitle.toString().toLowerCase());
                 return SearchResultCard(
                   item: resultItem,
-                  preloadedPage: List.from(this.precinctList.values)[index]["resultModel"],
+                  preloadedPage: List.from(this.precinctList.values)[index]
+                      ["resultModel"],
                 );
               })
             : [CircularProgressIndicator()]);
@@ -103,16 +104,10 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
         child: Column(children: [
           Column(children: [
             //image
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fitWidth,
-                  image: precinct.getImage(),
-                ),
-              ),
-            ),
+            UI.tihImageBanner(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                tihDetails: precinct),
 
             Padding(
               padding:
@@ -167,7 +162,9 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
                       });
                       await fetchPrecinctList(this.loadedPages + 1);
                     },
-                    child: this._isFetchingResult? CircularProgressIndicator(): Text("Load More"))
+                    child: this._isFetchingResult
+                        ? CircularProgressIndicator()
+                        : Text("Load More"))
                 : SizedBox.shrink(),
           ]),
         ]),

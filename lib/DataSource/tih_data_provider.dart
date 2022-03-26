@@ -47,6 +47,26 @@ class TIHDataProvider {
     return imageURL;
   }
 
+  Future<List<Map<String, dynamic>>?> getPrecinctList() async{
+    String requestURL = "https://tih-api.stb.gov.sg/content/v1/precincts/search?keyword=precinct&language=en&apikey=$API_KEY";
+    final Uri request = Uri.parse(requestURL);
+    print(request.toString());
+    final response = await httpClient.get(request);
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status']['message'] == 'OK') {
+        final list = result['data'];
+        print(list);
+        final jsonPlaceList = List.generate(
+            list.length, (index) => list[index] as Map<String, dynamic>);
+        return jsonPlaceList;
+      } else {
+        print("Error fetching data from TIH Precinct API!");
+        return null;
+      }
+    }
+  }
+
   Future<List<Map<String, dynamic>>?> getPrecinctItemsByUUID(
       String uuid, int pageNumber) async {
     String requestURL =
