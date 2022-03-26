@@ -10,7 +10,7 @@ import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';
 import 'detail_page_container.dart';
-import '../UI/emptySearch.dart';
+import '../Discover_Components/Discover_home.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);

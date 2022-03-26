@@ -168,6 +168,26 @@ class MRTProvider {
     }
   }
 
+  Future<List<Map<String, dynamic>>?> listAllMRTStation () async {
+    try{
+    QuerySnapshot mrtSnapList =
+        await _mrtCollection.get();
+    
+    List<Map<String, dynamic>> mrtStationList = [];
+    for (var doc in mrtSnapList.docs)
+    {
+      if (doc.id != "Line"){
+        mrtStationList.add(doc.data() as Map<String, dynamic>);
+      }
+    }
+    return mrtStationList;
+    } catch (error, stacktrace){
+      print(error);
+      print(stacktrace);
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>?> queryMRT(text) async {
     try {
       final _lookup = lookuptables.mrtLookUp;

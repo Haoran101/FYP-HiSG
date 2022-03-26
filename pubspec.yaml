@@ -48,6 +48,8 @@ dependencies:
   flutter_map_location_marker: ^3.1.0
   provider: ^6.0.2
   cached_network_image: ^3.2.0
+  azlistview: ^2.0.0
+  photo_view: ^0.13.0
   
 
 dev_dependencies:
@@ -62,20 +64,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/icons/AR.svg
-    - assets/img/avatar.png
-    - assets/img/AR.png
-    - assets/img/app_logo.png
+    - assets/img/
     - assets/img/explore/
-    - assets/img/placeholder.png
-    - assets/img/login/change.jpg
-    - assets/img/login/dashboard.png
-    - assets/img/login/forget.jpg
-    - assets/img/login/login.jpg
-    - assets/img/login/profile.png
-    - assets/img/login/signup.png
-    - assets/img/plan.jpg
-    - assets/icons/google.png
+    - assets/img/login/
+    - assets/icons/
     - samples/
     - samples/00_My_Test_Program/
     - samples/00_My_Test_Program/js/
