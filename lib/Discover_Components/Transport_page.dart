@@ -53,10 +53,11 @@ class MRTMapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: PhotoView(
+        backgroundDecoration: BoxDecoration(color: Colors.white),
         imageProvider: CachedNetworkImageProvider(
           "https://www.lta.gov.sg/content/dam/ltagov/getting_around/public_transport/rail_network/image/tel2_sm-20-03-en-exp.png"
         ),
-        loadingBuilder: (context, event) => CircularProgressIndicator(),
+        loadingBuilder: (context, event) => Container(child: Center(child: CircularProgressIndicator())),
       )
     );
   }

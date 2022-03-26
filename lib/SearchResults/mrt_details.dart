@@ -26,7 +26,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
   }
 
   getPhotoView() {
-    print(this.place.toString());
+    //print(this.place.toString());
     if (this.place!.photoReferences!.length < 3) {
       return GoogleImage(photoRef: place!.photoReferences![0], cover: true);
     } else {
@@ -50,7 +50,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
   Widget exitSection() {
     String _exit = "Exit";
     String _poi = "Place of Interest/Road";
-    TextStyle normal = TextStyle(fontSize: 16);
+    TextStyle normal = TextStyle(fontSize: 14);
     List<Widget> rows = [];
     for (final row in this.mrtData["exit_info"]) {
       String joinedPOI = row[_poi].join("\n");
@@ -69,7 +69,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
             child: Center(child: Text(row[_exit], style: TextStyle(color: Colors.white, fontSize: 25,),
             )),
           ),
-          Flexible(child: Text(joinedPOI, style: TextStyle(fontSize: 18,  height: 1.5, letterSpacing: 1.2),))
+          Flexible(child: Text(joinedPOI, style: TextStyle(fontSize: 14,  height: 1.5,),))
         ],
       ));
       rows.add(infoRow);
@@ -87,7 +87,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
       this.mrtData.addAll(mrtDoc);
     }
     String placeId = this.mrtData["place_id"];
-    print("place_id: " + placeId);
+    //print("place_id: " + placeId);
     this.place = (await PlaceApiProvider().getPlaceDetailFromId(placeId))!;
   }
 
@@ -148,6 +148,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return FutureBuilder(
         future: fetchPOIDetails(),
         builder: (context, snapshot) {
@@ -162,12 +163,18 @@ class _MRTStationPageState extends State<MRTStationPage> {
             );
           }
 
+          print("Loaded");
+          bool NotShowExitInfo = !this.mrtData.containsKey("exit_info") || this.mrtData["exit_info"][0]["Exit"] == "" || this.mrtData["exit_info"][0]["Exit"].toString().toLowerCase().contains("mon");
           return Container(
               color: Colors.white,
               child: SingleChildScrollView(
                   child: Column(children: [
                 //Image Section
-                getPhotoView(),
+                this.place!.photoReferences != null?
+                getPhotoView():
+                Image.asset("assets/img/placeholder.png", height: 200, 
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fitWidth,),
 
                 //Title
                 Padding(
@@ -268,7 +275,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                       List.generate(this.mrtData["name codes"].length, (index) {
                     String codePrefix =
                         getCodePrefix(this.mrtData["name codes"][index]);
-                    print(_mrt.getLineAbbvFromLineCode(codePrefix));
+                    //print(_mrt.getLineAbbvFromLineCode(codePrefix));
                     return InkWell(
                       onTap: () => Navigator.push(
                         context,
@@ -315,7 +322,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 ),
 
                 //Exits
-                if (this.mrtData["exit_info"][0]["Exit"] != "")
+                if (!NotShowExitInfo)
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Align(
@@ -324,7 +331,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold))),
                   ),
-                if (this.mrtData["exit_info"][0]["Exit"] != "") exitSection(),
+                if (!NotShowExitInfo) exitSection(),
               ])));
         });
   }
