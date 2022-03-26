@@ -30,8 +30,7 @@ class SearchResult {
   Icon? icon;
   DataSource? source;
   Map<String, dynamic>? details;
-  bool favoriated = false;
-  bool planned = false;
+  String? imageSnapshot;
 
   final _iconProvider = IconProvider();
 
@@ -106,6 +105,7 @@ class SearchResult {
     details = jsondata;
     subtitle = "360 PHOTO";
     var docref = jsondata["data_handle"];
+    imageSnapshot = jsondata["preview_img_url"];
     resultId = "cloud>360_photos>$docref";
   }
 
@@ -117,6 +117,7 @@ class SearchResult {
     details = jsondata;
     subtitle = "360 VIDEO";
     var docref = jsondata["name"].toLowerCase().replaceAll("-", "").replaceAll(" ", "_");
+    imageSnapshot = jsondata["preview_url"];
     resultId = "cloud>360_video_storage>$docref";
   }
 
@@ -128,6 +129,7 @@ class SearchResult {
     details = jsondata;
     subtitle = "360 VIDEO";
     var docref = jsondata["contentDetails"]["videoId"];
+    imageSnapshot = jsondata["snippet"]["thumbnails"]["high"]["url"];
     resultId = "cloud>360_videos>$docref";
   }
 

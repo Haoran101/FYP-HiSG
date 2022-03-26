@@ -12,6 +12,24 @@ class Image360Provider {
   final CollectionReference _image360Collection =
       firestore.collection('360_photos');
 
+  Future<List<Map<String, dynamic>>?> ListAllImage360() async {
+    try {
+      QuerySnapshot ytbSnapList = await _image360Collection.get();
+
+      List<Map<String, dynamic>> ytbVideoList = [];
+      for (var doc in ytbSnapList.docs) {
+        if (doc.id != "Line") {
+          ytbVideoList.add(doc.data() as Map<String, dynamic>);
+        }
+      }
+      return ytbVideoList;
+    } catch (error, stacktrace) {
+      print(error);
+      print(stacktrace);
+      return null;
+    }
+  }
+
   Future<List<Map<String, dynamic>>?> queryImage360ByTitle(text) async {
     try {
       final _lookup = lookuptables.photos360LookUp;
@@ -41,6 +59,42 @@ class Video360Provider {
       firestore.collection('360_videos');
   final CollectionReference _video360StorageCollection =
       firestore.collection('360_video_storage');
+
+  Future<List<Map<String, dynamic>>?> ListAllVideo360YouTube() async {
+    try {
+      QuerySnapshot ytbSnapList = await _video360YoutubeCollection.get();
+
+      List<Map<String, dynamic>> ytbVideoList = [];
+      for (var doc in ytbSnapList.docs) {
+        if (doc.id != "Line") {
+          ytbVideoList.add(doc.data() as Map<String, dynamic>);
+        }
+      }
+      return ytbVideoList;
+    } catch (error, stacktrace) {
+      print(error);
+      print(stacktrace);
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> ListAllVideo360Storage() async {
+    try {
+      QuerySnapshot ytbSnapList = await _video360StorageCollection.get();
+
+      List<Map<String, dynamic>> ytbVideoList = [];
+      for (var doc in ytbSnapList.docs) {
+        if (doc.id != "Line") {
+          ytbVideoList.add(doc.data() as Map<String, dynamic>);
+        }
+      }
+      return ytbVideoList;
+    } catch (error, stacktrace) {
+      print(error);
+      print(stacktrace);
+      return null;
+    }
+  }
 
   Future<List<Map<String, dynamic>>?> queryYoutubeVideo360ByTitle(text) async {
     try {
@@ -155,8 +209,7 @@ class MRTProvider {
   }
 
   Future<Map<String, dynamic>?> fetchMRTDetailsByDocRef(docref) async {
-    DocumentReference<Object?> mrtSnap =
-       _mrtCollection.doc(docref);
+    DocumentReference<Object?> mrtSnap = _mrtCollection.doc(docref);
     DocumentSnapshot snapshot = await mrtSnap.get();
     if (snapshot.exists) {
       var data = snapshot.data() as Map<String, dynamic>;
@@ -168,20 +221,18 @@ class MRTProvider {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> listAllMRTStation () async {
-    try{
-    QuerySnapshot mrtSnapList =
-        await _mrtCollection.get();
-    
-    List<Map<String, dynamic>> mrtStationList = [];
-    for (var doc in mrtSnapList.docs)
-    {
-      if (doc.id != "Line"){
-        mrtStationList.add(doc.data() as Map<String, dynamic>);
+  Future<List<Map<String, dynamic>>?> listAllMRTStation() async {
+    try {
+      QuerySnapshot mrtSnapList = await _mrtCollection.get();
+
+      List<Map<String, dynamic>> mrtStationList = [];
+      for (var doc in mrtSnapList.docs) {
+        if (doc.id != "Line") {
+          mrtStationList.add(doc.data() as Map<String, dynamic>);
+        }
       }
-    }
-    return mrtStationList;
-    } catch (error, stacktrace){
+      return mrtStationList;
+    } catch (error, stacktrace) {
       print(error);
       print(stacktrace);
       return null;
@@ -257,57 +308,63 @@ class HotelProvider {
 }
 
 class TIHBackupProvider {
-  final CollectionReference _backupCollection = firestore.collection('backupRecommendation');
+  final CollectionReference _backupCollection =
+      firestore.collection('backupRecommendation');
 
-  Future<List<Map<String, dynamic>>> _fetchBackUpListByInterest(interest) async {
+  Future<List<Map<String, dynamic>>> _fetchBackUpListByInterest(
+      interest) async {
     QuerySnapshot interestSnapList =
         await _backupCollection.where("interest", isEqualTo: interest).get();
-    
+
     List<QueryDocumentSnapshot> interestSnap = interestSnapList.docs;
 
     List<Map<String, dynamic>> items = [];
-    for (final QueryDocumentSnapshot item in interestSnap){
-      Map<String, dynamic> interestItem =  item.data() as Map<String, dynamic>;
+    for (final QueryDocumentSnapshot item in interestSnap) {
+      Map<String, dynamic> interestItem = item.data() as Map<String, dynamic>;
       items.add(interestItem);
     }
     return items;
   }
 
-  Future<List<SearchResult>> getBackupSearchResultList(List<String> interests) async{
+  Future<List<SearchResult>> getBackupSearchResultList(
+      List<String> interests) async {
     Map<String, int> disMap = _distributionMap(interests);
     List<SearchResult> finalItems = [];
-    for (final interest in interests){
-      List<Map<String, dynamic>> interestItems = await _fetchBackUpListByInterest(interest);
-      List<SearchResult> interestSr = _randomSelector(interestItems, disMap[interest]!);
+    for (final interest in interests) {
+      List<Map<String, dynamic>> interestItems =
+          await _fetchBackUpListByInterest(interest);
+      List<SearchResult> interestSr =
+          _randomSelector(interestItems, disMap[interest]!);
       finalItems.addAll(interestSr);
     }
     return finalItems;
   }
 
-  Map<String, int> _distributionMap(List<String> interests){
-
+  Map<String, int> _distributionMap(List<String> interests) {
     Map<String, int> map = {};
     Random rand = new Random();
     int total = rand.nextInt(2) + 6;
     int each = (total / interests.length).floor();
-    int last = total - each*(interests.length - 1);
+    int last = total - each * (interests.length - 1);
     int lastIndex = rand.nextInt(interests.length);
 
     int i = 0;
-    while (i < interests.length){
+    while (i < interests.length) {
       String interest = interests[i];
-      map[interest] = (i == lastIndex)? last: each;
+      map[interest] = (i == lastIndex) ? last : each;
       i++;
     }
 
     return map;
   }
 
-  List<SearchResult> _randomSelector(List<Map<String, dynamic>> interestItemList, int number) {
+  List<SearchResult> _randomSelector(
+      List<Map<String, dynamic>> interestItemList, int number) {
     Set<SearchResult> selectedItems = Set();
-    while (selectedItems.length < number){
+    while (selectedItems.length < number) {
       Random rand = new Random();
-      Map<String, dynamic> item = interestItemList[rand.nextInt(interestItemList.length)];
+      Map<String, dynamic> item =
+          interestItemList[rand.nextInt(interestItemList.length)];
       SearchResult sr = SearchResult.fromTIHBackUp(item);
       selectedItems.add(sr);
     }

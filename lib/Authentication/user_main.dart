@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/Plan/favorites.dart';
 import 'package:wikitude_flutter_app/User/user_database.dart';
 import 'package:wikitude_flutter_app/User/user_model.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
@@ -170,20 +171,24 @@ class _UserMainState extends State<UserMain> {
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                         color: Colors.white),
                     child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.black)),
-                        child: Row(children: [
-                          Text(
-                            "Favorites",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          Spacer(),
-                          Icon(Icons.chevron_right_outlined)
-                        ]),
-                        onPressed: null))),
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black)),
+                      child: Row(children: [
+                        Text(
+                          "Favorites",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Spacer(),
+                        Icon(Icons.chevron_right_outlined)
+                      ]),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Favorites()),
+                      ),
+                    ))),
             Container(
                 margin: EdgeInsets.only(
                     top: 0.0, bottom: 20.0, left: 30, right: 30),
@@ -208,13 +213,14 @@ class _UserMainState extends State<UserMain> {
                           Spacer(),
                         ]),
                         onPressed: () => showAboutDialog(
-                              context: context,
-                              applicationName: "HiSG",
-                              applicationVersion: "1.0.0",
-                              applicationIcon: Image.asset("assets/img/app_logo.png",
-                              width: 50, height: 50,)
-
-                            )))),
+                            context: context,
+                            applicationName: "HiSG",
+                            applicationVersion: "1.0.0",
+                            applicationIcon: Image.asset(
+                              "assets/img/app_logo.png",
+                              width: 50,
+                              height: 50,
+                            ))))),
             //Container(child: Text(user!.uid!)),
             Container(
                 margin: EdgeInsets.only(

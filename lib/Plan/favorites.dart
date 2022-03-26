@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/search.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 class Favorites extends StatefulWidget {
@@ -19,12 +21,23 @@ class _FavoritesState extends State<Favorites> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: List.generate(_user.favoriteItems.length, (index) => 
-        ListTile(
-          title: Text(_user.favoriteItems[index].resultId.toString())
-        )),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("My Favourites"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: List.generate(_user.favoriteItems.length, (index) {
+            SearchResult item = _user.favoriteItems[index];
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchResultCard(item: item),
+            );
+            }),
+          ),
+        ),
       ),
     );
   }

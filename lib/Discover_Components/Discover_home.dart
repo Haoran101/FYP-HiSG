@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Discover_Components/360_image_gallery.dart';
 import 'package:wikitude_flutter_app/Discover_Components/Transport_page.dart';
 import 'package:wikitude_flutter_app/Discover_Components/currency_home.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
@@ -79,7 +80,7 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
               Banner(
                   text: "360 GALLERY",
                   image: "assets/img/explore/singapore.jpg",
-                  nextPage: null),
+                  nextPage: ImageGallery()),
               SizedBox(
                 height: 10,
               ),
