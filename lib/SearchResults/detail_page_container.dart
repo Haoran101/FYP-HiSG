@@ -24,6 +24,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
   final UserService _user = UserService();
   bool isFavorated = false;
   bool isInPlan = false;
+  final List notBeAbleToPlan = [DataSource.Photo360, DataSource.Video360, DataSource.Video360YouTube];
 
   initState() {
     super.initState();
@@ -62,7 +63,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
         _user.deleteFromFavorite(this.widget.searchResult);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Deleted from Faviorite."),
+            content: Text("Deleted from Favourites."),
             duration: Duration(seconds: 1),
           ),
         );
@@ -81,7 +82,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
       try {
         _user.addToFavorite(this.widget.searchResult);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Added to Faviorite."),
+          content: Text("Added to Favourites."),
           duration: Duration(seconds: 1),
         ));
       } catch (error, stacktrace) {
@@ -89,7 +90,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
         print(stacktrace);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to add to Faviorite."),
+            content: Text("Failed to add to Favourite."),
             duration: Duration(seconds: 1),
           ),
         );
@@ -226,6 +227,8 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
                         ? IconProvider().FAVORITED_ICON
                         : IconProvider().NOT_FAVORITED_ICON),
               ),
+              notBeAbleToPlan.contains(this.widget.searchResult.source) ?
+              SizedBox.shrink():
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(

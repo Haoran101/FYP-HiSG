@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wikitude_flutter_app/Currency/currency_home.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
@@ -78,7 +79,7 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
               Banner(
                   text: "360 GALLERY",
                   image: "assets/img/explore/singapore.jpg",
-                  call: () => null),
+                  nextPage: null),
               SizedBox(
                 height: 10,
               ),
@@ -88,13 +89,13 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
                       text: "PRECINCT",
                       image: "assets/img/explore/chinatown.jpg",
                       color: Colors.red[900]!,
-                      call: () => null),
+                      nextPage: null),
                   Spacer(),
                   HalfBanner(
                       text: "WALKING\n  TRAIL",
                       image: "assets/img/explore/walking.jpg",
                       color: Colors.green,
-                      call: () => null),
+                      nextPage: null),
                 ],
               ),
               SizedBox(
@@ -106,13 +107,13 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
                       text: "TRANSPORT",
                       image: "assets/img/explore/mrt.jpg",
                       color: Colors.blueAccent,
-                      call: () => null),
+                      nextPage: null),
                   Spacer(),
                   HalfBanner(
                       text: "CURRENCY",
                       image: "assets/img/explore/money.jpg",
                       color: Colors.deepOrangeAccent,
-                      call: () => null),
+                      nextPage: CurrencyConverterScreen())
                 ],
               ),
               Padding(
@@ -226,15 +227,26 @@ class NearbySpotBlock extends StatelessWidget {
 }
 
 class Banner extends StatelessWidget {
-  Banner({required this.text, required this.image, required this.call});
+  Banner({required this.text, required this.image, required this.nextPage});
   final String text;
   final String image;
-  final Function call;
+  final Widget? nextPage;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => this.call,
+        onTap: () {
+          print("called on $text");
+          if (this.nextPage != null){
+            Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => this.nextPage!),);
+          } else {
+            print("not implemented");
+          }
+          
+        },
         child: Container(
           child: Stack(alignment: Alignment.center, children: <Widget>[
             Padding(
@@ -269,16 +281,25 @@ class HalfBanner extends StatelessWidget {
       {required this.text,
       required this.image,
       required this.color,
-      required this.call});
+      required this.nextPage});
   final String text;
   final String image;
   final Color color;
-  final Function call;
+  final Widget? nextPage;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => this.call,
+        onTap: () {
+          print("called on $text");
+          if (this.nextPage != null){
+            Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => this.nextPage!),);
+          } else {
+            print("not implemented");
+          }},
         child: Container(
           child: Stack(alignment: Alignment.center, children: <Widget>[
             Padding(
@@ -304,6 +325,6 @@ class HalfBanner extends StatelessWidget {
               style: _floatStyle.copyWith(fontSize: 15),
             ),
           ]),
-        ));
+    ));
   }
 }

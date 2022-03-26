@@ -116,7 +116,7 @@ class SearchResult {
     source = DataSource.Video360;
     details = jsondata;
     subtitle = "360 VIDEO";
-    var docref = jsondata["name"].toLowerCase().replace("-", "").replace(" ", "_");
+    var docref = jsondata["name"].toLowerCase().replaceAll("-", "").replaceAll(" ", "_");
     resultId = "cloud>360_video_storage>$docref";
   }
 

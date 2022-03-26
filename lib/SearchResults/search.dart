@@ -39,6 +39,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           .where((term) => term.startsWith(filter))
           .toList();
     } else {
+      _searchHistory = List.from(_searchHistory.where((element) => element.length > 0));
       return _searchHistory.reversed.toList();
     }
   }
@@ -81,9 +82,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     _user.syncSearchHistory(_searchHistory);
     fetchGooglePlacesResultsList(); //Google places search
     fetchTIHResultsList(); //TIH database search
-    //fetchImage360ResultsList(); //Image 360 search (cloud storage)
-    //fetchVideo360YoutubeResultsList(); //Video 360 Youtube
-    //fetchVideo360StorageResultsList(); //Video 360 Storage
+    fetchImage360ResultsList(); //Image 360 search (cloud storage)
+    fetchVideo360YoutubeResultsList(); //Video 360 Youtube
+    fetchVideo360StorageResultsList(); //Video 360 Storage
     fetchMRTResultsList(); //MRT dataset implemented with places
   }
 
