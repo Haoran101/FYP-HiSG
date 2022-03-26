@@ -2,6 +2,7 @@ import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
 import 'package:wikitude_flutter_app/Wikitude/arview.dart';
 import 'package:wikitude_flutter_app/Wikitude/sample.dart';
@@ -79,16 +80,22 @@ class _NavigationDialogState extends State<NavigationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Start Your Journey To"),
       content: Container(
-        height: 165,
+        height: 200,
         child: Column(children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Start Your Journey To", style: 
+              TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+            )),
           this.widget.destination.name == null
             ? Center(
               child: Text(
-                  "Location: ${widget.destination.lat} , ${widget.destination.lon}"),
+                  "Location: ${widget.destination.lat} , ${widget.destination.lon}" ,softWrap: true,),
             )
-            : Center(child: Text("${widget.destination.name}")),
+            : Center(child: Text("${widget.destination.name}", softWrap: true,)),
           //open AR navigation
           Container(
               margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
@@ -145,9 +152,7 @@ class _NavigationDialogState extends State<NavigationDialog> {
                       ]),
                       onPressed: () {
                         //Open Google Maps
-                        var parameters = [
-                          "origin=Current+Location",
-                        ];
+                        var parameters = [];
                         if (widget.destination.place_id != null) {
                           parameters.add(
                               "destination_place_id=${widget.destination.place_id}");
@@ -168,7 +173,7 @@ class _NavigationDialogState extends State<NavigationDialog> {
           child: TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
-              "Cancel",
+              "Close",
               style: TextStyle(
                 color: Colors.red,
               ),

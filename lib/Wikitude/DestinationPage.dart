@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/UI/navDialog.dart';
 import 'package:wikitude_flutter_app/Wikitude/arview.dart';
 import 'package:wikitude_flutter_app/Wikitude/sample.dart';
@@ -63,7 +65,7 @@ class _DestinationPageState extends State<DestinationPage> {
     super.dispose();
   }
 
-  ensureLocationFetched() async {
+  Future<Position?> ensureLocationFetched() async {
     await locationService.fetchUserPosition();
     
     return locationService.position;
@@ -111,7 +113,7 @@ class _DestinationPageState extends State<DestinationPage> {
           backgroundColor: Colors.white,
           foregroundColor: Theme.of(context).primaryColor,
           child: Icon(Icons.search, size: 32),
-          onPressed: null,
+          onPressed: searchPlaces,
         ),
       ),
       body: FutureBuilder(
@@ -409,7 +411,12 @@ class LocationCard extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                      onPressed: null,
+                      onPressed: () => Navigator.push(
+                        context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPageContainer(searchResult: loc!.toSearchResult(),)),
+                      ),
                       icon: Icon(Icons.info, size: 35, color: Colors.blue)),
                   Spacer(),
                   IconButton(
@@ -441,6 +448,7 @@ class Location {
   String? type;
   String? placeId;
   int? index;
+  Map<String, dynamic>? details;
 
   Location.fromJSON(jsonObject, index) {
     index = index;
@@ -456,5 +464,10 @@ class Location {
     var typeImportant = searchImportantGoogleType(jsonObject["types"]);
     type = typeImportant.replaceAll("_", " ").toUpperCase();
     locality = jsonObject["vicinity"];
+    details = jsonObject;
+  }
+
+  toSearchResult(){
+    return SearchResult.fromGoogle(this.details!);
   }
 }
