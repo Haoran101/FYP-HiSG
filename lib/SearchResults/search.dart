@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
@@ -136,10 +135,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
   }
 
-  fetchArticlesResultsList() async {
-    //TODO: fetch articles results list
-  }
-
   fetchImage360ResultsList() async {
     List<Map<String, dynamic>>? image360Result =
         await Image360Provider().queryImage360ByTitle(selectedTerm);
@@ -227,12 +222,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         searchTerm: selectedTerm,
       );
     }
-  }
-
-  void _scrollToTop() {
-    print("scroll to top");
-    scrollController?.animateTo(0,
-        duration: Duration.zero, curve: Curves.linear);
   }
 
   @override

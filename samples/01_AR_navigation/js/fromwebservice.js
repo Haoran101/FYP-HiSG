@@ -64,7 +64,7 @@ var World = {
             World.markerList.push(new Marker(singlePoi));
         }
 
-        World.switchInstructions();
+        World.switchInstructions(0);
         World.updateStatusMessage('Route loaded from Google Maps.');
     },
 
@@ -110,8 +110,8 @@ var World = {
     /* get Updated Distance and Duration values */
     fetchUpdatedDistanceAndDuration: function fetchUpdatedDistanceAndDurationFn(lat, lon){
         var distance = getDistanceFromLatLonInM(lat, lon, World.currentMarker.poiData.latitude, World.currentMarker.poiData.longitude);
-        if (distance < 30){
-            World.switchInstructions();
+        if (distance < 15){
+            World.switchInstructions(World.currentMarker.id + 1);
         } else {
             World.currentDistance = distance;
             World.currentDuration = distance / World.currentMarker.poiData.speed;
@@ -119,11 +119,9 @@ var World = {
     },
 
     /* Switch to next marker */
-    switchInstructions: function switchInstructionsFn(){
-        var nextId = 0;
+    switchInstructions: function switchInstructionsFn(nextId){
         if (World.currentMarker != null){
             World.currentMarker.setDeselected(World.currentMarker);
-            nextId = World.currentMarker.poiData.id + 1;
         }
         var nextMarker = World.markerList[nextId];
         nextMarker.setSelected(nextMarker);

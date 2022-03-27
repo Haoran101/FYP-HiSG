@@ -50,7 +50,6 @@ class _MRTStationPageState extends State<MRTStationPage> {
   Widget exitSection() {
     String _exit = "Exit";
     String _poi = "Place of Interest/Road";
-    TextStyle normal = TextStyle(fontSize: 14);
     List<Widget> rows = [];
     for (final row in this.mrtData["exit_info"]) {
       String joinedPOI = row[_poi].join("\n");

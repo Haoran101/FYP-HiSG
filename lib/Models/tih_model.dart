@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:basic_utils/basic_utils.dart';
+import 'package:latlong2/latlong.dart';
 
 class TIHDetails {
   String? uuid;
@@ -34,6 +35,7 @@ class TIHDetails {
   String? nearstMRTStation;
   Icon? icon;
   Map<String, dynamic>? rawdata;
+  List<MapTile>? walkingTrailPoints;
 
   TIHDetails.fromEventJSON(Map<String, dynamic> jsondata) {
     uuid = jsondata["uuid"];
@@ -142,6 +144,20 @@ class TIHDetails {
     return map;
   }
 
+  TIHDetails.fromWalkingTrailJSON(Map<String, dynamic> jsondata) {
+    uuid = jsondata["uuid"];
+    name = jsondata["name"];
+    description = jsondata["description"];
+    body = jsondata["body"];
+    imageURL =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["url"] : null;
+    imageUUID =
+        jsondata["images"].length > 0 ? jsondata["images"][0]["uuid"] : null;
+    type = jsondata["type"];
+    icon = IconProvider().WALKING_TRAIL_ICON;
+    rawdata = jsondata;
+  }
+
   Widget getImage() {
     //try fetch from "url"
     if (this.imageURL != null && this.imageURL != "") {
@@ -188,6 +204,12 @@ class TIHDetails {
     }
   }
 
+  void setMapTiles(List<Map<String, dynamic>> walkingTrailDetails) {
+    this.walkingTrailPoints = walkingTrailDetails
+        .map((item) => MapTile.fromDetailJSON(item))
+        .toList();
+  }
+
   List<String> _getBusinessHour(jsonList) {
     List<String> result = <String>[];
     for (final day in jsonList) {
@@ -197,5 +219,22 @@ class TIHDetails {
       result.add("$dayName: $startTime ~ $endTime");
     }
     return result;
+  }
+}
+
+class MapTile {
+  String? uuid;
+  String? name;
+  String? address;
+  LatLng? location;
+
+  MapTile.fromDetailJSON(Map<String, dynamic> jsonobject) {
+    uuid = jsonobject["uuid"];
+    name = jsonobject["name"];
+    address = jsonobject["formattedAddress"];
+    location = LatLng(
+    double.parse(jsonobject["location"]["latitude"].toString()),
+    double.parse(jsonobject["location"]["longitude"].toString())
+    );
   }
 }

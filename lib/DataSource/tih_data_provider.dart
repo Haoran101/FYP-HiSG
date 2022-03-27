@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:basic_utils/basic_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 
@@ -124,6 +122,49 @@ class TIHDataProvider {
         return searchResultList;
       } else {
         print("Error fetching data: precinct details from TIH API!");
+        return null;
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> getWalkingTrailList({nextToken=""}) async{
+    String requestURL = "https://tih-api.stb.gov.sg//content/v1/walking-trail/search?keyword=Walking%20Trail&language=en&nextToken=$nextToken&apikey=$API_KEY";
+    final Uri request = Uri.parse(requestURL);
+    print(request.toString());
+    final response = await httpClient.get(request);
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status']['message'] == 'OK') {
+        final list = result['data'];
+        final nextTokenRetrieved = result['nextToken'];
+        print(list);
+        var jsonPlaceList = List.generate(
+            list.length, (index) => list[index] as Map<String, dynamic>);
+        jsonPlaceList.add({"nextToken": nextTokenRetrieved});
+        return jsonPlaceList;
+      } else {
+        print("Error fetching data from TIH Walking Trail API!");
+        return null;
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>?> getWalkingTrailDetailsByUUID(String uuid) async{
+    
+    String requestURL =
+        "https://tih-api.stb.gov.sg//content/v1/walking-trail/uuid/$uuid/detail?language=en&apikey=$API_KEY";
+
+    final Uri request = Uri.parse(requestURL);
+
+    print(request.toString());
+    final response = await httpClient.get(request);
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['status']['message'] == 'OK') {
+        final data = List.generate(result["data"].length, (index) => result["data"][index] as Map<String, dynamic>);
+        return data;
+      } else {
+        print("Error fetching data: walking trail details from TIH API!");
         return null;
       }
     }

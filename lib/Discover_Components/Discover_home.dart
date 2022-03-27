@@ -4,6 +4,7 @@ import 'package:wikitude_flutter_app/Discover_Components/Transport_page.dart';
 import 'package:wikitude_flutter_app/Discover_Components/currency_home.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/Discover_Components/Precincts_List.dart';
+import 'package:wikitude_flutter_app/Discover_Components/walking_trails.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
@@ -96,7 +97,7 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
                       text: "WALKING\n  TRAIL",
                       image: "assets/img/explore/walking.jpg",
                       color: Colors.green,
-                      nextPage: null),
+                      nextPage: WalkingTrailsList()),
                 ],
               ),
               SizedBox(

@@ -39,6 +39,7 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 }
 
+// ignore: must_be_immutable
 class Image360GridView extends StatefulWidget {
   String? type;
   Image360GridView({

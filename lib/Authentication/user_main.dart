@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
@@ -129,13 +130,16 @@ class _UserMainState extends State<UserMain> {
               child: Center(
                   child: Container(
                 margin: EdgeInsets.symmetric(vertical: 30.0),
-                child: CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: NetworkImage(
-                      (user != null && user!.photoURL != null)
-                          ? (user!.photoURL!)
-                          : defaultProfilePhotoURL),
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                 ),
+                child: CachedNetworkImage(
+                  fit: BoxFit.fitWidth,
+                    imageUrl: (user != null && user!.photoURL != null)
+                        ? (user!.photoURL!)
+                        : defaultProfilePhotoURL),
               )),
             ),
             //displayName
@@ -148,7 +152,7 @@ class _UserMainState extends State<UserMain> {
                 ),
               ),
               InkWell(
-                //TODO: update user name
+                //update user name
                 onTap: () => showNameEditDialog(),
                 child: Container(
                   height: 30,
