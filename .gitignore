@@ -39,8 +39,10 @@ lib/DataSource/api_key.dart
 lib/DataSource/cloud_firestore_look_up.dart
 lib/firebase_options.dart
 
+
 # Symbolication related
 app.*.symbols
+lib/firebase_options.dart
 
 # Obfuscation related
 app.*.map.json
