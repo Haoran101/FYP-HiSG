@@ -1,10 +1,11 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 class PositionIndicator {

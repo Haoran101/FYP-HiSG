@@ -12,6 +12,7 @@ import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
 
+// ignore: must_be_immutable
 class DetailPageContainer extends StatefulWidget {
   final searchResult;
   var modelPreloaded;

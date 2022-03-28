@@ -3,7 +3,6 @@
 import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
@@ -39,6 +38,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
                 onPressed: () {
                   _addNewDay();
                   Navigator.of(context).pop(true);
+                  UI.showCustomSnackBarMessage(context, "New empty day added!");
                 },
                 child: Text("Confirm")),
             //Cancel button
@@ -99,9 +99,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
                                   },
                                 )),
                       );
-                    } catch (error) {
+                    } catch (error, stackTrace) {
                       print(error);
-                      //TODO: snackbar notification
+                      print(stackTrace);
+                      UI.showCustomSnackBarMessage(context, "Failed to load recommedation page.");
                     }
                   }),
             ),
@@ -115,7 +116,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
                       _showNewDayDialog();
                     } catch (error) {
                       print(error);
-                      //TODO: snackbar notification
+                      UI.showCustomSnackBarMessage(context, "Failed to add new day to plan.");
                     }
                   } //Add a new day
                   ),
@@ -585,7 +586,6 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
         });
         print(isCheckedMap);
       },
-      //TODO: customize icons
       secondary: const Icon(Icons.favorite_outline_rounded),
     );
   }
@@ -606,23 +606,20 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
       builder: (BuildContext context) {
         return AlertDialog(
             title: Text(
-                "A new day: Day ${this.widget.nextday} \n has been generated! "),
+                "Day ${this.widget.nextday} has been generated! "),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             content: Container(
-              height: double.infinity - 300,
-              width: double.infinity - 100,
+              height: searchResultList.length * 60.0 + 100.0,
+              width: double.infinity - 50,
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: List.generate(
-                          searchResultList.length,
-                          (index) =>
-                              SearchResultCard(item: searchResultList[index]))),
-                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                        searchResultList.length,
+                        (index) =>
+                            SearchResultCard(item: searchResultList[index]))),
               ),
             ),
-            contentPadding: EdgeInsets.all(30),
             actions: [
               //Confirm button
               ElevatedButton(
@@ -632,8 +629,10 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                     
                     this.widget.addRecommendDay(searchResultList);
                     Navigator.of(context).pop(true);
+                    Navigator.of(context).pop(true);
+                    UI.showCustomSnackBarMessage(context, "Recommended day added!");
                   },
-                  child: Text("OK")),
+                  child: Text("Add")),
               //Cancel Button
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.red),

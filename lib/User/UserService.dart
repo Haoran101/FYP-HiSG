@@ -1,4 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/User/user_database.dart';

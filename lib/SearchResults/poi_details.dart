@@ -5,8 +5,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:wikitude_flutter_app/UI/navDialog.dart';
 
 import '../DataSource/google_maps_platform.dart';
+import '../Models/nav_info_model.dart';
 import '../Models/poi_model.dart';
 import 'review_details.dart';
 
@@ -16,7 +18,8 @@ class POISubPage extends StatefulWidget {
   final category;
   bool isCid;
 
-  POISubPage({required this.placeId, required this.category, this.isCid = false});
+  POISubPage(
+      {required this.placeId, required this.category, this.isCid = false});
 
   @override
   _POISubPageState createState() => _POISubPageState();
@@ -36,36 +39,39 @@ class _POISubPageState extends State<POISubPage> {
 
   Future fetchPOIDetails() async {
     print(this.widget.isCid);
-    if (this.widget.isCid){
+    if (this.widget.isCid) {
       print("cid: " + this.widget.placeId);
-      this.place = (await PlaceApiProvider().getPlaceDetailFromCID(widget.placeId))!;
+      this.place =
+          (await PlaceApiProvider().getPlaceDetailFromCID(widget.placeId))!;
       print("POI details fetched!");
     } else {
       print("place_id: " + this.widget.placeId);
-      this.place = (await PlaceApiProvider().getPlaceDetailFromId(widget.placeId))!;
+      this.place =
+          (await PlaceApiProvider().getPlaceDetailFromId(widget.placeId))!;
       print("POI details fetched!");
     }
   }
 
   Future fetchHotelDetails() async {
-    if (this.widget.category == "ACCOMMODATION"){
+    if (this.widget.category == "ACCOMMODATION") {
       this.hotelData =
-        (await HotelProvider().queryHotelURLByPlaceId(widget.placeId));
+          (await HotelProvider().queryHotelURLByPlaceId(widget.placeId));
       print(this.hotelData);
     }
   }
 
   Future fetchMRTDetails() async {
-    if (this.widget.category == "SUBWAY STATION"){
+    if (this.widget.category == "SUBWAY STATION") {
       this.mrtData =
-        (await MRTProvider().fetchMRTDetailsByPlaceId(widget.placeId));
+          (await MRTProvider().fetchMRTDetailsByPlaceId(widget.placeId));
       print(this.mrtData);
     }
   }
 
   @override
   void dispose() {
-    super.dispose();EdgeInsets.all(20.0);
+    super.dispose();
+    EdgeInsets.all(20.0);
   }
 
   @override
@@ -73,10 +79,11 @@ class _POISubPageState extends State<POISubPage> {
     var _pageElementPadding = EdgeInsets.all(20.0);
 
     getPhotoView() {
-      if (this.place.photoReferences == null){
+      if (this.place.photoReferences == null) {
         return Container(
           height: 200,
-          child: Image.asset("assets/img/placeholder.png", height: 200, width: double.infinity, fit: BoxFit.fitWidth),
+          child: Image.asset("assets/img/placeholder.png",
+              height: 200, width: double.infinity, fit: BoxFit.fitWidth),
         );
       }
       if (this.place.photoReferences!.length < 3) {
@@ -134,7 +141,9 @@ class _POISubPageState extends State<POISubPage> {
                       child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                              searchImportantGoogleType(place.types!).toUpperCase().replaceAll("_", " "),
+                              searchImportantGoogleType(place.types!)
+                                  .toUpperCase()
+                                  .replaceAll("_", " "),
                               style: TextStyle(
                                   fontSize: 15,
                                   color: Theme.of(context).primaryColor))),
@@ -146,7 +155,7 @@ class _POISubPageState extends State<POISubPage> {
                       child: Row(
                         children: [
                           //rating bar
-                          (place.rating == null|| place.rating == -1)
+                          (place.rating == null || place.rating == -1)
                               ? SizedBox(
                                   width: 10,
                                 )
@@ -160,23 +169,30 @@ class _POISubPageState extends State<POISubPage> {
                                   itemSize: 30.0,
                                   direction: Axis.horizontal,
                                 ),
-                          (place.rating == null|| place.rating == -1)
-                              ? 
-                            SizedBox(width: 0,) :
-                            Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              place.rating.toString(),
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
+                          (place.rating == null || place.rating == -1)
+                              ? SizedBox(
+                                  width: 0,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    place.rating.toString(),
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
                           Spacer(),
                           //direction button
                           InkWell(
                             child: Icon(Icons.near_me,
                                 size: 40, color: Colors.red[400]),
-                            onTap: () => print("Tapped direction arrow"),
-                            //TODO: navigate to directions page
+                            //navigate to directions page
+                            onTap: () => showNavigationDialog(
+                                context,
+                                new NavInfo(
+                                  name: place.name,
+                                  lat: place.location!["lat"],
+                                  lon: place.location!["lng"],
+                                )),
                           )
                         ],
                       ),
@@ -284,7 +300,8 @@ class _POISubPageState extends State<POISubPage> {
                                   onLongPress: () {
                                     Clipboard.setData(
                                         ClipboardData(text: place.phoneNumber));
-                                    UI.showCustomSnackBarMessage(context, "Phone number copied to clipboard.");
+                                    UI.showCustomSnackBarMessage(context,
+                                        "Phone number copied to clipboard.");
                                   },
                                   onTap: () =>
                                       launch("tel://${place.phoneNumber}"),
@@ -305,7 +322,8 @@ class _POISubPageState extends State<POISubPage> {
                                   onLongPress: () {
                                     Clipboard.setData(
                                         ClipboardData(text: place.website));
-                                    UI.showCustomSnackBarMessage(context, "Website Url copied to clipboard.");
+                                    UI.showCustomSnackBarMessage(context,
+                                        "Website Url copied to clipboard.");
                                   },
                                   onTap: () => launch("${place.website}"),
                                 )
@@ -315,8 +333,6 @@ class _POISubPageState extends State<POISubPage> {
                         ],
                       ),
                     ),
-
-                    //TODO: 360 experiences
 
                     //reviews
                     place.reviews != null
@@ -391,8 +407,6 @@ class _POISubPageState extends State<POISubPage> {
                         : SizedBox(
                             height: 0,
                           )
-                    //TODO: related articles
-                    //TODO: Nearby places/events/something
                   ],
                 ),
               ),
@@ -415,13 +429,11 @@ class GoogleImage extends StatefulWidget {
 class _GoogleImageState extends State<GoogleImage> {
   @override
   Widget build(BuildContext context) {
-    if (this.widget.photoRef == null){
-      return Image.asset(
-              "assets/img/placeholder.png",
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.fitHeight
-            );
+    if (this.widget.photoRef == null) {
+      return Image.asset("assets/img/placeholder.png",
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.fitHeight);
     }
     return Container(
       child: FutureBuilder(
@@ -463,9 +475,18 @@ class _GoogleImageState extends State<GoogleImage> {
 }
 
 String searchImportantGoogleType(List<dynamic> types) {
-  List<String> typePriority = ["lodging", "university", "school", 
-  "subway_station", "bank", "health", "shopping_mall", "health", "store"];
-  for (final x in typePriority){
+  List<String> typePriority = [
+    "lodging",
+    "university",
+    "school",
+    "subway_station",
+    "bank",
+    "health",
+    "shopping_mall",
+    "health",
+    "store"
+  ];
+  for (final x in typePriority) {
     if (types.contains(x)) {
       if (x == "lodging") return "accommodation";
       return x;

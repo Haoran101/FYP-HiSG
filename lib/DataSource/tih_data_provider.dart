@@ -98,7 +98,7 @@ class TIHDataProvider {
               } else if (jsonItem["tour"] == "tour") {
                 innerMap["resultModel"] = TIHDetails.fromTourJSON(jsonItem);
               } else {
-                //TODO: walking trail
+                innerMap["resultModel"] = TIHDetails.fromWalkingTrailJSON(jsonItem);
               }
               searchResultList.add(innerMap);
             }

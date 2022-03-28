@@ -1,9 +1,8 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
@@ -14,6 +13,7 @@ import 'package:wikitude_flutter_app/UI/navDialog.dart';
 import '../DataSource/api_key.dart' as api;
 import '../Models/nav_info_model.dart';
 
+// ignore: non_constant_identifier_names
 final MAPBOX_ACCESS_TOKEN = api.mapbox_access_token;
 
 class WalkingTrailDetailsSubpage extends StatefulWidget {
@@ -273,7 +273,7 @@ class _WalkingTrailMapViewState extends State<WalkingTrailMapView> {
             TileLayerWidget(
               options: TileLayerOptions(
                 urlTemplate:
-                    "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}",
+                    "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=$MAPBOX_ACCESS_TOKEN",
                 attributionBuilder: (_) {
                   return Align(
                       alignment: Alignment.bottomLeft,

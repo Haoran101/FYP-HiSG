@@ -103,7 +103,6 @@ class TIHDetails {
     nearstMRTStation = jsondata["nearestMrtStation"];
     businessHour = _getBusinessHour(jsondata["businessHour"]);
     icon = IconProvider().mapTIHEventIcon(type);
-    //TODO: map tour types and icons
     rawdata = jsondata;
   }
 

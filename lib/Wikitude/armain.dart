@@ -10,7 +10,6 @@ import 'custom_expansion_tile.dart';
 import 'sample.dart';
 
 import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
-import 'package:augmented_reality_plugin_wikitude/wikitude_sdk_build_information.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 
 Future<String> _loadSamplesJson() async {
@@ -40,15 +39,6 @@ class MyAppState extends State<MainMenu> {
         appBar: AppBar(
           title: const Text('Augmented Reality'),
           backgroundColor: Theme.of(context).primaryColor,
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.help,
-                color: Colors.white,
-              ),
-            )
-          ],
         ),
         backgroundColor: Colors.white,
         body: Column(

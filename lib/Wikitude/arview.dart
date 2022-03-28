@@ -4,11 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
-import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
-import 'package:wikitude_flutter_app/Wikitude/DestinationPage.dart';
 
 import 'sample.dart';
 

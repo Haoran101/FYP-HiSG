@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
+// ignore_for_file: unused_field
 
-import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
-import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
 import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:latlong2/latlong.dart';
@@ -15,14 +10,15 @@ import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/navDialog.dart';
-import 'package:wikitude_flutter_app/Wikitude/arview.dart';
 import 'package:wikitude_flutter_app/Wikitude/sample.dart';
 import '../DataSource/api_key.dart' as api;
 import '../Models/nav_info_model.dart';
 import '../SearchResults/poi_details.dart';
 
+// ignore: non_constant_identifier_names
 final MAPBOX_ACCESS_TOKEN = api.mapbox_access_token;
 
+// ignore: must_be_immutable
 class DestinationPage extends StatefulWidget {
   Sample sample = Sample.fromJson(
     {
@@ -95,7 +91,8 @@ class _DestinationPageState extends State<DestinationPage> {
               (index) => Location.fromJSON(resultList[index], index));
         });
       } else {
-        //TODO: show failed to fetch result dialog
+        //show failed to fetch result dialog
+        UI.showCustomSnackBarMessage(context, "No results found for : "+ _currentSearchTerm.toString());
       }
     }
   }
@@ -265,7 +262,7 @@ class _MapAndPageViewState extends State<MapAndPageView> {
           layers: [
             TileLayerOptions(
               urlTemplate:
-                  "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_ACCESS_TOKEN}",
+                  "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=$MAPBOX_ACCESS_TOKEN",
               attributionBuilder: (_) {
                 return Text("©Mapbox  ");
               },
@@ -359,6 +356,7 @@ class FromRow extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class LocationCard extends StatelessWidget {
   Location? loc;
 

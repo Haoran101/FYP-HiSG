@@ -73,8 +73,8 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 20),
-        children: (this.precinctList != null)
-            ? List.generate(this.precinctList.length, (index) {
+        children: 
+            List.generate(this.precinctList.length, (index) {
                 var resultItem =
                     List.from(this.precinctList.values)[index]["searchResult"];
                 resultItem.icon = IconProvider()
@@ -85,7 +85,7 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
                       ["resultModel"],
                 );
               })
-            : [CircularProgressIndicator()]);
+            );
   }
 
   @override

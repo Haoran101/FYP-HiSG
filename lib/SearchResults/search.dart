@@ -433,6 +433,7 @@ class SearchResultsListView extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class SearchResultCard extends StatelessWidget {
   final item;
   var preloadedPage;

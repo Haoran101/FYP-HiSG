@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:wikitude_flutter_app/UI/navDialog.dart';
 
 class EventDetailsSubpage extends StatefulWidget {
   final details;
@@ -71,9 +73,13 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
         alignment: Alignment.centerRight,
         child: InkWell(
           child: Icon(Icons.near_me, size: 40, color: Colors.red[400]),
-          onTap: () => print(
-              event.latitude.toString() + "," + event.longitude.toString()),
-          //TODO: navigate to directions page
+          //navigate to directions page
+          onTap: () => showNavigationDialog(
+                    context,
+                    new NavInfo(
+                        name: event.name,
+                        lat: event.latitude,
+                        lon: event.longitude)),
         ),
       );
     } else
@@ -257,18 +263,14 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
 
                   ///nearest mrt station
                   event.nearstMRTStation != null && event.nearstMRTStation != ""
-                      ? InkWell(
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.train_sharp,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            title: Text("Nearest MRT Station: " +
-                                event.nearstMRTStation!),
-                          ),
-                          //TODO: link to mrt page
-                          onTap: null,
-                        )
+                      ? ListTile(
+                        leading: Icon(
+                          Icons.train_sharp,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        title: Text("Nearest MRT Station: " +
+                            event.nearstMRTStation!),
+                      )
                       : SizedBox(
                           height: 0,
                         ),

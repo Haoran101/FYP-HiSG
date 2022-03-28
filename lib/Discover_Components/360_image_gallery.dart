@@ -58,20 +58,20 @@ class _Image360GridViewState extends State<Image360GridView> {
   Future<List<SearchResult>> _fetchResult(type) async {
     if (type == "image") {
       List<Map<String, dynamic>>? imageData =
-          await Image360Provider().ListAllImage360();
+          await Image360Provider().listAllImage360();
       if (imageData != null) {
         this.viewList.addAll(
             imageData.map((item) => SearchResult.from360ImageDataset(item)));
       }
     } else {
       List<Map<String, dynamic>>? videoStorageData =
-          await Video360Provider().ListAllVideo360Storage();
+          await Video360Provider().listAllVideo360Storage();
       if (videoStorageData != null) {
         this.viewList.addAll(videoStorageData
             .map((item) => SearchResult.from360VideoStorage(item)));
       }
       List<Map<String, dynamic>>? videoYouTubeData =
-          await Video360Provider().ListAllVideo360YouTube();
+          await Video360Provider().listAllVideo360YouTube();
       if (videoYouTubeData != null) {
         this.viewList.addAll(videoYouTubeData
             .map((item) => SearchResult.from360VideoYouTube(item)));

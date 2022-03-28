@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
 import 'package:wikitude_flutter_app/Models/poi_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
+import 'package:wikitude_flutter_app/UI/navDialog.dart';
 
 import '../DataSource/google_maps_platform.dart';
 
+// ignore: must_be_immutable
 class MRTStationPage extends StatefulWidget {
   late Map<String, dynamic> mrtData;
   MRTStationPage({required this.mrtData});
@@ -165,7 +168,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
           }
 
           print("Loaded");
-          bool NotShowExitInfo = !this.mrtData.containsKey("exit_info") || this.mrtData["exit_info"][0]["Exit"] == "" || this.mrtData["exit_info"][0]["Exit"].toString().toLowerCase().contains("mon");
+          bool notShowExitInfo = !this.mrtData.containsKey("exit_info") || this.mrtData["exit_info"][0]["Exit"] == "" || this.mrtData["exit_info"][0]["Exit"].toString().toLowerCase().contains("mon");
           return Container(
               color: Colors.white,
               child: SingleChildScrollView(
@@ -210,8 +213,14 @@ class _MRTStationPageState extends State<MRTStationPage> {
                       InkWell(
                         child: Icon(Icons.near_me,
                             size: 40, color: Colors.red[400]),
-                        onTap: () => print("Tapped direction arrow"),
-                        //TODO: navigate to directions page
+                        onTap: () => showNavigationDialog(
+                                context,
+                                new NavInfo(
+                                  name: place!.name,
+                                  lat: place!.location!["lat"],
+                                  lon: place!.location!["lng"],
+                                )),
+                        //navigate to directions page
                       )
                     ],
                   ),
@@ -323,7 +332,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                 ),
 
                 //Exits
-                if (!NotShowExitInfo)
+                if (!notShowExitInfo)
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Align(
@@ -332,7 +341,7 @@ class _MRTStationPageState extends State<MRTStationPage> {
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold))),
                   ),
-                if (!NotShowExitInfo) exitSection(),
+                if (!notShowExitInfo) exitSection(),
               ])));
         });
   }

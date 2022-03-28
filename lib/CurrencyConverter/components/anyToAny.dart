@@ -21,7 +21,6 @@ class _AnyToAnyState extends State<AnyToAny> {
 
   @override
   Widget build(BuildContext context) {
-    var w = MediaQuery.of(context).size.width;
     return Card(
       child: Container(
         // width: w / 3,

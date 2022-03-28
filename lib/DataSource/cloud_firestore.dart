@@ -12,7 +12,7 @@ class Image360Provider {
   final CollectionReference _image360Collection =
       firestore.collection('360_photos');
 
-  Future<List<Map<String, dynamic>>?> ListAllImage360() async {
+  Future<List<Map<String, dynamic>>?> listAllImage360() async {
     try {
       QuerySnapshot ytbSnapList = await _image360Collection.get();
 
@@ -60,7 +60,7 @@ class Video360Provider {
   final CollectionReference _video360StorageCollection =
       firestore.collection('360_video_storage');
 
-  Future<List<Map<String, dynamic>>?> ListAllVideo360YouTube() async {
+  Future<List<Map<String, dynamic>>?> listAllVideo360YouTube() async {
     try {
       QuerySnapshot ytbSnapList = await _video360YoutubeCollection.get();
 
@@ -78,7 +78,7 @@ class Video360Provider {
     }
   }
 
-  Future<List<Map<String, dynamic>>?> ListAllVideo360Storage() async {
+  Future<List<Map<String, dynamic>>?> listAllVideo360Storage() async {
     try {
       QuerySnapshot ytbSnapList = await _video360StorageCollection.get();
 

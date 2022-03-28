@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
 import 'package:wikitude_flutter_app/Models/tih_model.dart';
 import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:wikitude_flutter_app/UI/navDialog.dart';
 
 class TourDetailsSubpage extends StatefulWidget {
   final details;
@@ -80,9 +82,14 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
         alignment: Alignment.centerRight,
         child: InkWell(
           child: Icon(Icons.near_me, size: 40, color: Colors.red[400]),
-          onTap: () =>
-              print(tour.latitude.toString() + "," + tour.longitude.toString()),
-          //TODO: navigate to directions page
+          onTap: () => showNavigationDialog(
+              context,
+              new NavInfo(
+                name: tour.name,
+                lat: tour.latitude,
+                lon: tour.longitude,
+              )),
+          //navigate to directions page
         ),
       );
     } else
@@ -224,8 +231,8 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: tour.website));
-                            UI.showCustomSnackBarMessage(context, "Website Url copied to clipboard.");
-                            
+                            UI.showCustomSnackBarMessage(
+                                context, "Website Url copied to clipboard.");
                           },
                           onTap: () => launch("${tour.website}"),
                         )
@@ -245,7 +252,8 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: tour.contactNumber));
-                            UI.showCustomSnackBarMessage(context, "Phone number copied to clipboard.");
+                            UI.showCustomSnackBarMessage(
+                                context, "Phone number copied to clipboard.");
                           },
                           onTap: () => launch("tel://${tour.contactNumber}"),
                         )
@@ -265,7 +273,8 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           ),
                           onLongPress: () {
                             Clipboard.setData(ClipboardData(text: tour.email));
-                            UI.showCustomSnackBarMessage(context, "Email address copied to clipboard.");
+                            UI.showCustomSnackBarMessage(
+                                context, "Email address copied to clipboard.");
                           },
                           onTap: () => launch("mailto:${tour.email}"),
                         )
@@ -275,18 +284,14 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
 
                   ///nearest mrt station
                   tour.nearstMRTStation != null && tour.nearstMRTStation != ""
-                      ? InkWell(
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.train_sharp,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            title: Text("Nearest MRT Station: " +
-                                tour.nearstMRTStation!),
-                          ),
-                          //TODO: link to mrt page
-                          onTap: null,
-                        )
+                      ? ListTile(
+                        leading: Icon(
+                          Icons.train_sharp,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        title: Text("Nearest MRT Station: " +
+                            tour.nearstMRTStation!),
+                      )
                       : SizedBox(
                           height: 0,
                         ),
