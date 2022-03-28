@@ -224,9 +224,8 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: tour.website));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text("Website Url copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Website Url copied to clipboard.");
+                            
                           },
                           onTap: () => launch("${tour.website}"),
                         )
@@ -246,9 +245,7 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: tour.contactNumber));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text("Phone number copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Phone number copied to clipboard.");
                           },
                           onTap: () => launch("tel://${tour.contactNumber}"),
                         )
@@ -268,9 +265,7 @@ class _TourDetailsSubpageState extends State<TourDetailsSubpage> {
                           ),
                           onLongPress: () {
                             Clipboard.setData(ClipboardData(text: tour.email));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Email address copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Email address copied to clipboard.");
                           },
                           onTap: () => launch("mailto:${tour.email}"),
                         )

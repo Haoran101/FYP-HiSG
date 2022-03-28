@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 // ignore: must_be_immutable
 class ForgotPassword extends StatefulWidget {
@@ -25,25 +26,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       //Send reset password email
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.blueGrey,
-        content: Text('An email has been sent to reset your password.',
-            style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-      ));
-
+      UI.showCustomSnackBarMessage(context, "Please check your email inbox to reset the password.");
       widget.setPage();
 
     } on FirebaseAuthException catch (error) {
       //no user found for the email
       if (error.code == 'user-not-found') {
         print('No user found for that email.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.black26,
-            content: Text('No user found for that email.',
-                style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-          ),
-        );
+        UI.showCustomSnackBarMessage(context, "No user found for that email. Please sign up.");
       }
     }
   }

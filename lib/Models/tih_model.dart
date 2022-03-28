@@ -163,7 +163,7 @@ class TIHDetails {
     if (this.imageURL != null && this.imageURL != "") {
       print(imageURL);
       return CachedNetworkImage(
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.fill,
         imageUrl: imageURL!,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(

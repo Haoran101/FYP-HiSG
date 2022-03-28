@@ -5,6 +5,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
 
 class TransportPage extends StatefulWidget {
@@ -148,7 +149,7 @@ class _StationListPageState extends State<StationListPage> {
         builder:
             (context, AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
           if (snapshot.hasError) {
-            return Text("Error");
+            return UI.errorMessage();
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {

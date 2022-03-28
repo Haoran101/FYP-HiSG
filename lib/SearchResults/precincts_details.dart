@@ -139,6 +139,7 @@ class _PrecinctDetailsSubpageState extends State<PrecinctDetailsSubpage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print("Error occurs fetching precinct data");
+                    return UI.errorMessage();
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {

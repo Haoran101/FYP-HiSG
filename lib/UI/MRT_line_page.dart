@@ -5,6 +5,7 @@ import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 class PositionIndicator {
   int horizontalPosition;
@@ -124,6 +125,7 @@ class _MRTGraphicsGeneratorState extends State<MRTGraphicsGenerator> {
               if (snapshot.hasError) {
                 print(snapshot.error);
                 print(snapshot.stackTrace);
+                return UI.errorMessage();
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 //Show circular progress indicator if loading

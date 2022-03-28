@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import 'package:wikitude_flutter_app/main.dart';
 
@@ -38,20 +39,12 @@ class _LoginPageState extends State<LoginPage> {
       //if user email is not registered
       if (error.code == 'user-not-found') {
         print('No user found for that email.');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.blueGrey,
-          content: Text('No user found for that email.',
-              style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-        ));
+        UI.showCustomSnackBarMessage(context, "No user found for that email. Please sign up.");
       }
       //if user email is registered but password is wrong
       else if (error.code == 'wrong-password') {
         print('Wrong password provided by the user.');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.blueGrey,
-          content: Text('Wrong password provided by the user.',
-              style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-        ));
+        UI.showCustomSnackBarMessage(context, "Wrong password provided by the user.");
       }
     }
   }

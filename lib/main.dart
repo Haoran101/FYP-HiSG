@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:wikitude_flutter_app/Plan/favorites.dart';
 import 'package:wikitude_flutter_app/Plan/plan_main.dart';
-import 'package:wikitude_flutter_app/UI/test.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         future: _initialization,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print("Something went wrong");
+            return UI.errorMessage();
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             //Show circular progress indicator if loading

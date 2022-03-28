@@ -128,7 +128,10 @@ class TIHDataProvider {
   }
 
   Future<List<Map<String, dynamic>>?> getWalkingTrailList({nextToken=""}) async{
-    String requestURL = "https://tih-api.stb.gov.sg//content/v1/walking-trail/search?keyword=Walking%20Trail&language=en&nextToken=$nextToken&apikey=$API_KEY";
+    String requestURL = "https://tih-api.stb.gov.sg/content/v1/walking-trail/search?keyword=Walking%20Trail&language=en&nextToken=$nextToken&apikey=$API_KEY";
+    if (nextToken == ""){
+      requestURL = "https://tih-api.stb.gov.sg/content/v1/walking-trail/search?keyword=Walking%20Trail&language=en&apikey=$API_KEY";
+    }
     final Uri request = Uri.parse(requestURL);
     print(request.toString());
     final response = await httpClient.get(request);
@@ -140,7 +143,7 @@ class TIHDataProvider {
         print(list);
         var jsonPlaceList = List.generate(
             list.length, (index) => list[index] as Map<String, dynamic>);
-        jsonPlaceList.add({"nextToken": nextTokenRetrieved});
+        jsonPlaceList.insert(0, {"nextToken": nextTokenRetrieved});
         return jsonPlaceList;
       } else {
         print("Error fetching data from TIH Walking Trail API!");

@@ -3,6 +3,7 @@
 import 'package:drag_and_drop_lists/drag_and_drop_item.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
@@ -11,6 +12,7 @@ import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/Plan/plan_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/search.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 
 class ExpansionTileExample extends StatefulWidget {
@@ -126,10 +128,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
           builder: (context, AsyncSnapshot<Plan?> snapshot) {
             if (snapshot.hasError) {
               print("Error loading plan");
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("Error loading plan"),
-              );
+              return UI.errorMessage();
+              
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {

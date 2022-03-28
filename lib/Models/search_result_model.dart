@@ -66,6 +66,7 @@ class SearchResult {
   }
 
   SearchResult.fromTIH(Map<String, dynamic> jsondata) {
+    print(jsondata);
     title = jsondata["name"].toString();
     icon = _iconProvider.mapTIHIcon(jsondata["dataset"]);
     subtitle = _textConverter(jsondata["dataset"]);

@@ -8,6 +8,7 @@ import 'package:wikitude_flutter_app/Discover_Components/walking_trails.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
 import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 import '../DataSource/location_provider.dart';
 
@@ -135,7 +136,7 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
                         if (snapshot.hasError) {
                           print(snapshot.error);
                           print(snapshot.stackTrace);
-                          return Text("Error loading nearby results");
+                          return UI.errorMessage();
                         }
 
                         if (snapshot.connectionState ==

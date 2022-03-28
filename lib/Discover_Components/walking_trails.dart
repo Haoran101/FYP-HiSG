@@ -17,7 +17,7 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
   String nextToken = "";
   bool _isFetchingResult = true;
 
-  fetchWalkingTrailList() async {
+  Future<List<TIHDetails>> fetchWalkingTrailList() async {
     List<Map<String, dynamic>>? result =
         await TIHDataProvider().getWalkingTrailList(nextToken: this.nextToken);
     List<TIHDetails> resultTIH = [];
@@ -41,11 +41,11 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: FutureBuilder(
-        future: TIHDataProvider().getWalkingTrailList(),
+        future: fetchWalkingTrailList(),
         builder:
-            (context, AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
+            (context, AsyncSnapshot<List<TIHDetails>> snapshot) {
           if (snapshot.hasError) {
-            return Text("Has error");
+            return UI.errorMessage();
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -59,7 +59,7 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
           List<Widget> bodyList = List.generate(
               snapshot.data!.length,
               (index) =>
-                  WalkingTrailCard(walkingTrailJSON: snapshot.data![index]));
+                  WalkingTrailCard(walkingTrailDetails: snapshot.data![index]));
 
           if (this.nextToken.length > 0) {
             bodyList.add(TextButton(
@@ -84,8 +84,9 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
 }
 
 class WalkingTrailCard extends StatefulWidget {
-  final walkingTrailJSON;
-  const WalkingTrailCard({Key? key, this.walkingTrailJSON}) : super(key: key);
+  
+  WalkingTrailCard({Key? key, required this.walkingTrailDetails}) : super(key: key);
+  final TIHDetails walkingTrailDetails;
 
   @override
   State<WalkingTrailCard> createState() => _WalkingTrailCardState();
@@ -93,14 +94,10 @@ class WalkingTrailCard extends StatefulWidget {
 
 class _WalkingTrailCardState extends State<WalkingTrailCard> {
   SearchResult? walkingTrailSearchResult;
-  TIHDetails? walkingTrailTIHDetails;
 
   @override
   void initState() {
-    walkingTrailSearchResult =
-        SearchResult.fromTIH(this.widget.walkingTrailJSON);
-    walkingTrailTIHDetails =
-        TIHDetails.fromWalkingTrailJSON(walkingTrailSearchResult!.details!);
+    walkingTrailSearchResult = SearchResult.fromTIH(widget.walkingTrailDetails.rawdata!);
     super.initState();
   }
 
@@ -128,7 +125,7 @@ class _WalkingTrailCardState extends State<WalkingTrailCard> {
                   child: UI.tihImageBanner(
                       width: MediaQuery.of(context).size.width,
                       height: 200,
-                      tihDetails: walkingTrailTIHDetails),
+                      tihDetails: widget.walkingTrailDetails),
                 ),
                 //Title
                 Padding(
@@ -138,7 +135,7 @@ class _WalkingTrailCardState extends State<WalkingTrailCard> {
                     child: Text(
                       walkingTrailSearchResult!.title,
                       style:
-                          TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 )

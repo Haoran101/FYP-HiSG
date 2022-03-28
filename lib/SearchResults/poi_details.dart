@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 
 import '../DataSource/google_maps_platform.dart';
 import '../Models/poi_model.dart';
@@ -283,10 +284,7 @@ class _POISubPageState extends State<POISubPage> {
                                   onLongPress: () {
                                     Clipboard.setData(
                                         ClipboardData(text: place.phoneNumber));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Phone number copied to clipboard.")));
+                                    UI.showCustomSnackBarMessage(context, "Phone number copied to clipboard.");
                                   },
                                   onTap: () =>
                                       launch("tel://${place.phoneNumber}"),
@@ -307,10 +305,7 @@ class _POISubPageState extends State<POISubPage> {
                                   onLongPress: () {
                                     Clipboard.setData(
                                         ClipboardData(text: place.website));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Website Url copied to clipboard.")));
+                                    UI.showCustomSnackBarMessage(context, "Website Url copied to clipboard.");
                                   },
                                   onTap: () => launch("${place.website}"),
                                 )

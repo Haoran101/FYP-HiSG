@@ -20,7 +20,7 @@ class PrecinctPage extends StatelessWidget {
         builder:
             (context, AsyncSnapshot<List<Map<String, dynamic>>?> snapshot) {
           if (snapshot.hasError) {
-            return Text("Has error");
+            return UI.errorMessage();
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {

@@ -7,6 +7,7 @@ import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/precincts_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/tour_details.dart';
 import 'package:wikitude_flutter_app/SearchResults/walking_trail_details.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import '../Models/search_result_model.dart';
@@ -49,10 +50,7 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
   _toggleFavorite() {
     if (_user.getCurrentUser == null) {
       //cannot do without login
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Not logged in. Cannot add to favorite."),
-        duration: Duration(seconds: 1),
-      ));
+      UI.showCustomSnackBarMessage(context, "Not logged in. Cannot add to favorite.");
       return;
     }
 
@@ -61,39 +59,21 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
       //delete from favorite
       try {
         _user.deleteFromFavorite(this.widget.searchResult);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Deleted from Favourites."),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        UI.showCustomSnackBarMessage(context, "Deleted from Favourites.");
       } catch (error, stacktrace) {
         print(error);
         print(stacktrace);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to delete from Faviorite."),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        UI.showCustomSnackBarMessage(context, "Failed to delete from Faviorite.");
       }
     } else {
       //add to favorite
       try {
         _user.addToFavorite(this.widget.searchResult);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Added to Favourites."),
-          duration: Duration(seconds: 1),
-        ));
+        UI.showCustomSnackBarMessage(context, "Added to Favourites.");
       } catch (error, stacktrace) {
         print(error);
         print(stacktrace);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Failed to add to Favourite."),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        UI.showCustomSnackBarMessage(context, "Failed to add to Favourite.");
       }
     }
     setState(() {
@@ -107,35 +87,22 @@ class _DetailPageContainerState extends State<DetailPageContainer> {
 
     if (_user.getCurrentUser == null) {
       //cannot do without login
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Not logged in. Cannot add to plan."),
-        duration: Duration(seconds: 1),
-      ));
+      UI.showCustomSnackBarMessage(context, "Not logged in. Cannot add to plan.");
       return;
     }
 
     if (isInPlan) {
       //Notify item is already in plan
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Already in plan. Please edit in 'Plan' menu."),
-        duration: Duration(seconds: 1),
-      ));
+      UI.showCustomSnackBarMessage(context, "Already in plan. Please edit in 'Plan' menu.");
     } else {
       //Add to plan list archieve
       try{
         _user.addToPlanArchieve(this.widget.searchResult);
-        print("added to plan archieve.");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Added to plan."),
-        duration: Duration(seconds: 1),
-      ));
+        UI.showCustomSnackBarMessage(context, "Added to plan archieve.");
       } catch (error, stacktrace) {
         print(error);
         print(stacktrace);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Failed to add to plan."),
-        duration: Duration(seconds: 1),
-      ));
+        UI.showCustomSnackBarMessage(context, "Failed to add to plan.");
       }
     }
 

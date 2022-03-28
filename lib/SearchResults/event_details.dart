@@ -207,9 +207,7 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: event.website));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text("Website Url copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Website Url copied to clipboard.");
                           },
                           onTap: () => launch("${event.website}"),
                         )
@@ -229,9 +227,7 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                           onLongPress: () {
                             Clipboard.setData(
                                 ClipboardData(text: event.contactNumber));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content:
-                                    Text("Phone number copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Phone number copied to clipboard.");
                           },
                           onTap: () => launch("tel://${event.contactNumber}"),
                         )
@@ -251,9 +247,7 @@ class _EventDetailsSubpageState extends State<EventDetailsSubpage> {
                           ),
                           onLongPress: () {
                             Clipboard.setData(ClipboardData(text: event.email));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Email address copied to clipboard.")));
+                            UI.showCustomSnackBarMessage(context, "Email address copied to clipboard.");
                           },
                           onTap: () => launch("mailto:${event.email}"),
                         )

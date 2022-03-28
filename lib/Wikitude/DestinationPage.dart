@@ -13,6 +13,7 @@ import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:wikitude_flutter_app/Models/search_result_model.dart';
 import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/UI/navDialog.dart';
 import 'package:wikitude_flutter_app/Wikitude/arview.dart';
 import 'package:wikitude_flutter_app/Wikitude/sample.dart';
@@ -120,7 +121,7 @@ class _DestinationPageState extends State<DestinationPage> {
           future: ensureLocationFetched(),
           builder: (context, AsyncSnapshot<Position?> snapshot) {
             if (snapshot.hasError) {
-              return Container(child: Text("Error loading map."));
+              return UI.errorMessage();
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {

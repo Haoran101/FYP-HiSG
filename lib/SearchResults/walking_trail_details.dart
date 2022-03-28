@@ -53,7 +53,7 @@ class _WalkingTrailDetailsSubpageState
         if (snapshot.hasError) {
           print(snapshot.error);
           print(snapshot.stackTrace);
-          return Text("has error");
+          return UI.errorMessage();
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {

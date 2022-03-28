@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
+import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
 import 'package:wikitude_flutter_app/User/UserService.dart';
 import 'package:wikitude_flutter_app/main.dart';
 
@@ -38,41 +39,21 @@ class _SignUpState extends State<SignUp> {
         String uid = userCredential.user!.uid;
         //set global user
         _user.setDefaultEmailUser(uid);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.blueGrey,
-            content: Text(' Registered suucessfully. Please sign in. ',
-                style: TextStyle(fontSize: 20.0)),
-          ),
-        );
+        UI.showCustomSnackBarMessage(context, "Registered suucessfully. Please sign in.");
 
         widget.setPage(AuthPage.login);
       } on FirebaseAuthException catch (error) {
         //password is too weak
         if (error.code == 'weak-password') {
           print(' Password is too weak (less than 6 characters)');
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.black26,
-              content: Text(' Password is too weak. (less than 6 characters)',
-                  style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-            ),
-          );
+          UI.showCustomSnackBarMessage(context, "Password is too weak (less than 6 characters)");
+          
         }
 
         //already in use
         else if (error.code == 'email-already-in-use') {
           print(' Email is already exists ');
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.black26,
-              content: Text(' Email provided is already registered. ',
-                  style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-            ),
-          );
+          UI.showCustomSnackBarMessage(context, "Email is already exists. Please sign in.");
         }
       }
     }
@@ -80,14 +61,7 @@ class _SignUpState extends State<SignUp> {
     //password and confirm password does not match
     else {
       print(' password and confirm password does not match. ');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.black26,
-          content: Text(' Password and confirm password does not match. ',
-              style: TextStyle(fontSize: 15.0, color: Colors.amber)),
-        ),
-      );
+      UI.showCustomSnackBarMessage(context, "Password and confirm password does not match.");
     }
   }
 
