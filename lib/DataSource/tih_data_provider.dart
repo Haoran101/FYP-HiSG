@@ -272,8 +272,8 @@ class RecommendationEngine {
     return schedule;
   }
 
-  Future<List<SearchResult>> getRecommendationFromBackUpDatabase(List<String> interests) async{
-    List<SearchResult> items = await TIHBackupProvider().getBackupSearchResultList(interests);
+  Future<List<Map<String, dynamic>>> getRecommendationFromBackUpDatabase(List<String> interests) async{
+    List<Map<String, dynamic>> items = await TIHBackupProvider().getBackupSearchResultList(interests);
     return items;
   }
 
@@ -297,14 +297,19 @@ class RecommendationEngine {
     List<String> interests,
     String startDate,
   ) async {
+    bool fromBackup = false;
     var schedule = await getRecommendationInitaryDataTIH(interests, startDate);
     var searchResultList = <SearchResult>[];
-    if (schedule != null){
+    if (schedule == null){
+      fromBackup = true;
+      schedule = await getRecommendationFromBackUpDatabase(interests);
+    }
       //process schedule data
       for (var item in schedule){
         
         try {
-          item = item["data"];
+          if (!fromBackup){
+          item = item["data"];}
           var loc = item["location"]["latitude"].toString() + "," + item["location"]["longitude"].toString();
           var googleJSONList = await PlaceApiProvider().getGooglePlaceListByTextSearch(item["name"], location: loc);
           //fuzzywuzzy sort
@@ -316,10 +321,6 @@ class RecommendationEngine {
           continue;
         }
       }
-
-    } else {
-      searchResultList = await getRecommendationFromBackUpDatabase(interests);
-    }
 
     return searchResultList;
   }

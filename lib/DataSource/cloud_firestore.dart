@@ -326,14 +326,14 @@ class TIHBackupProvider {
     return items;
   }
 
-  Future<List<SearchResult>> getBackupSearchResultList(
+  Future<List<Map<String, dynamic>>> getBackupSearchResultList(
       List<String> interests) async {
     Map<String, int> disMap = _distributionMap(interests);
-    List<SearchResult> finalItems = [];
+    List<Map<String, dynamic>> finalItems = [];
     for (final interest in interests) {
       List<Map<String, dynamic>> interestItems =
           await _fetchBackUpListByInterest(interest);
-      List<SearchResult> interestSr =
+      List<Map<String, dynamic>> interestSr =
           _randomSelector(interestItems, disMap[interest]!);
       finalItems.addAll(interestSr);
     }
@@ -358,15 +358,14 @@ class TIHBackupProvider {
     return map;
   }
 
-  List<SearchResult> _randomSelector(
+  List<Map<String, dynamic>> _randomSelector(
       List<Map<String, dynamic>> interestItemList, int number) {
-    Set<SearchResult> selectedItems = Set();
+    Set<Map<String, dynamic>> selectedItems = Set();
     while (selectedItems.length < number) {
       Random rand = new Random();
       Map<String, dynamic> item =
           interestItemList[rand.nextInt(interestItemList.length)];
-      SearchResult sr = SearchResult.fromTIHBackUp(item);
-      selectedItems.add(sr);
+      selectedItems.add(item);
     }
     return List.from(selectedItems);
   }

@@ -419,6 +419,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
     setState(() {
       var movedItem =
           _plan.dayList[oldListIndex].activities.removeAt(oldItemIndex);
+      if (_plan.dayList[newListIndex].activities.length == 0){
+        _plan.dayList[newListIndex].activities = [movedItem];
+        return;
+      }
       _plan.dayList[newListIndex].activities.insert(newItemIndex, movedItem);
     });
     _plan.updateMain();
