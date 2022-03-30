@@ -13,16 +13,17 @@ HiSG is an Android mobile application created by Haoran as the outcome of final 
 
 ## Key Features
 
-- AR nearby point of interests view
+- AR nearby points of interest view
+- AR walking navigation
 - 360 degree photos and videos experiences
 - Keyword search among places, hotels, events, precincts, tours, 360 experiences... and many more in Singapore
-- Trip Planner to manage personalized itineraries
+- Trip planner and recommendation engine to manage personalized itineraries
 
 ## Other Features
 
 - Authentication: register or login with email & password or Google
-- Save activity or destination from search result to Favorites
-- 
+- Save activity or destination from search result to Favorites list
+- Check lines and stations for Singapore MRT
 
 ## Developer
 
