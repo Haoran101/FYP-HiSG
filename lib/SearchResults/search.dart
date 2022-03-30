@@ -3,8 +3,8 @@ import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:geolocator/geolocator.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/DataSource/google_maps_platform.dart';
+import 'package:hi_sg/User/UserService.dart';
 import '../DataSource/cloud_firestore.dart';
 import '../DataSource/tih_data_provider.dart';
 import '../Models/search_result_model.dart';

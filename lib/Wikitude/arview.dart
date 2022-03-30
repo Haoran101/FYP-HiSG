@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
-import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/Models/nav_info_model.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/UI/navDialog.dart';
 
 import 'sample.dart';
 
@@ -119,6 +120,11 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
             MaterialPageRoute(builder: (context) => DetailPageContainer(searchResult: SearchResult.fromGoogle(jsonObject),)
             ),
           );
+          break;
+        case "poi_navigation":
+          print(jsonObject);
+          NavInfo nav = NavInfo(lat: jsonObject["latitude"], lon: jsonObject["longitude"], place_id: jsonObject["place_id"], name: jsonObject["name"]);
+          showNavigationDialog(context, nav);
           break;
         case "save_current_instant_target":
           final fileDirectory = await getApplicationDocumentsDirectory();

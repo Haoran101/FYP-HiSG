@@ -30,18 +30,6 @@
 @import firebase_core;
 #endif
 
-#if __has_include(<firebase_dynamic_links/FLTFirebaseDynamicLinksPlugin.h>)
-#import <firebase_dynamic_links/FLTFirebaseDynamicLinksPlugin.h>
-#else
-@import firebase_dynamic_links;
-#endif
-
-#if __has_include(<flutter_compass/FlutterCompassPlugin.h>)
-#import <flutter_compass/FlutterCompassPlugin.h>
-#else
-@import flutter_compass;
-#endif
-
 #if __has_include(<geolocator_apple/GeolocatorPlugin.h>)
 #import <geolocator_apple/GeolocatorPlugin.h>
 #else
@@ -60,22 +48,10 @@
 @import location;
 #endif
 
-#if __has_include(<money_converter/MoneyConverterPlugin.h>)
-#import <money_converter/MoneyConverterPlugin.h>
-#else
-@import money_converter;
-#endif
-
 #if __has_include(<motion_sensors/MotionSensorsPlugin.h>)
 #import <motion_sensors/MotionSensorsPlugin.h>
 #else
 @import motion_sensors;
-#endif
-
-#if __has_include(<package_info_plus/FLTPackageInfoPlusPlugin.h>)
-#import <package_info_plus/FLTPackageInfoPlusPlugin.h>
-#else
-@import package_info_plus;
 #endif
 
 #if __has_include(<path_provider_ios/FLTPathProviderPlugin.h>)
@@ -127,14 +103,10 @@
   [FLTFirebaseFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFirestorePlugin"]];
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
-  [FLTFirebaseDynamicLinksPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseDynamicLinksPlugin"]];
-  [FlutterCompassPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterCompassPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
-  [MoneyConverterPlugin registerWithRegistrar:[registry registrarForPlugin:@"MoneyConverterPlugin"]];
   [MotionSensorsPlugin registerWithRegistrar:[registry registrarForPlugin:@"MotionSensorsPlugin"]];
-  [FLTPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlusPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];

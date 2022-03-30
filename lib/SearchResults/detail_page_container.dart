@@ -1,15 +1,15 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/SearchResults/event_details.dart';
-import 'package:wikitude_flutter_app/SearchResults/experiences360.dart';
-import 'package:wikitude_flutter_app/SearchResults/mrt_details.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
-import 'package:wikitude_flutter_app/SearchResults/precincts_details.dart';
-import 'package:wikitude_flutter_app/SearchResults/tour_details.dart';
-import 'package:wikitude_flutter_app/SearchResults/walking_trail_details.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/SearchResults/event_details.dart';
+import 'package:hi_sg/SearchResults/experiences360.dart';
+import 'package:hi_sg/SearchResults/mrt_details.dart';
+import 'package:hi_sg/SearchResults/poi_details.dart';
+import 'package:hi_sg/SearchResults/precincts_details.dart';
+import 'package:hi_sg/SearchResults/tour_details.dart';
+import 'package:hi_sg/SearchResults/walking_trail_details.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/UI/activity_icon_provider.dart';
+import 'package:hi_sg/User/UserService.dart';
 import '../Models/search_result_model.dart';
 
 // ignore: must_be_immutable

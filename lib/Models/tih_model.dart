@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
+import 'package:hi_sg/DataSource/tih_data_provider.dart';
+import 'package:hi_sg/UI/activity_icon_provider.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:latlong2/latlong.dart';
 

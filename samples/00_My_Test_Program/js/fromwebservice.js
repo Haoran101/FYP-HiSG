@@ -151,6 +151,22 @@ var World = {
         AR.platform.sendJSONObject(markerSelectedJSON);
     },
 
+    /* User clicked "More" button in POI-detail panel -> fire event to open native screen. */
+    onPoiDirectionButtonClicked: function onPoiDirectionButtonClickedFn() {
+        var currentMarker = World.currentMarker;
+        var markerSelectedJSON = {
+            action: "poi_navigation",
+            place_id: currentMarker.poiData.id,
+            name: currentMarker.poiData.title,
+            latitude: currentMarker.poiData.latitude,
+            longitude: currentMarker.poiData.longitude,
+        };
+        /*
+            The sendJSONObject method can be used to send data from javascript to the native code.
+        */
+        AR.platform.sendJSONObject(markerSelectedJSON);
+    },
+
     /*
         Location updates, fired every time you call architectView.setLocation() in native environment
         Note: You may set 'AR.context.onLocationChanged = null' to no longer receive location updates in

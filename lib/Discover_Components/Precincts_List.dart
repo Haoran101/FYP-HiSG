@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/DataSource/tih_data_provider.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/Models/tih_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 
 class PrecinctPage extends StatelessWidget {
   const PrecinctPage({Key? key}) : super(key: key);

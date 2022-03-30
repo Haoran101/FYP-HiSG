@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
-import 'package:wikitude_flutter_app/Models/poi_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
-import 'package:wikitude_flutter_app/UI/navDialog.dart';
+import 'package:hi_sg/DataSource/cloud_firestore.dart';
+import 'package:hi_sg/Models/nav_info_model.dart';
+import 'package:hi_sg/Models/poi_model.dart';
+import 'package:hi_sg/SearchResults/poi_details.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/UI/MRT_line_page.dart';
+import 'package:hi_sg/UI/navDialog.dart';
 
 import '../DataSource/google_maps_platform.dart';
 

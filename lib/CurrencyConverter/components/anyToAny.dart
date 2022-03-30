@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/fetchrates.dart';
+import 'package:hi_sg/CurrencyConverter/fetchrates.dart';
 
 class AnyToAny extends StatefulWidget {
   final rates;
@@ -113,7 +113,7 @@ class _AnyToAnyState extends State<AnyToAny> {
                     answer = amountController.text +
                         ' ' +
                         dropdownValue1 +
-                        ' ' +
+                        ' = ' +
                         convertany(widget.rates, amountController.text,
                             dropdownValue1, dropdownValue2) +
                         ' ' +

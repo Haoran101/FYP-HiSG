@@ -1,4 +1,4 @@
-import 'package:wikitude_flutter_app/Models/review_model.dart';
+import 'package:hi_sg/Models/review_model.dart';
 
 class POI {
   String? placeId;

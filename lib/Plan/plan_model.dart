@@ -1,5 +1,5 @@
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/User/UserService.dart';
 
 final _userService = UserService();
 
@@ -16,13 +16,14 @@ class Plan {
   Future init() async {
     //init list day
     List<Day> listday = [];
-    for (Map<String, dynamic> dayItem in this.main["day_list"]) {
-      Day day = Day(name: dayItem["name"].toString());
-      day
-          .initActivities(dayItem["activities"])
-          .whenComplete(() => listday.add(day));
+    if (this.main.containsKey("day_list")) {
+      for (Map<String, dynamic> dayItem in this.main["day_list"]) {
+        Day day = Day(name: dayItem["name"].toString());
+        day
+            .initActivities(dayItem["activities"])
+            .whenComplete(() => listday.add(day));
+      }
     }
-
     Day archieve = Day(name: "Archieve");
     archieve.initActivities(this.main["archieve"]).whenComplete(() {
       listday.add(archieve);

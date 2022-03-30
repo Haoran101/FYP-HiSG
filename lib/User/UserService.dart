@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Plan/plan_model.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/User/user_database.dart';
-import 'package:wikitude_flutter_app/User/user_model.dart';
+import 'package:hi_sg/Plan/plan_model.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/User/user_database.dart';
+import 'package:hi_sg/User/user_model.dart';
 
 class UserService {
   static final UserService _instance = UserService._internal();

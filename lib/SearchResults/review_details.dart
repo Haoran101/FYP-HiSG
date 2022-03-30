@@ -1,6 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Models/review_model.dart';
+import 'package:hi_sg/Models/review_model.dart';
 
 // ignore: must_be_immutable
 class ReviewDetailsPage extends StatelessWidget {

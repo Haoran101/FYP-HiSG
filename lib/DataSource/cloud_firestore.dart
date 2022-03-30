@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/UI/MRT_line_page.dart';
+import 'package:hi_sg/UI/MRT_line_page.dart';
 import 'cloud_firestore_look_up.dart' as lookuptables;
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;

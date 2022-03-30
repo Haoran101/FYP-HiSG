@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
 
 /// Determine the current position of the device.
 ///

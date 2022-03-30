@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
-import 'package:wikitude_flutter_app/Plan/favorites.dart';
-import 'package:wikitude_flutter_app/User/user_database.dart';
-import 'package:wikitude_flutter_app/User/user_model.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/Authentication/accountScreen.dart';
+import 'package:hi_sg/Plan/favorites.dart';
+import 'package:hi_sg/User/user_database.dart';
+import 'package:hi_sg/User/user_model.dart';
+import 'package:hi_sg/User/UserService.dart';
 
 // ignore: must_be_immutable
 class UserMain extends StatefulWidget {

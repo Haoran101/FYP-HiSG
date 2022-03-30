@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Models/poi_model.dart';
-import 'package:wikitude_flutter_app/UI/activity_icon_provider.dart';
+import 'package:hi_sg/Models/poi_model.dart';
+import 'package:hi_sg/UI/activity_icon_provider.dart';
 
 enum DataSource {
   Google,

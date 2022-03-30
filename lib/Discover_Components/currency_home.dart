@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/components/anyToAny.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/components/sgdToAny.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/fetchrates.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/models/ratesmodel.dart';
+import 'package:hi_sg/CurrencyConverter/components/anyToAny.dart';
+import 'package:hi_sg/CurrencyConverter/components/sgdToAny.dart';
+import 'package:hi_sg/CurrencyConverter/fetchrates.dart';
+import 'package:hi_sg/CurrencyConverter/models/ratesmodel.dart';
 
 class CurrencyConverterScreen extends StatefulWidget {
   const CurrencyConverterScreen({Key? key}) : super(key: key);

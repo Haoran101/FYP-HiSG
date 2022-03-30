@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/DataSource/cloud_firestore.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 
 class PositionIndicator {
   int horizontalPosition;

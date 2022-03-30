@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Authentication/forget_password.dart';
-import 'package:wikitude_flutter_app/Authentication/login.dart';
-import 'package:wikitude_flutter_app/Authentication/signup.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/Authentication/forget_password.dart';
+import 'package:hi_sg/Authentication/login.dart';
+import 'package:hi_sg/Authentication/signup.dart';
+import 'package:hi_sg/User/UserService.dart';
 
 import 'user_main.dart';
 

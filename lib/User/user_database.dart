@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/User/user_model.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/User/user_model.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 

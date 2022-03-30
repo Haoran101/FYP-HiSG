@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/search.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/Plan/plan_main.dart';
+import 'package:hi_sg/SearchResults/search.dart';
+import 'package:hi_sg/User/UserService.dart';
 
 class Favorites extends StatefulWidget {
   const Favorites({ Key? key }) : super(key: key);
@@ -27,7 +28,10 @@ class _FavoritesState extends State<Favorites> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(
-        child: Container(
+        child: 
+        _user.favoriteItems.length == 0?
+        NoPlanDisplay(isFavourite: true):
+        Container(
           child: Column(
             children: List.generate(_user.favoriteItems.length, (index) {
             SearchResult item = _user.favoriteItems[index];

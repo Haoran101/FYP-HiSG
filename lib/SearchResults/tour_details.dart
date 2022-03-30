@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/UI/navDialog.dart';
+import 'package:hi_sg/Models/nav_info_model.dart';
+import 'package:hi_sg/Models/tih_model.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/UI/navDialog.dart';
 
 class TourDetailsSubpage extends StatefulWidget {
   final details;

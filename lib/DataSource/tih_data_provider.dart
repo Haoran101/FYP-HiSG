@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
+import 'package:hi_sg/DataSource/cloud_firestore.dart';
+import 'package:hi_sg/DataSource/google_maps_platform.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/Models/tih_model.dart';
 
 import 'api_key.dart' as tih_api;
 import 'package:http/http.dart';

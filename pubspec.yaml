@@ -1,7 +1,7 @@
-name: wikitude_flutter_app
-description: A new Flutter project.
+name: hi_sg
+description: Singapore Tourism Application built with Wikitude Flutter SDK
 
-version: 9.9.0+1
+version: 1.0.0
 publish_to: none
 
 environment:
@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_math_fork: ^0.5.0
-  cupertino_icons: ^1.0.3
   location: ^4.1.1
   path_provider: ^2.0.1
   wakelock: ^0.5.1
@@ -23,17 +21,10 @@ dependencies:
   flutter_html: ^2.1.5
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
-  firebase_dynamic_links: ^4.0.4
-  random_string: ^2.3.1
   google_sign_in: ^5.2.2
-  money_converter: ^2.0.1
   cloud_firestore: ^3.1.6
-  uuid: ^3.0.5
   video_player_360: ^0.1.5
   panorama: ^0.4.1
-  flutter_google_places: ^0.3.0
-  web_scraper: ^0.1.4
-  beautiful_soup_dart: ^0.2.0
   fuzzywuzzy: ^0.1.7
   flutter_rating_bar: ^4.0.0
   url_launcher: ^6.0.18
@@ -41,11 +32,8 @@ dependencies:
   date_format: ^2.0.5
   geolocator: ^8.0.5
   basic_utils: ^3.9.0
-  dropdown_button2: ^1.1.1
   flutter_map: ^0.14.0
   flutter_map_marker_popup: ^2.1.2
-  flutter_map_location_marker: ^3.1.0
-  provider: ^6.0.2
   cached_network_image: ^3.2.0
   azlistview: ^2.0.0
   photo_view: ^0.13.0

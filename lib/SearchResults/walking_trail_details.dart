@@ -5,11 +5,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/DataSource/tih_data_provider.dart';
+import 'package:hi_sg/Models/tih_model.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:wikitude_flutter_app/UI/navDialog.dart';
+import 'package:hi_sg/UI/navDialog.dart';
 import '../DataSource/api_key.dart' as api;
 import '../Models/nav_info_model.dart';
 

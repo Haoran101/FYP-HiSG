@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:wikitude_flutter_app/CurrencyConverter/models/allcurrencies.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/models/ratesmodel.dart';
-import 'package:wikitude_flutter_app/DataSource/api_key.dart';
+import 'package:hi_sg/CurrencyConverter/models/allcurrencies.dart';
+import 'package:hi_sg/CurrencyConverter/models/ratesmodel.dart';
+import 'package:hi_sg/DataSource/api_key.dart';
 
 Future<RatesModel> fetchrates() async {
   var response = await http.get(Uri.parse(

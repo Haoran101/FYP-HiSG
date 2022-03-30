@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/CurrencyConverter/fetchrates.dart';
+import 'package:hi_sg/CurrencyConverter/fetchrates.dart';
 
 class SgdToAny extends StatefulWidget {
   final rates;

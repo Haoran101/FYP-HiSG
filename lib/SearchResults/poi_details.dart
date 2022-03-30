@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikitude_flutter_app/DataSource/cloud_firestore.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/UI/navDialog.dart';
+import 'package:hi_sg/DataSource/cloud_firestore.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/UI/navDialog.dart';
 
 import '../DataSource/google_maps_platform.dart';
 import '../Models/nav_info_model.dart';

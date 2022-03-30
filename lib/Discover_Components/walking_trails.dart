@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/DataSource/tih_data_provider.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/Models/tih_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 
 class WalkingTrailsList extends StatefulWidget {
   const WalkingTrailsList({Key? key}) : super(key: key);
@@ -16,6 +16,7 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
   List<TIHDetails> walkingTrailList = [];
   String nextToken = "";
   bool _isFetchingResult = true;
+  bool _isLastPageLoaded = false;
 
   Future<List<TIHDetails>> fetchWalkingTrailList() async {
     List<Map<String, dynamic>>? result =
@@ -23,6 +24,9 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
     List<TIHDetails> resultTIH = [];
     for (var item in result!) {
       if (item.containsKey("nextToken")) {
+        if (item["nextToken"] == ""){
+          _isLastPageLoaded = true;
+        }
         this.nextToken = item["nextToken"];
       } else {
         resultTIH.add(TIHDetails.fromWalkingTrailJSON(item));
@@ -61,7 +65,7 @@ class _WalkingTrailsListState extends State<WalkingTrailsList> {
               (index) =>
                   WalkingTrailCard(walkingTrailDetails: snapshot.data![index]));
 
-          if (this.nextToken.length > 0) {
+          if (this.nextToken.length > 0 && !_isLastPageLoaded) {
             bodyList.add(TextButton(
                 onPressed: () async {
                   setState(() {

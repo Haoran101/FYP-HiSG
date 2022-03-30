@@ -2,9 +2,9 @@ import 'package:augmented_reality_plugin_wikitude/wikitude_plugin.dart';
 import 'package:augmented_reality_plugin_wikitude/wikitude_response.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wikitude_flutter_app/Models/nav_info_model.dart';
-import 'package:wikitude_flutter_app/Wikitude/arview.dart';
-import 'package:wikitude_flutter_app/Wikitude/sample.dart';
+import 'package:hi_sg/Models/nav_info_model.dart';
+import 'package:hi_sg/Wikitude/arview.dart';
+import 'package:hi_sg/Wikitude/sample.dart';
 
 // ignore: non_constant_identifier_names
 Sample ARNavigation = Sample.fromJson({

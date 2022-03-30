@@ -5,14 +5,14 @@ import 'package:drag_and_drop_lists/drag_and_drop_list_expansion.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
-import 'package:wikitude_flutter_app/DataSource/tih_data_provider.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/Plan/plan_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/SearchResults/search.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
+import 'package:hi_sg/Authentication/accountScreen.dart';
+import 'package:hi_sg/DataSource/tih_data_provider.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/Plan/plan_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/SearchResults/search.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/User/UserService.dart';
 
 class ExpansionTileExample extends StatefulWidget {
   @override
@@ -102,7 +102,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
                     } catch (error, stackTrace) {
                       print(error);
                       print(stackTrace);
-                      UI.showCustomSnackBarMessage(context, "Failed to load recommedation page.");
+                      UI.showCustomSnackBarMessage(
+                          context, "Failed to load recommedation page.");
                     }
                   }),
             ),
@@ -116,7 +117,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
                       _showNewDayDialog();
                     } catch (error) {
                       print(error);
-                      UI.showCustomSnackBarMessage(context, "Failed to add new day to plan.");
+                      UI.showCustomSnackBarMessage(
+                          context, "Failed to add new day to plan.");
                     }
                   } //Add a new day
                   ),
@@ -130,7 +132,6 @@ class _ListTileExample extends State<ExpansionTileExample> {
             if (snapshot.hasError) {
               print("Error loading plan");
               return UI.errorMessage();
-              
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -204,7 +205,11 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
               return
                   //Main Plan View
-                  Padding(
+                  SingleChildScrollView(
+                    child: Column(children: [
+                                  _plan.dayList.length == 1?
+                                  NoPlanDisplay(isFavourite: false,): SizedBox.shrink(),
+                                  Padding(
                     padding: const EdgeInsets.only(top: 20.0, left: 5, right: 5),
                     child: Container(
                       height: _calculateHeight(),
@@ -235,6 +240,8 @@ class _ListTileExample extends State<ExpansionTileExample> {
                           listGhost:
                               Container(height: 70, color: Colors.grey[800])),
                     ),
+                                  ),
+                                ]),
                   );
             }
           },
@@ -249,18 +256,22 @@ class _ListTileExample extends State<ExpansionTileExample> {
       title: Container(
         height: 50,
         padding: EdgeInsets.symmetric(vertical: 5),
-        child: Row(
-          children: [Text(
-            '${day.name}',
+        child: Row(children: [
+          Text(
+            day.name == "Archieve"? "Archive": '${day.name}',
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
           ),
           Spacer(),
-          outerIndex != _plan.dayList.length - 1?
-          InkWell(child: Icon(Icons.delete_rounded, color: Colors.grey,),
-          onTap: () => _showDeleteDayDialog(outerIndex)): SizedBox.shrink()
-          ]
-        ),
+          outerIndex != _plan.dayList.length - 1
+              ? InkWell(
+                  child: Icon(
+                    Icons.delete_rounded,
+                    color: Colors.grey,
+                  ),
+                  onTap: () => _showDeleteDayDialog(outerIndex))
+              : SizedBox.shrink()
+        ]),
       ),
       children: List.generate(day.activities.length,
           (index) => _buildItem(day.activities[index], index, outerIndex)),
@@ -282,7 +293,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Icon(Icons.archive_outlined, color: Colors.white),
             ),
-            Text('Move to archieve', style: TextStyle(color: Colors.white)),
+            Text('Move to archive', style: TextStyle(color: Colors.white)),
           ],
         ),
       ),
@@ -317,10 +328,10 @@ class _ListTileExample extends State<ExpansionTileExample> {
           } else {
             //Dismiss activity not in archieve => move to archieve / delete
             alertText = (direction == DismissDirection.startToEnd)
-                ? "Move item to archieve?"
+                ? "Move item to archive?"
                 : "Delete this item from plan?";
             buttonText = (direction == DismissDirection.startToEnd)
-                ? "Archieve"
+                ? "Archive"
                 : "Delete";
           }
 
@@ -391,7 +402,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
     print("New Day Created: ${newDay.name}");
     this._plan.updateMain();
     _user.updatePlanMainInDatabase(this._plan);
-    for (var item in recommendedList){
+    for (var item in recommendedList) {
       _user.addRecommendedPlanItem(item);
     }
   }
@@ -419,7 +430,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
     setState(() {
       var movedItem =
           _plan.dayList[oldListIndex].activities.removeAt(oldItemIndex);
-      if (_plan.dayList[newListIndex].activities.length == 0){
+      if (_plan.dayList[newListIndex].activities.length == 0) {
         _plan.dayList[newListIndex].activities = [movedItem];
         return;
       }
@@ -431,15 +442,18 @@ class _ListTileExample extends State<ExpansionTileExample> {
 
   _showDeleteDayDialog(int outerIndex) {
     Day _day = this._plan.dayList[outerIndex];
-    String _moveToArchieveString = _day.activities.length > 0?
-    " and all ${_day.activities.length} activities will be moved to archieve": "";
-    
-      return showDialog(
+    String _moveToArchieveString = _day.activities.length > 0
+        ? " and all ${_day.activities.length} activities will be moved to archive"
+        : "";
+
+    return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Delete ${_day.name}? '),
-            content: Text("Days in the plan will be re-indexed" + _moveToArchieveString + "."),
+            content: Text("Days in the plan will be re-indexed" +
+                _moveToArchieveString +
+                "."),
             actions: [
               //Confirm button
               ElevatedButton(
@@ -449,7 +463,7 @@ class _ListTileExample extends State<ExpansionTileExample> {
                     _deleteDay(outerIndex);
                     Navigator.of(context).pop(true);
                   },
-                  child: Text("OK")),
+                  child: Text("Delete")),
               //Cancel Button
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.red),
@@ -458,21 +472,69 @@ class _ListTileExample extends State<ExpansionTileExample> {
                   },
                   child: Text("Cancel")),
             ],
-          );}
-        );
-    
-
+          );
+        });
   }
 
   _deleteDay(int outerIndex) {
     setState(() {
       this._plan.dayList.removeAt(outerIndex);
-      for (int i=0; i<_plan.dayList.length - 1; i++){
-        _plan.dayList[i].name = "Day ${i+1}";
+      for (int i = 0; i < _plan.dayList.length - 1; i++) {
+        _plan.dayList[i].name = "Day ${i + 1}";
       }
     });
     _plan.updateMain();
     _user.updatePlanMainInDatabase(this._plan);
+  }
+}
+
+class NoPlanDisplay extends StatelessWidget {
+  const NoPlanDisplay({
+    Key? key,
+    required bool this.isFavourite,
+  }) : super(key: key);
+  
+  final isFavourite;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      //Image
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Image.asset("assets/img/no_plan.jpg"),
+        ),
+      ),
+      //Text
+      Padding(
+        padding: const EdgeInsets.all(25.0),
+        child: Text(
+          "Start Planning Your Trip !",
+          style: TextStyle(fontSize: 20, color: Colors.grey[700]),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          "Search something in the discover page ",
+          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+        ),
+      ),
+      !isFavourite?
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(children: [
+          Spacer(),
+          Text(
+            "or try our Recommendation Engine",
+            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+          ),
+          Icon(Icons.emoji_objects_outlined),
+          Spacer(),
+        ]),
+      ): SizedBox.shrink()
+    ]);
   }
 }
 
@@ -609,8 +671,7 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text(
-                "Day ${this.widget.nextday} has been generated! "),
+            title: Text("Day ${this.widget.nextday} has been generated! "),
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             content: Container(
               height: searchResultList.length * 60.0 + 100.0,
@@ -630,11 +691,11 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                   style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor),
                   onPressed: () {
-                    
                     this.widget.addRecommendDay(searchResultList);
                     Navigator.of(context).pop(true);
                     Navigator.of(context).pop(true);
-                    UI.showCustomSnackBarMessage(context, "Recommended day added!");
+                    UI.showCustomSnackBarMessage(
+                        context, "Recommended day added!");
                   },
                   child: Text("Add")),
               //Cancel Button
@@ -705,11 +766,16 @@ class _RecommendOptionsUIState extends State<RecommendOptionsUI> {
                             style: TextStyle(fontSize: 17),
                           ),
                           onPressed: () {
-                            _showLoadingDialog();
+                            if (isCheckedMap.containsValue(true)){
+                              _showLoadingDialog();
                             getRecommendation().then((recList) {
                               Navigator.of(context).pop(true);
                               _showConfirmationDialog(recList);
                             });
+                            } else {
+                              UI.showCustomSnackBarMessage(context, "Please select your interest.");
+                            }
+                            
                           }))),
             ]),
       ),

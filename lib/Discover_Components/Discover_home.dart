@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Discover_Components/360_image_gallery.dart';
-import 'package:wikitude_flutter_app/Discover_Components/Transport_page.dart';
-import 'package:wikitude_flutter_app/Discover_Components/currency_home.dart';
-import 'package:wikitude_flutter_app/DataSource/google_maps_platform.dart';
-import 'package:wikitude_flutter_app/Discover_Components/Precincts_List.dart';
-import 'package:wikitude_flutter_app/Discover_Components/walking_trails.dart';
-import 'package:wikitude_flutter_app/Models/search_result_model.dart';
-import 'package:wikitude_flutter_app/SearchResults/detail_page_container.dart';
-import 'package:wikitude_flutter_app/SearchResults/poi_details.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/Discover_Components/360_image_gallery.dart';
+import 'package:hi_sg/Discover_Components/Transport_page.dart';
+import 'package:hi_sg/Discover_Components/currency_home.dart';
+import 'package:hi_sg/DataSource/google_maps_platform.dart';
+import 'package:hi_sg/Discover_Components/Precincts_List.dart';
+import 'package:hi_sg/Discover_Components/walking_trails.dart';
+import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:hi_sg/SearchResults/detail_page_container.dart';
+import 'package:hi_sg/SearchResults/poi_details.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 
 import '../DataSource/location_provider.dart';
 

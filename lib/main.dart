@@ -1,10 +1,10 @@
 // ignore_for_file: unused_import
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:wikitude_flutter_app/DataSource/location_provider.dart';
-import 'package:wikitude_flutter_app/Plan/favorites.dart';
-import 'package:wikitude_flutter_app/Plan/plan_main.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
+import 'package:hi_sg/DataSource/location_provider.dart';
+import 'package:hi_sg/Plan/favorites.dart';
+import 'package:hi_sg/Plan/plan_main.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 

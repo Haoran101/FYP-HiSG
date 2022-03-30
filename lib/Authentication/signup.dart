@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:wikitude_flutter_app/Authentication/accountScreen.dart';
-import 'package:wikitude_flutter_app/UI/CommonWidget.dart';
-import 'package:wikitude_flutter_app/User/UserService.dart';
-import 'package:wikitude_flutter_app/main.dart';
+import 'package:hi_sg/Authentication/accountScreen.dart';
+import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:hi_sg/User/UserService.dart';
+import 'package:hi_sg/main.dart';
 
 // ignore: must_be_immutable
 class SignUp extends StatefulWidget {

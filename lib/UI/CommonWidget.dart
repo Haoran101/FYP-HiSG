@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wikitude_flutter_app/Models/tih_model.dart';
+import 'package:hi_sg/Models/tih_model.dart';
 
 class UI {
 

@@ -57,13 +57,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.9.0"
-  beautiful_soup_dart:
-    dependency: "direct main"
-    description:
-      name: beautiful_soup_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -254,7 +247,7 @@ packages:
     source: hosted
     version: "0.17.1"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
@@ -281,13 +274,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.2+2"
-  dropdown_button2:
-    dependency: "direct main"
-    description:
-      name: dropdown_button2
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -351,20 +337,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.3"
-  firebase_dynamic_links:
-    dependency: "direct main"
-    description:
-      name: firebase_dynamic_links
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.4"
-  firebase_dynamic_links_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_dynamic_links_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0+4"
   fixnum:
     dependency: transitive
     description:
@@ -391,13 +363,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  flutter_compass:
-    dependency: transitive
-    description:
-      name: flutter_compass
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   flutter_cube:
     dependency: transitive
     description:
@@ -405,13 +370,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  flutter_google_places:
-    dependency: "direct main"
-    description:
-      name: flutter_google_places
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   flutter_html:
     dependency: "direct main"
     description:
@@ -433,13 +391,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0"
-  flutter_map_location_marker:
-    dependency: "direct main"
-    description:
-      name: flutter_map_location_marker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
   flutter_map_marker_popup:
     dependency: "direct main"
     description:
@@ -448,7 +399,7 @@ packages:
     source: hosted
     version: "2.1.2"
   flutter_math_fork:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_math_fork
       url: "https://pub.dartlang.org"
@@ -541,20 +492,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  google_api_headers:
-    dependency: transitive
-    description:
-      name: google_api_headers
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
-  google_maps_webservice:
-    dependency: transitive
-    description:
-      name: google_maps_webservice
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.20-nullsafety.5"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -730,13 +667,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  money_converter:
-    dependency: "direct main"
-    description:
-      name: money_converter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   motion_sensors:
     dependency: transitive
     description:
@@ -772,48 +702,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
-  package_info_plus_linux:
-    dependency: transitive
-    description:
-      name: package_info_plus_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
-  package_info_plus_macos:
-    dependency: transitive
-    description:
-      name: package_info_plus_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  package_info_plus_web:
-    dependency: transitive
-    description:
-      name: package_info_plus_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
-  package_info_plus_windows:
-    dependency: transitive
-    description:
-      name: package_info_plus_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
   panorama:
     dependency: "direct main"
     description:
@@ -962,7 +850,7 @@ packages:
     source: hosted
     version: "2.0.0"
   provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: provider
       url: "https://pub.dartlang.org"
@@ -989,13 +877,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1+1"
-  random_string:
-    dependency: "direct main"
-    description:
-      name: random_string
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
   rxdart:
     dependency: transitive
     description:
@@ -1198,7 +1079,7 @@ packages:
     source: hosted
     version: "2.0.2"
   uuid:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: uuid
       url: "https://pub.dartlang.org"
@@ -1281,13 +1162,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  web_scraper:
-    dependency: "direct main"
-    description:
-      name: web_scraper
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   web_socket_channel:
     dependency: transitive
     description:
