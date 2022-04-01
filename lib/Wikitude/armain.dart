@@ -41,39 +41,42 @@ class MyAppState extends State<MainMenu> {
           backgroundColor: Theme.of(context).primaryColor,
         ),
         backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 80, left: 20, right: 20, bottom: 30),
-              child: Text(
-                "Meet Singapore, now with AR",
-                style: TextStyle(fontSize: 22, color: Colors.black54),
-              ),
-            ),
-            Container(
-                padding: EdgeInsets.only(top: 10),
-                child: Image.asset("assets/img/AR.png")),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: FutureBuilder(
-                  future: _loadSamples(),
-                  builder: (context, AsyncSnapshot<List<Category>> snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                        child: CategoryExpansionTile(
-                          categories: snapshot.data!,
-                        ),
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+        body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 80, left: 20, right: 20, bottom: 30),
+                child: Text(
+                  "Meet Singapore, now with AR",
+                  style: TextStyle(fontSize: 22, color: Colors.black54),
                 ),
               ),
-            ),
-          ],
+              Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Image.asset("assets/img/AR.png")),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: FutureBuilder(
+                    future: _loadSamples(),
+                    builder: (context, AsyncSnapshot<List<Category>> snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          child: CategoryExpansionTile(
+                            categories: snapshot.data!,
+                          ),
+                        );
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ));
   }
 

@@ -15,9 +15,11 @@ class UI {
     return Container(
       child: Column(
         children: [
-          Center(child: Image.asset("assets/img/error.jpg")),
+          Center(child: Container(
+            height: 100,
+            child: Image.asset("assets/img/error.jpg"))),
           Center(child: Text("Oops, Something went wrong. \nPlease try again later.",
-            style: TextStyle(fontSize: 20, color: Colors.grey),
+            style: TextStyle(fontSize: 15, color: Colors.grey),
           )
 
           )

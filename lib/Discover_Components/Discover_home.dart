@@ -50,10 +50,10 @@ class _EmptySearchScreenState extends State<EmptySearchScreen> {
       print("nearby List fetched from cache.");
       return this.nearbyList;
     }
-    var pos = await LocationService().fetchUserPosition();
-    print("Position returned: " + pos.toString());
+    var pos = await LocationService().getLocation();
+    print("Position returned: " + pos.latitude.toString() + "," + pos.longitude.toString());
     var resultListRaw = await PlaceApiProvider().getGoogleNearbyResult(
-        LocationService().latitute, LocationService().longitude);
+        pos.latitude, pos.longitude);
     this.nearbyList = [];
     for (var map in resultListRaw!) {
       if (map["types"].contains("point_of_interest") &&

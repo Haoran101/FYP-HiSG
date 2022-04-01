@@ -259,7 +259,7 @@ Marker.prototype.setDeselected = function(marker) {
     }
 
     /* Sets the click trigger function for the idle state marker. */
-    marker.markerDrawableIdle.onClick = Marker.prototype.getOnClickTrigger(marker);
+    marker.markerDrawableIdle.onClick = null;
     /* Removes function that is set on the onClick trigger of the selected-state marker. */
     marker.markerDrawableSelected.onClick = null;
 

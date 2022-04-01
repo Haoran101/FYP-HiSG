@@ -5,7 +5,9 @@ import 'package:hi_sg/DataSource/location_provider.dart';
 import 'package:hi_sg/Plan/favorites.dart';
 import 'package:hi_sg/Plan/plan_main.dart';
 import 'package:hi_sg/UI/CommonWidget.dart';
+import 'package:location/location.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'Wikitude/armain.dart';
@@ -17,7 +19,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  LocationService().periodFetchLocation(20);
   runApp(MyApp());
 }
 
@@ -25,24 +26,34 @@ void main() async {
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
+  final Future<UserLocation> _loc = LocationService().getLocation();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _initialization,
-        builder: (context, snapshot) {
+        future: Future.wait([
+        _initialization,
+        _loc,
+    ]),
+        builder: (context, AsyncSnapshot<List<Object>> snapshot) {
           if (snapshot.hasError) {
             return UI.errorMessage();
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             //Show circular progress indicator if loading
-            return Center(
-              child: CircularProgressIndicator(),
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: Image.asset("assets/img/splash.png"),
+              ),
             );
           }
 
           //Material App
-          return MaterialApp(
+          
+          return StreamProvider<UserLocation>(
+          create: (context) =>  LocationService().locationStream,
+          initialData: snapshot.data![1] as UserLocation,
+          child: MaterialApp(
             debugShowCheckedModeBanner: false,
             //Theme Data
             theme: ThemeData(
@@ -57,7 +68,7 @@ class MyApp extends StatelessWidget {
               
             ),
             home: Home(), //Home Page of the App
-          );
+          ));
         });
   }
 }

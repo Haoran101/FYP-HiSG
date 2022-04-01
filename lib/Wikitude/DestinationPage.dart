@@ -1,8 +1,8 @@
 // ignore_for_file: unused_field
 
+import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hi_sg/DataSource/google_maps_platform.dart';
 import 'package:hi_sg/DataSource/location_provider.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,6 +11,7 @@ import 'package:hi_sg/SearchResults/detail_page_container.dart';
 import 'package:hi_sg/UI/CommonWidget.dart';
 import 'package:hi_sg/UI/navDialog.dart';
 import 'package:hi_sg/Wikitude/sample.dart';
+import 'package:provider/provider.dart';
 import '../DataSource/api_key.dart' as api;
 import '../Models/nav_info_model.dart';
 import '../SearchResults/poi_details.dart';
@@ -62,19 +63,6 @@ class _DestinationPageState extends State<DestinationPage> {
     super.dispose();
   }
 
-  Future<Position?> ensureLocationFetched() async {
-    await locationService.fetchUserPosition();
-    
-    return locationService.position;
-  }
-
-  updateLocation(pos) async {
-    setState(() {
-      _currentPos = pos;
-      _center = pos;
-    });
-  }
-
   searchPlaces() async {
     if (destinController.text != "") {
       print(
@@ -92,7 +80,8 @@ class _DestinationPageState extends State<DestinationPage> {
         });
       } else {
         //show failed to fetch result dialog
-        UI.showCustomSnackBarMessage(context, "No results found for : "+ _currentSearchTerm.toString());
+        UI.showCustomSnackBarMessage(
+            context, "No results found for : " + _currentSearchTerm.toString());
       }
     }
   }
@@ -100,112 +89,86 @@ class _DestinationPageState extends State<DestinationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search For Destination'),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 30),
-        child: FloatingActionButton(
-          backgroundColor: Colors.white,
-          foregroundColor: Theme.of(context).primaryColor,
-          child: Icon(Icons.search, size: 32),
-          onPressed: searchPlaces,
+        appBar: AppBar(
+          title: const Text('Search For Destination'),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
-      ),
-      body: FutureBuilder(
-          future: ensureLocationFetched(),
-          builder: (context, AsyncSnapshot<Position?> snapshot) {
-            if (snapshot.hasError) {
-              return UI.errorMessage();
-            }
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(bottom: 30),
+          child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            foregroundColor: Theme.of(context).primaryColor,
+            child: Icon(Icons.search, size: 32),
+            onPressed: searchPlaces,
+          ),
+        ),
+        body
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                height: 900,
-                child: Center(
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).primaryColor),
-                ),
-              );
-            }
-
-            var pos = LatLng(snapshot.data!.latitude, snapshot.data!.longitude);
-
-            if (_center == null) {
-              WidgetsBinding.instance
-                  ?.addPostFrameCallback((_) => updateLocation(pos));
-            }
-
-            return SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    height: 100,
-                    child: Form(
-                      child: Column(
-                        children: [
-                          FromRow(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 18.0),
-                            child: Row(
-                              children: [
-                                Container(
-                                    child: Text(
-                                  "To",
-                                  style: TextStyle(fontSize: 17),
-                                )),
-                                Spacer(),
-                                Container(
-                                  height: 40,
-                                  width:
-                                      MediaQuery.of(context).size.width - 150,
-                                  child: TextField(
-                                    controller: destinController,
-                                    decoration: InputDecoration(
-                                      labelText: "Enter your destination",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    onSubmitted: (value) {
-                                      setState(() {
-                                        _currentSearchTerm =
-                                            destinController.text;
-                                      });
-                                      searchPlaces();
-                                    },
+          : SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  height: 100,
+                  child: Form(
+                    child: Column(
+                      children: [
+                        FromRow(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 18.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                  child: Text(
+                                "To",
+                                style: TextStyle(fontSize: 17),
+                              )),
+                              Spacer(),
+                              Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width - 150,
+                                child: TextField(
+                                  controller: destinController,
+                                  decoration: InputDecoration(
+                                    labelText: "Enter your destination",
+                                    border: OutlineInputBorder(),
                                   ),
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      _currentSearchTerm =
+                                          destinController.text;
+                                    });
+                                    searchPlaces();
+                                  },
                                 ),
-                                SizedBox(
-                                  width: 30,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-                MapAndPageView(pos: pos, resultList: _resultList)
-              ]),
-            );
-          }),
-    );
+              ),
+              MapAndPageView(resultList: _resultList)
+            ]),
+          )
+        );
   }
 }
 
 class MapAndPageView extends StatefulWidget {
   const MapAndPageView({
     Key? key,
-    required this.pos,
     required List<Location> resultList,
   })  : _resultList = resultList,
         super(key: key);
 
-  final LatLng pos;
   final List<Location> _resultList;
 
   @override
@@ -221,15 +184,27 @@ class _MapAndPageViewState extends State<MapAndPageView> {
 
   @override
   void initState() {
-    _center = this.widget._resultList.length > 0
-        ? this.widget._resultList[0].location
-        : this.widget.pos;
-    pos = this.widget.pos;
     pageView = CustomPageView(
       callback: updateCenter,
       resultList: this.widget._resultList,
     );
+
+    print(pageView!.resultList!);
     super.initState();
+  }
+
+  @override 
+  void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _center = this.widget._resultList.length > 0
+        ? this.widget._resultList[0].location
+        : null;
+    print("Updated widget: " + _center.toString());
+    pageView = CustomPageView(
+      callback: updateCenter,
+      resultList: this.widget._resultList,
+    );
+    print("updated page view : " +  this.widget._resultList.length.toString());
   }
 
   updateCenter(number) {
@@ -244,44 +219,49 @@ class _MapAndPageViewState extends State<MapAndPageView> {
   @override
   Widget build(BuildContext context) {
     bool emptyList = this.widget._resultList.length == 0;
+    print(this.widget._resultList.length);
 
     print("Center: $_center");
+    print("Empty list : " + emptyList.toString());
 
     return Stack(children: [
       Container(
         height: MediaQuery.of(context).size.height - 140,
-        child: FlutterMap(
-          key: UniqueKey(),
-          options: MapOptions(
-            center: this._center,
-            bounds: this._mapBounds,
-            zoom: 14.0,
-            minZoom: 5.0,
-            maxZoom: 20.0,
-          ),
-          layers: [
-            TileLayerOptions(
-              urlTemplate:
-                  "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=$MAPBOX_ACCESS_TOKEN",
-              attributionBuilder: (_) {
-                return Text("©Mapbox  ");
-              },
-            ),
-            MarkerLayerOptions(
-              markers: [
-                Marker(
-                  point: this._center!,
-                  builder: (ctx) => Container(
-                    child: Center(
-                        child: InkWell(
-                            onTap: () => print("taped marker"),
-                            child:
-                                Icon(Icons.place, color: Colors.red, size: 50))),
-                  ),
+        child: Consumer<UserLocation>(builder: (context, UserLocation loc, child) {
+            return FlutterMap(
+              key: UniqueKey(),
+              options: MapOptions(
+                center: emptyList ? LatLng(loc.latitude, loc.longitude) : this._center!,
+                bounds: this._mapBounds,
+                zoom: 14.0,
+                minZoom: 5.0,
+                maxZoom: 20.0,
+              ),
+              layers: [
+                TileLayerOptions(
+                  urlTemplate:
+                      "https://api.mapbox.com/styles/v1/weih0006/cksha5ahb1lxk17s3siaxqxie/tiles/256/{z}/{x}/{y}@2x?access_token=$MAPBOX_ACCESS_TOKEN",
+                  attributionBuilder: (_) {
+                    return Text("©Mapbox  ");
+                  },
+                ),
+                MarkerLayerOptions(
+                  markers: [
+                    Marker(
+                      point: emptyList ? LatLng(loc.latitude, loc.longitude) : _center!,
+                      builder: (ctx) => Container(
+                        child: Center(
+                            child: InkWell(
+                                onTap: () => print("taped marker"),
+                                child: Icon(Icons.place,
+                                    color: Colors.red, size: 50))),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
+            );
+          }
         ),
       ),
       Opacity(opacity: emptyList ? 0 : 0.8, child: pageView),
@@ -290,7 +270,7 @@ class _MapAndPageViewState extends State<MapAndPageView> {
 }
 
 // ignore: must_be_immutable
-class CustomPageView extends StatelessWidget with ChangeNotifier {
+class CustomPageView extends StatelessWidget {
   List? resultList;
   int pageNumber = 0;
   Function callback;
@@ -299,13 +279,8 @@ class CustomPageView extends StatelessWidget with ChangeNotifier {
   final PageController pageController = PageController();
 
   @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print("Loaded Page View, length : " + this.resultList!.length.toString());
     return Container(
       height: MediaQuery.of(context).size.height - 140,
       padding: EdgeInsets.only(top: 450, bottom: 100),
@@ -411,11 +386,12 @@ class LocationCard extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () => Navigator.push(
-                        context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        DetailPageContainer(searchResult: loc!.toSearchResult(),)),
-                      ),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailPageContainer(
+                                      searchResult: loc!.toSearchResult(),
+                                    )),
+                          ),
                       icon: Icon(Icons.info, size: 35, color: Colors.blue)),
                   Spacer(),
                   IconButton(
@@ -466,7 +442,7 @@ class Location {
     details = jsonObject;
   }
 
-  toSearchResult(){
+  toSearchResult() {
     return SearchResult.fromGoogle(this.details!);
   }
 }

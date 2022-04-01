@@ -26,7 +26,6 @@
     <!-- marker representation-->
     <script src="js/marker.js"></script>
 
-    <script type="text/javascript" src="js/ui.js"></script>
 
     <!-- World logic-->
     <script type="text/javascript" src="js/fromwebservice.js"></script>
@@ -38,7 +37,7 @@
 
 <body>
     <div id="instruction_banner" class="header">
-        <p id="instruction">Loading Route</p>
+        <p id="instruction"></p>
     </div>
 
     <div id="panelPoiDetail">
@@ -46,12 +45,14 @@
             <p style="font-size: 20px; padding-left: 40px; margin-bottom: 0;">Next Turn</p>
         </div>
         <div id="distanceAndDuration">
-            <div>
+            <p id="distance"></p>
+            <p id="duration"></p>
+            <!-- <div>
                 <p style="padding-top: 0;">
                     <span>
                         <img src="assets/walk.png">
                     </span>
-                    <span id = "distance" style="padding-top: 0;"></span>
+                    <span id="distance" style="padding-top: 0;"></span>
                 </p>
             </div>
             <div>
@@ -59,10 +60,10 @@
                     <span>
                         <img src="assets/time.png">
                     </span>
-                    <span id = "duration" style="padding-top: 0;"></span>
+                    <span id="duration" style="padding-top: 0;"></span>
                 </p>
-            </div>
-        </div>
+            </div>-->
+        </div> 
     </div>
 
     <div id="footer" width="100%">
