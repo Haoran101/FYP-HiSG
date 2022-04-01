@@ -63,7 +63,6 @@ class LocationService {
       return;
     }
     DateTime now = DateTime.now();
-    print("Now: $now");
     if (now.difference(this._lastFetchLocationTime!).inSeconds >
         timeIntervalSeconds) {
       print(
@@ -73,14 +72,11 @@ class LocationService {
   }
 
   fetchUserPosition() async {
-    print("fetchUserPosition called");
-    if (this._userPosition!= null){
-      return this._userPosition;
-    }
     var pos = await determinePosition();
     print(pos);
     this._userPosition = pos;
     this._lastFetchLocationTime = DateTime.now();
+    print(this._lastFetchLocationTime);
     return pos;
   }
 
