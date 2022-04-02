@@ -60,10 +60,11 @@ var World = {
                 "distance": routeData[currentPlaceNr].distance.value,
                 "duration": routeData[currentPlaceNr].duration.value,
                 "speed": routeData[currentPlaceNr].distance.value / routeData[currentPlaceNr].duration.value,
+                "polyline": routeData[currentPlaceNr].polyline.points,
                 "details": routeData[currentPlaceNr]
             };
             formattedJSON.push(singlePoi);
-            World.markerList.push(new Marker(singlePoi));
+            //World.markerList.push(new Marker(singlePoi));
         }
         try {
             var JSONObject = {
@@ -78,11 +79,8 @@ var World = {
         //World.switchInstructions(0);
         //World.updateDistanceAndDurationDisplay(World.markerList[0].poiData.distance, World.markerList[0].poiData.duration);
        // World.updateTotalStatusMessage();
-        var highlight = World.markerList[World.markerList.length];
-        highlight.setSelected(highlight);
-        World.currentMarker = highlight;
+        //World.markerList[0].isSelected = true;
         World.updateStatusMessage('Route loaded from Google Maps.');
-  
     },
 
     /*on received destination info from Architect Widget*/
@@ -185,19 +183,7 @@ var World = {
         Note: You may set 'AR.context.onLocationChanged = null' to no longer receive location updates in
         World.locationChanged.
      */
-    locationChanged: function locationChangedFn(lat, lon, alt, acc) {
-        console.log("Location Received from Native: " + lat.toString() + " , " + lon.toString());
-        /* Request data if not already present. */
-        if (!World.isRequestingData) {
-            var newDistance = World.fetchUpdatedDistance(lat, lon);
-            var newDuration = World.fetchUpdatedDuration(newDistance);
-            if (newDistance < 15) {
-                World.switchInstructions(World.currentMarker.id + 1);
-            }
-            //World.updateDistanceAndDurationDisplay(newDistance, newDuration);
-            //World.updateTotalStatusMessage();
-        }
-    },
+    locationChanged: null,
 
     /* Fired when user pressed maker in cam. */
     onMarkerSelected: function onMarkerSelectedFn(marker) {
@@ -292,6 +278,7 @@ var World = {
         }
         ).catch((e) => {
             World.updateStatusMessage('Route failed to request from Google Maps', true);
+            console.log(e);
         });
     },
 

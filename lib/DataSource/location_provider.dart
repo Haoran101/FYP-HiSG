@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:hi_sg/Models/search_result_model.dart';
+import 'package:flutter_compass/flutter_compass.dart'; 
 
 /// Determine the current position of the device.
 ///

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hi_sg/DataSource/location_provider.dart';
+import 'package:hi_sg/MicroServices/compass.dart';
+import 'package:hi_sg/Wikitude/map_overlay.dart';
 import 'package:hi_sg/Wikitude/overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
@@ -29,8 +32,14 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
   bool navDataLoaded = false;
   NavInfo? destinationJSON;
   LocationService _locationService = LocationService();
-  ARNavigationOverlay? _arNavigationOverlay;
   List<Widget> arBody = [];
+  RouteData? route;
+  bool isARNavigation = false;
+  Key navLayerKey = GlobalKey();
+  bool? _showMap;
+  bool? _showCompass;
+  bool? _isWhite;
+  bool? _fullScreenMap;
 
   ArViewState({required this.sample, this.destinationJSON}) {
     if (this.sample.path.contains("http://") ||
@@ -39,13 +48,16 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
     } else {
       loadPath = "samples/" + this.sample.path;
     }
+    isARNavigation = this.sample.name == "AR Walking Navigation";
   }
 
   @override
   void initState() {
     super.initState();
+    _showMap = true;
+    _showCompass = true;
+    _isWhite = true;
     WidgetsBinding.instance!.addObserver(this);
-    _arNavigationOverlay = ARNavigationOverlay();
 
     architectWidget = new ArchitectWidget(
       onArchitectWidgetCreated: onArchitectWidgetCreated,
@@ -60,11 +72,13 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
               child: architectWidget),
         );
 
-    if (widget.sample.name == "AR Walking Navigation") {
+    if (isARNavigation) {
       this.arBody.add(Container(
           color: Colors.black45,
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Color.fromRGBO(255, 0, 117, 1),
+            ),
           )));
     }
     Wakelock.enable();
@@ -94,11 +108,135 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
     }
   }
 
+  List<Widget> getAction() {
+    if (isARNavigation) {
+      return [
+        IconButton(
+            onPressed: () => showSwitchControls(), icon: Icon(Icons.settings))
+      ];
+    } else
+      return [];
+  }
+
+  printStates() {
+    print("showMap: " + this._showMap.toString());
+    print("ShowCompass: " + this._showCompass.toString());
+    print("isWhite: " + this._isWhite.toString());
+  }
+
+  showSwitchControls() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Display Settings"),
+            content: StatefulBuilder(builder: (context, StateSetter setState) {
+              return Container(
+                padding: EdgeInsets.only(right: 20),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Row(
+                    children: [
+                      Text("Show Map"),
+                      Spacer(),
+                      Switch(
+                        activeColor: Color.fromRGBO(255, 0, 117, 1),
+                        activeTrackColor: Color.fromRGBO(255, 0, 117, 0.5),
+                        value: this._showMap!,
+                        onChanged: (value) => setState(() {
+                          this._showMap = value;
+                          changeDisplay();
+                          printStates();
+                        }),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("Show Compass"),
+                      Spacer(),
+                      Switch(
+                        activeColor: Color.fromRGBO(255, 0, 117, 1),
+                        activeTrackColor: Color.fromRGBO(255, 0, 117, 0.5),
+                        value: this._showCompass!,
+                        onChanged: (value) => setState(() {
+                          this._showCompass = value;
+                          changeDisplay();
+                          printStates();
+                        }),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("Light Text Color"),
+                      Spacer(),
+                      Switch(
+                        activeColor: Color.fromRGBO(255, 0, 117, 1),
+                        activeTrackColor: Color.fromRGBO(255, 0, 117, 0.5),
+                        value: this._isWhite!,
+                        onChanged: (value) => setState(() {
+                          this._isWhite = value;
+                          changeDisplay();
+                          printStates();
+                        }),
+                      )
+                    ],
+                  ),
+                ]),
+              );
+            }),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromRGBO(255, 0, 117, 1),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    "Close",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   changeDisplay() {
     print("Change display invoked");
     setState(() {
       List<Widget> newARbody = [arBody[0]];
-      newARbody.add(_arNavigationOverlay!);
+
+      newARbody.add(Positioned(
+        top: 60,
+        left: 0,
+        height: 130,
+        child: Opacity(
+          opacity: _showCompass! ? 0.7 : 0,
+          child: CompassService(),
+        ),
+      ));
+      newARbody.add(Positioned(
+        top: 200,
+        right: 10,
+        child: Opacity(
+          opacity: _showMap! ? 1 : 0,
+          child: MapWidget(
+            height: 250,
+            width: 150,
+            polylines: route!.polylines,
+          ),
+        ),
+      ));
+      newARbody.add(ARNavigationOverlay(
+        key: navLayerKey,
+        navData: route,
+        isLightMode: _isWhite,
+      ));
       arBody = newARbody;
     });
   }
@@ -109,12 +247,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
         appBar: AppBar(
           title: Text(sample.name),
           backgroundColor: Theme.of(context).primaryColor,
-          actions: [
-            IconButton(
-                onPressed: () => this.architectWidget.callJavascript(
-                    "World.locationChanged(${_locationService.latitute},${_locationService.longitude}, 50, 3);"),
-                icon: Icon(Icons.refresh))
-          ],
+          actions: getAction(),
         ),
         body: WillPopScope(
           onWillPop: () async {
@@ -162,11 +295,10 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
             "endLon": widget.destinationNavInfo!.lon,
             "path": jsonObject["data"]
           };
-          _arNavigationOverlay = new ARNavigationOverlay(navData: 
-            RouteData.fromJSON(routeData)
-          );
+          RouteData routeLoaded = RouteData.fromJSON(routeData);
           setState(() {
             navDataLoaded = true;
+            route = routeLoaded;
             changeDisplay();
           });
           break;
@@ -241,7 +373,7 @@ class ArViewState extends State<ArViewWidget> with WidgetsBindingObserver {
 
   Future<void> onLoadSuccess() async {
     loadFailed = false;
-    if (this.sample.name == "AR Walking Navigation") {
+    if (isARNavigation) {
       this.architectWidget.callJavascript(
           "World.initializeDestination(${_locationService.latitute}, ${_locationService.longitude}, ${this.destinationJSON!.lat}, ${this.destinationJSON!.lon});");
     }

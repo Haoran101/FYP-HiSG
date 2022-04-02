@@ -2,13 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:hi_sg/MicroServices/compass.dart';
 import 'package:provider/provider.dart';
 
 import '../DataSource/location_provider.dart';
 
 class ARNavigationOverlay extends StatefulWidget {
-  ARNavigationOverlay({Key? key, this.navData});
+  ARNavigationOverlay({Key? key, this.navData, this.isLightMode});
   RouteData? navData;
+  bool? isLightMode = true;
 
   @override
   State<ARNavigationOverlay> createState() => _ARNavigationOverlayState();
@@ -29,18 +31,29 @@ class _ARNavigationOverlayState extends State<ARNavigationOverlay> {
 
   RouteData? _navData;
 
+  Color? _textColor;
+
   @override
   void initState() {
     _navData = widget.navData;
+    bool light = widget.isLightMode?? true;
+    _textColor = light? Colors.white : Colors.black;
     super.initState();
   }
 
+  void didUpdateWidget(oldWidget) {
+    bool light = widget.isLightMode?? true;
+    _textColor = light? Colors.white : Colors.black;
+    super.didUpdateWidget(oldWidget);
+  }
+
   switchToNext() {
-    if (currentId + 1 < _navData!.route!.length){
+    if (currentId + 1 < _navData!.route!.length) {
       Future.delayed(Duration(milliseconds: 20), () async {
-        setState(()  {
-        currentId += 1;
-      });});
+        setState(() {
+          currentId += 1;
+        });
+      });
       print(_navData!.route![currentId].instruction!);
       print(currentId.toString() + "/" + _navData!.route!.length.toString());
     } else {
@@ -48,25 +61,40 @@ class _ARNavigationOverlayState extends State<ARNavigationOverlay> {
     }
   }
 
-
   @override
   Widget build(context) {
-    return Consumer<UserLocation>(
-      builder: (context, UserLocation loc, child) {
+    return Consumer<UserLocation>(builder: (context, UserLocation loc, child) {
       if (_navData == null) return SizedBox();
       _currDistance = _calculateDistance(loc.latitude, loc.longitude,
           _navData!.route![currentId].lat, _navData!.route![currentId].lon);
       _currDuration = _currDistance / _navData!.route![currentId].speed!;
-      if (_currDistance < 5 && _currDistance >= 0) {
-        switchToNext();}
+      if (_currDistance < 50 && _currDistance >= 0) {
+        switchToNext();
+      }
       return Stack(children: [
-        DistanceWidget(currDistance: _currDistance),
-        InstructionWidget(navData: _navData, currentId: currentId),
-        DurationWidget(currDuration: _currDuration),
-        Center(child: TextButton(
-          child: Text("Next"),
-          onPressed: () => switchToNext()),)
-      ]);} );
+        DistanceWidget(currDistance: _currDistance, textColor: _textColor!,),
+        InstructionWidget(navData: _navData, currentId: currentId, textColor: _textColor!,),
+        DurationWidget(currDuration: _currDuration, textColor: _textColor!,),
+        //Next Turn
+        Positioned(
+            bottom: 180,
+            left: 30,
+            child: Text(
+              "Next Turn",
+              style: TextStyle(fontSize: 22, color: _textColor),
+            )),
+        //Next Button
+        Align(
+          alignment: Alignment.bottomRight,
+          child: TextButton(
+              child: Text(
+                "Next",
+                style: TextStyle(color: _textColor),
+              ),
+              onPressed: () => switchToNext()),
+        )
+      ]);
+    });
   }
 
   _calculateDistance(lat1, lon1, lat2, lon2) {
@@ -130,14 +158,17 @@ class DurationWidget extends StatelessWidget {
   const DurationWidget({
     Key? key,
     required double currDuration,
+    required Color textColor,
   })  : _currDuration = currDuration,
+        _textColor = textColor,
         super(key: key);
 
   final double _currDuration;
+  final Color _textColor;
 
   @override
   Widget build(BuildContext context) {
-    print(_currDuration);
+    print("Color? " + _textColor.toString());
     return Positioned(
       bottom: 100,
       right: 60,
@@ -145,7 +176,7 @@ class DurationWidget extends StatelessWidget {
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Icon(
             Icons.timer_outlined,
-            color: Colors.black,
+            color: _textColor,
             size: 40,
           ),
           Padding(
@@ -154,7 +185,7 @@ class DurationWidget extends StatelessWidget {
               _currDuration / 60 < 60
                   ? (_currDuration / 60).toStringAsFixed(0) + " min"
                   : (_currDuration / 3600).toStringAsFixed(1) + " h",
-              style: TextStyle(fontSize: 22),
+              style: TextStyle(fontSize: 22, color: _textColor),
             ),
           ),
         ]),
@@ -167,22 +198,25 @@ class DistanceWidget extends StatelessWidget {
   const DistanceWidget({
     Key? key,
     required double currDistance,
+    required Color textColor,
   })  : _currDistance = currDistance,
+        _textColor = textColor,
         super(key: key);
 
   final double _currDistance;
+  final Color _textColor;
 
   @override
   Widget build(BuildContext context) {
     print(_currDistance);
     return Positioned(
       bottom: 100,
-      left: 80,
+      left: 50,
       child: Container(
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Icon(
             Icons.directions_walk_rounded,
-            color: Colors.black,
+            color: _textColor,
             size: 40,
           ),
           Padding(
@@ -191,7 +225,7 @@ class DistanceWidget extends StatelessWidget {
               _currDistance < 1000
                   ? _currDistance.toStringAsFixed(1) + " m"
                   : (_currDistance / 1000).toStringAsFixed(2) + " km",
-              style: TextStyle(fontSize: 22),
+              style: TextStyle(fontSize: 22, color: _textColor),
             ),
           ),
         ]),
@@ -205,14 +239,16 @@ class InstructionWidget extends StatelessWidget {
     Key? key,
     required RouteData? navData,
     required this.currentId,
+    required Color textColor,
   })  : _navData = navData,
+        _textColor = textColor,
         super(key: key);
 
   final RouteData? _navData;
   final int currentId;
+  final Color _textColor;
 
   @override
-  
   Widget build(BuildContext context) {
     print(currentId);
     return Positioned(
@@ -222,6 +258,7 @@ class InstructionWidget extends StatelessWidget {
         style: {
           "div": Style(
               fontSize: FontSize(18),
+              color: _textColor,
               textAlign: TextAlign.center,
               lineHeight: LineHeight(1.5))
         },
@@ -235,6 +272,7 @@ class RouteData {
   double? endLat;
   double? startLon;
   double? endLon;
+  List<String>? polylines;
   List<RoutePoint>? route;
 
   RouteData.fromJSON(jsonObject) {
@@ -242,6 +280,10 @@ class RouteData {
     this.endLat = jsonObject["endLat"];
     this.startLon = jsonObject["startLon"];
     this.endLon = jsonObject["endLon"];
+    this.polylines = List.generate(jsonObject["path"].length, (index) {
+      var curr = jsonObject["path"][index];
+      return curr["polyline"];
+    });
     this.route = List.generate(jsonObject["path"].length, (index) {
       var curr = jsonObject["path"][index];
       return RoutePoint(

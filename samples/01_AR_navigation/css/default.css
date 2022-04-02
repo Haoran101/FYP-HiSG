@@ -9,6 +9,16 @@ html, body {
     position: relative;
 }
 
+.dot {
+    height: 250px;
+    width: 250px;
+    background-color: rgba(153, 205, 212, 0.977);
+    border:#000 2px solid;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: large;
+}
+
 #footer {
     position: absolute;
     text-align: center;
