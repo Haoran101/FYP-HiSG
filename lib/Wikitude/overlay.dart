@@ -36,28 +36,42 @@ class _ARNavigationOverlayState extends State<ARNavigationOverlay> {
   @override
   void initState() {
     _navData = widget.navData;
-    bool light = widget.isLightMode?? true;
-    _textColor = light? Colors.white : Colors.black;
+    bool light = widget.isLightMode ?? true;
+    _textColor = light ? Colors.white : Colors.black;
     super.initState();
   }
 
   void didUpdateWidget(oldWidget) {
-    bool light = widget.isLightMode?? true;
-    _textColor = light? Colors.white : Colors.black;
+    bool light = widget.isLightMode ?? true;
+    _textColor = light ? Colors.white : Colors.black;
     super.didUpdateWidget(oldWidget);
   }
 
   switchToNext() {
-    if (currentId + 1 < _navData!.route!.length) {
-      Future.delayed(Duration(milliseconds: 20), () async {
-        setState(() {
-          currentId += 1;
+    try {
+      var nextIndex = currentId + 1;
+      while (nextIndex < _navData!.route!.length - 1) {
+        var distance = _navData!.route![nextIndex].distance;
+        if (distance! < 40) {
+          nextIndex += 1;
+        } else {
+          break;
+        }
+      }
+
+      if (nextIndex >= _navData!.route!.length - 1) {
+        showReturnDialog();
+      } else {
+        Future.delayed(Duration(milliseconds: 200), () async {
+          setState(() {
+            currentId = min(nextIndex, _navData!.route!.length - 1);
+          });
         });
-      });
-      print(_navData!.route![currentId].instruction!);
-      print(currentId.toString() + "/" + _navData!.route!.length.toString());
-    } else {
-      showReturnDialog();
+        print(_navData!.route![currentId].instruction!);
+        print(currentId.toString() + "/" + _navData!.route!.length.toString());
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -68,13 +82,24 @@ class _ARNavigationOverlayState extends State<ARNavigationOverlay> {
       _currDistance = _calculateDistance(loc.latitude, loc.longitude,
           _navData!.route![currentId].lat, _navData!.route![currentId].lon);
       _currDuration = _currDistance / _navData!.route![currentId].speed!;
-      if (_currDistance < 50 && _currDistance >= 0) {
-        switchToNext();
+      if (_currDistance < 60 && _currDistance >= 0) {
+            switchToNext();
       }
+
       return Stack(children: [
-        DistanceWidget(currDistance: _currDistance, textColor: _textColor!,),
-        InstructionWidget(navData: _navData, currentId: currentId, textColor: _textColor!,),
-        DurationWidget(currDuration: _currDuration, textColor: _textColor!,),
+        DistanceWidget(
+          currDistance: _currDistance,
+          textColor: _textColor!,
+        ),
+        InstructionWidget(
+          navData: _navData,
+          currentId: currentId,
+          textColor: _textColor!,
+        ),
+        DurationWidget(
+          currDuration: _currDuration,
+          textColor: _textColor!,
+        ),
         //Next Turn
         Positioned(
             bottom: 180,
